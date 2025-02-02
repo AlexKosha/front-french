@@ -13,6 +13,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {combineReducers} from 'redux';
 import {authSlice} from './auth/authSlice';
+import {topicReducer} from './topic/topicSlice';
+import {vocabReducer} from './vocab/vocabSlice';
 
 // Налаштування persist для авторизації (збереження токена)
 const persistConfig = {
@@ -24,8 +26,8 @@ const persistConfig = {
 // Комбінуємо редюсери
 const rootReducer = combineReducers({
   auth: persistReducer(persistConfig, authSlice.reducer),
-  // vocab: vocabReducer,
-  // topic: topicReducer,
+  vocab: vocabReducer,
+  topic: topicReducer,
 });
 
 // Створення store
@@ -44,4 +46,5 @@ export const persistor = persistStore(store);
 
 // Типізація для використання у всьому додатку
 export type RootState = ReturnType<typeof store.getState>;
+
 export type AppDispatch = typeof store.dispatch;

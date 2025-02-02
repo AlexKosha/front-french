@@ -35,7 +35,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     // Редюсер для зміни теми
-    setTheme: (state, action: PayloadAction<boolean>) => {
+    setTheme: (state, action) => {
       state.theme = action.payload; // Оновлюємо тему в стані Redux
     },
   },

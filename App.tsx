@@ -2,7 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import React, {Suspense} from 'react';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
-import {StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 
 import {persistor, store} from './src/store/store';
 // import {AppNavigator} from './components/AppNavigator';
@@ -18,16 +18,9 @@ export default function App(): JSX.Element {
                 <Text>Loading...</Text>
               </View>
             }>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
-            <Text>Hello</Text>
+            <SafeAreaView>
+              <Text>Hello</Text>
+            </SafeAreaView>
           </Suspense>
         </NavigationContainer>
       </PersistGate>
