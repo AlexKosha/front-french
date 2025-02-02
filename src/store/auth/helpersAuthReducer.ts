@@ -1,24 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {WritableDraft} from 'immer';
-
-// Тип для вашого стану
-interface User {
-  name: string | null;
-  email: string | null;
-  birthDate: string | null;
-  croissants: number;
-  theme?: boolean;
-  lng?: string;
-}
-
-interface AuthState {
-  user: User;
-  token: string | null;
-  theme: boolean;
-  isRefreshing: boolean;
-  error: string;
-  isLoggedIn: boolean;
-}
+import {AuthState, User} from './authSlice';
 
 export const handlePending = (state: AuthState) => {
   state.isRefreshing = true;

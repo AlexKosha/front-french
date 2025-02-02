@@ -24,6 +24,7 @@ interface LoginBody {
 interface RegisterBody {
   email: string;
   password: string;
+  birthDate: string;
   name: string;
 }
 
