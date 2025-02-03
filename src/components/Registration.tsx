@@ -6,9 +6,9 @@ import {CheckBox} from 'react-native-btr';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {useTranslation} from 'react-i18next';
-import '../i18n';
+import '../../i18n';
 import {
   StyleSheet,
   Alert,
@@ -33,7 +33,6 @@ import 'dayjs/locale/en'; // англійська локаль
 import {defaultStyles} from './defaultStyles';
 import {AppDispatch} from '../store/store';
 import {NavigationProps} from '../helpers/navigationTypes';
-import {selectTheme} from '../store/auth/selector';
 
 dayjs.extend(localizedFormat);
 dayjs.locale('en'); // встановлення локалі за замовчуванням
@@ -62,7 +61,6 @@ export const Registration = () => {
   const [isChecked, setIsChecked] = useState(false);
 
   const {t, i18n} = useTranslation();
-  const isDarkTheme = useSelector(selectTheme);
 
   const handleRegister = async () => {
     try {
@@ -128,20 +126,20 @@ export const Registration = () => {
   //   );
   // };
 
-  const validateForm = () => {
-    const isNameValid: boolean = !!formData.name && !formErrors.nameError;
-    const isDateOfBirthValid: boolean =
-      !!formData.birthDate && !formErrors.birthDateError;
-    const isEmailValid: boolean = !!formData.email && !formErrors.emailError;
-    const isPasswordValid: boolean =
-      !!formData.password && !formErrors.passwordError;
-
-    setIsFormValid(
-      isNameValid && isDateOfBirthValid && isEmailValid && isPasswordValid,
-    );
-  };
-
   useEffect(() => {
+    const validateForm = () => {
+      const isNameValid: boolean = !!formData.name && !formErrors.nameError;
+      const isDateOfBirthValid: boolean =
+        !!formData.birthDate && !formErrors.birthDateError;
+      const isEmailValid: boolean = !!formData.email && !formErrors.emailError;
+      const isPasswordValid: boolean =
+        !!formData.password && !formErrors.passwordError;
+
+      setIsFormValid(
+        isNameValid && isDateOfBirthValid && isEmailValid && isPasswordValid,
+      );
+    };
+
     validateForm();
   }, [formData, formErrors]);
 
@@ -203,11 +201,11 @@ export const Registration = () => {
   };
 
   const formatDate = (rawDate: Date): string => {
-    let date = new Date(rawDate);
+    let newDate = new Date(rawDate);
 
-    let year = date.getFullYear();
-    let month: number = date.getMonth() + 1;
-    let day: number = date.getDate();
+    let year = newDate.getFullYear();
+    let month: number = newDate.getMonth() + 1;
+    let day: number = newDate.getDate();
 
     // month = month < 10 ? `0${month}` : month;
     // day = day < 10 ? `0${day}` : day;
@@ -216,13 +214,8 @@ export const Registration = () => {
     const formattedMonth = month < 10 ? `0${month}` : month.toString();
     const formattedDay = day < 10 ? `0${day}` : day.toString();
 
-    return `${day}-${month}-${year}`;
-    // return dayjs(rawDate).format("LL");
+    return `${formattedDay}-${formattedMonth}-${year}`;
   };
-
-  // useEffect(() => {
-  //   console.log("Current locale:", dayjs.locale());
-  // }, [i18n.language]);
 
   return (
     <TouchableOpacity

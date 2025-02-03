@@ -1,87 +1,89 @@
+/* eslint-disable react/no-unstable-nested-components */
 import {useDispatch, useSelector} from 'react-redux';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {useEffect} from 'react';
-import {getProfileThunk, logoutThunk} from '../store/auth/authThunks';
+import {TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
+import {getProfileThunk} from '../store/auth/authThunks';
 import * as Screens from '../screens';
 import * as Components from '../components';
-import {setTheme} from '../store/auth/authSlice';
-import {AppDispatch, RootState} from '../store/store';
+// import {setTheme} from '../store/auth/authSlice';
+import {AppDispatch} from '../store/store';
 import {NavigationProps} from '../helpers/navigationTypes';
+import {selectTheme} from '../store/auth/selector';
 
 const MainStack = createNativeStackNavigator();
 
 export const AppNavigator = (): JSX.Element => {
-  const isDarkTheme = useSelector((state: RootState) => state.auth.theme);
-  const {t, i18n} = useTranslation();
+  const isDarkTheme = useSelector(selectTheme);
+  const {i18n} = useTranslation();
   const dispatch = useDispatch<AppDispatch>(); // Типізуємо dispatch
-  const navigation = useNavigation<NavigationProps<'AppNavigator'>>();
+  const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
 
-  const handleGetProfile = async (): Promise<void> => {
-    try {
-      const resultAction = await dispatch(getProfileThunk());
-      if (getProfileThunk.fulfilled.match(resultAction)) {
-        navigation.navigate('Home');
-      }
-      return;
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      const resultAction = await dispatch(logoutThunk());
-      if (logoutThunk.fulfilled.match(resultAction)) {
-        navigation.navigate('Login');
-      } else {
-        Alert.alert('Error', resultAction.error.message);
-      }
-    } catch (error: any) {
-      console.log('Registration failed:', error);
-      Alert.alert('Error', error.message);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     const resultAction = await dispatch(logoutThunk());
+  //     if (logoutThunk.fulfilled.match(resultAction)) {
+  //       navigat.navigate('Login');
+  //     } else {
+  //       Alert.alert('Error', resultAction.error.message);
+  //     }
+  //   } catch (error: any) {
+  //     console.log('Registration failed:', error);
+  //     Alert.alert('Error', error.message);
+  //   }
+  // };
 
   useEffect(() => {
+    const handleGetProfile = async (): Promise<void> => {
+      try {
+        const resultAction = await dispatch(getProfileThunk());
+        if (getProfileThunk.fulfilled.match(resultAction)) {
+          navigat.navigate('Home');
+        }
+        return;
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
+
     handleGetProfile();
-  }, []);
+  }, [dispatch, navigat]);
 
-  const handleGoHome = () => {
-    Alert.alert(
-      'Попередження',
-      'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
-      [
-        {
-          text: 'Залишитись',
-          onPress: () => console.log('Залишаємося на ст'),
-          style: 'cancel',
-        },
-        {
-          text: 'Вийти',
-          onPress: () => navigation.navigate('Home'),
-          style: 'destructive',
-        },
-      ],
-    );
-  };
-  const toggleTheme = async () => {
-    const newTheme = !isDarkTheme; // Інвертуємо булеве значення теми
+  // const handleGoHome = () => {
+  //   Alert.alert(
+  //     'Попередження',
+  //     'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
+  //     [
+  //       {
+  //         text: 'Залишитись',
+  //         onPress: () => console.log('Залишаємося на ст'),
+  //         style: 'cancel',
+  //       },
+  //       {
+  //         text: 'Вийти',
+  //         onPress: () => navigat.navigate('Home'),
+  //         style: 'destructive',
+  //       },
+  //     ],
+  //   );
+  // };
+  // const toggleTheme = async () => {
+  //   const newTheme = !isDarkTheme; // Інвертуємо булеве значення теми
 
-    try {
-      // Зберігаємо нову тему як рядок (булеве значення) в AsyncStorage
-      await AsyncStorage.setItem('theme', JSON.stringify(newTheme)); // Replaced SecureStore with AsyncStorage
-      // Оновлюємо тему в Redux-стані
-      dispatch(setTheme(newTheme));
-    } catch (error: any) {
-      console.error('Failed to update theme:', error);
-    }
-  };
+  //   try {
+  //     // Зберігаємо нову тему як рядок (булеве значення) в AsyncStorage
+  //     await AsyncStorage.setItem('theme', JSON.stringify(newTheme)); // Replaced SecureStore with AsyncStorage
+  //     // Оновлюємо тему в Redux-стані
+  //     dispatch(setTheme(newTheme));
+  //   } catch (error: any) {
+  //     console.error('Failed to update theme:', error);
+  //   }
+  // };
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -456,16 +458,16 @@ export const AppNavigator = (): JSX.Element => {
 };
 
 // Стилі для лоадера
-const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '95%',
-  },
-});
+// const styles = StyleSheet.create({
+//   loadingContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   headerContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//     width: '95%',
+//   },
+// });

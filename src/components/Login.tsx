@@ -1,10 +1,10 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import {useTranslation} from 'react-i18next';
-import '../i18n';
+import '../../i18n';
 import {
   Pressable,
   SafeAreaView,
@@ -30,12 +30,13 @@ export const Login = () => {
   const [email, setEmail] = useState('');
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(false);
+  // const [isFormValid, setIsFormValid] = useState(false);
 
   const {t, i18n} = useTranslation();
 
   const validateForm = () => {
-    setIsFormValid(email.trim().length > 0 && password.trim().length > 0);
+    console.log('231');
+    // setIsFormValid(email.trim().length > 0 && password.trim().length > 0);
   };
 
   const handleLogin = async () => {
@@ -60,7 +61,7 @@ export const Login = () => {
   const handleEmailChange = (text: string) => {
     setEmail(text.trim());
     if (text.trim().length === 0) {
-      setIsFormValid(false);
+      // setIsFormValid(false);
     } else {
       validateForm();
     }
@@ -69,7 +70,7 @@ export const Login = () => {
   const handlePasswordChange = (text: string) => {
     setPassword(text.trim());
     if (text.trim().length === 0) {
-      setIsFormValid(false);
+      // setIsFormValid(false);
     } else {
       validateForm();
     }

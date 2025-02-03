@@ -1,5 +1,6 @@
+import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getTopic} from '../store/topic/topicThunk';
