@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import {useTranslation} from 'react-i18next';
-import '../../i18n';
+// import '../../i18n';
 import {
   Pressable,
   SafeAreaView,
@@ -21,7 +21,7 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 
-export const Login = () => {
+export const Login = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Login'>>();
   const dispatch = useDispatch<AppDispatch>();
   const isDarkTheme = useSelector(selectTheme);

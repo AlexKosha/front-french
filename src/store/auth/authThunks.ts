@@ -13,6 +13,10 @@ import {
   forgotPass,
   restorePassword,
   updateProgressUser,
+  UpdatePasswordBody,
+  ThemeUpdateBody,
+  LanguageUpdateBody,
+  UpdateUserBody,
 } from '../../services/authService';
 
 // Типи для тіла запиту (наприклад, для входу, реєстрації тощо)
@@ -26,25 +30,6 @@ interface RegisterBody {
   password: string;
   birthDate: string;
   name: string;
-}
-
-interface UpdatePasswordBody {
-  oldPassword: string;
-  newPassword: string;
-}
-
-interface UpdateUserBody {
-  name?: string;
-  email?: string;
-  birthDate?: string;
-}
-
-interface ThemeBody {
-  theme: boolean;
-}
-
-interface LngBody {
-  lng: string;
 }
 
 export const loginThunk = createAsyncThunk(
@@ -116,7 +101,7 @@ export const updaterPasswordThunk = createAsyncThunk(
 
 export const updaterUserThemeThunk = createAsyncThunk(
   '/users/theme',
-  async (body: ThemeBody, {rejectWithValue}) => {
+  async (body: ThemeUpdateBody, {rejectWithValue}) => {
     try {
       const data = await updateTheme(body);
       return data;
@@ -129,7 +114,7 @@ export const updaterUserThemeThunk = createAsyncThunk(
 
 export const updateUserLngThunk = createAsyncThunk(
   '/users/lng',
-  async (body: LngBody, {rejectWithValue}) => {
+  async (body: LanguageUpdateBody, {rejectWithValue}) => {
     try {
       return await updateLng(body);
     } catch (error: any) {
@@ -165,7 +150,7 @@ export const forgotPassThunk = createAsyncThunk(
 export const restorePasswordThunk = createAsyncThunk(
   '/users/restorePassword',
   async (
-    {body, otp}: {body: {newPassword: string}; otp: string},
+    {body, otp}: {body: {email: string; password: string}; otp: string},
     {rejectWithValue},
   ) => {
     try {

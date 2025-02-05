@@ -1,26 +1,29 @@
 /* eslint-disable react/no-unstable-nested-components */
 import {useDispatch, useSelector} from 'react-redux';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {TouchableOpacity} from 'react-native';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
-import {getProfileThunk} from '../store/auth/authThunks';
+import {getProfileThunk, logoutThunk} from '../store/auth/authThunks';
 import * as Screens from '../screens';
 import * as Components from '../components';
 // import {setTheme} from '../store/auth/authSlice';
 import {AppDispatch} from '../store/store';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {selectTheme} from '../store/auth/selector';
+import {setTheme} from '../store/auth/authSlice';
+import {RouteParams} from './LearnOrTrainTopic';
 
 const MainStack = createNativeStackNavigator();
 
 export const AppNavigator = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
-  const {i18n} = useTranslation();
+  const {t, i18n} = useTranslation();
   const dispatch = useDispatch<AppDispatch>(); // Типізуємо dispatch
   const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
 
@@ -54,36 +57,32 @@ export const AppNavigator = (): JSX.Element => {
     handleGetProfile();
   }, [dispatch, navigat]);
 
-  // const handleGoHome = () => {
-  //   Alert.alert(
-  //     'Попередження',
-  //     'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
-  //     [
-  //       {
-  //         text: 'Залишитись',
-  //         onPress: () => console.log('Залишаємося на ст'),
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: 'Вийти',
-  //         onPress: () => navigat.navigate('Home'),
-  //         style: 'destructive',
-  //       },
-  //     ],
-  //   );
-  // };
-  // const toggleTheme = async () => {
-  //   const newTheme = !isDarkTheme; // Інвертуємо булеве значення теми
+  const toggleTheme = async () => {
+    const newTheme = !isDarkTheme; // Інвертуємо булеве значення теми
 
-  //   try {
-  //     // Зберігаємо нову тему як рядок (булеве значення) в AsyncStorage
-  //     await AsyncStorage.setItem('theme', JSON.stringify(newTheme)); // Replaced SecureStore with AsyncStorage
-  //     // Оновлюємо тему в Redux-стані
-  //     dispatch(setTheme(newTheme));
-  //   } catch (error: any) {
-  //     console.error('Failed to update theme:', error);
-  //   }
-  // };
+    try {
+      // Зберігаємо нову тему як рядок (булеве значення) в AsyncStorage
+      await AsyncStorage.setItem('theme', JSON.stringify(newTheme)); // Replaced SecureStore with AsyncStorage
+      // Оновлюємо тему в Redux-стані
+      dispatch(setTheme(newTheme));
+    } catch (error) {
+      console.error('Failed to update theme:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const resultAction = await dispatch(logoutThunk());
+      if (logoutThunk.fulfilled.match(resultAction)) {
+        navigat.navigate('Login');
+      } else {
+        Alert.alert('Error', resultAction.error.message);
+      }
+    } catch (error: any) {
+      console.log('Registration failed:', error);
+      Alert.alert('Error', error.message);
+    }
+  };
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
@@ -137,249 +136,251 @@ export const AppNavigator = (): JSX.Element => {
           ),
         })}
       />
-    </MainStack.Navigator>
-    //   <MainStack.Screen
-    //     name="Profile"
-    //     component={Screens.Profile}
-    //     options={({ navigation }) => ({
-    //       headerTitle: () => (
-    //         <View style={[styles.headerContainer, { paddingRight: 20 }]}>
-    //           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-    //             <Icon
-    //               name="arrowleft"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //             />
-    //           </TouchableOpacity>
-    //           <TouchableOpacity
-    //             onPress={() =>
-    //               changeLanguage(i18n.language === "en" ? "uk" : "en")
-    //             }
-    //           >
-    //             <MaterialIcons
-    //               name="language"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //             />
-    //           </TouchableOpacity>
+      <MainStack.Screen
+        name="Profile"
+        component={Screens.Profile}
+        options={({navigation}) => ({
+          headerTitle: () => (
+            <View style={[styles.headerContainer, {paddingRight: 20}]}>
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <AntDesign
+                  name="arrowleft"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  changeLanguage(i18n.language === 'en' ? 'uk' : 'en')
+                }>
+                <MaterialIcons
+                  name="language"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                />
+              </TouchableOpacity>
 
-    //           <TouchableOpacity onPress={toggleTheme}>
-    //             <MaterialIcons
-    //               name="light-mode"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //             />
-    //           </TouchableOpacity>
-    //           <TouchableOpacity onPress={handleLogout}>
-    //             <Ionicons
-    //               name="log-out"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //             />
-    //           </TouchableOpacity>
-    //         </View>
-    //       ),
-    //       headerStyle: {
-    //         backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //       },
-    //       headerShadowVisible: false,
-    //       headerBackVisible: false,
-    //       headerLeft: () => null,
-    //     })}
-    //   />
-    //   <MainStack.Screen
-    //     name="StudyAndTrain"
-    //     component={Components.StudyAndTrain}
-    //     options={({ navigation }) => ({
-    //       title: ` ${t("LAT.lat")}`,
-    //       headerTitleAlign: "center",
-    //       headerStyle: {
-    //         backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //       },
-    //       headerShadowVisible: false,
-    //       headerTintColor: isDarkTheme ? "white" : "#67104c",
-    //       headerLeft: () => (
-    //         <TouchableOpacity onPress={() => navigation.goBack()}>
-    //           <Icon
-    //             name="arrowleft"
-    //             size={30}
-    //             color={isDarkTheme ? "white" : "#67104c"}
-    //             style={{ marginLeft: 5 }}
-    //           />
-    //         </TouchableOpacity>
-    //       ),
-    //     })}
-    //   />
-    //   <MainStack.Screen
-    //     name="LessonsBySubscription"
-    //     component={Components.LessonsBySubscription}
-    //     options={{ headerShown: false }}
-    //   />
-    //   <MainStack.Screen
-    //     name="Vocab"
-    //     component={Components.Vocab}
-    //     options={({ navigation }) => ({
-    //       title: ` ${t("LAT.vocab")}`,
-    //       headerTitleAlign: "center",
-    //       headerStyle: {
-    //         backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //       },
-    //       headerShadowVisible: false,
-    //       headerTintColor: isDarkTheme ? "white" : "#67104c",
-    //       headerLeft: () => (
-    //         <TouchableOpacity onPress={() => navigation.goBack()}>
-    //           <Icon
-    //             name="arrowleft"
-    //             size={30}
-    //             color={isDarkTheme ? "white" : "#67104c"}
-    //             style={{ marginLeft: 5 }}
-    //           />
-    //         </TouchableOpacity>
-    //       ),
-    //       headerRight: () => (
-    //         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-    //           <Icon
-    //             name="home"
-    //             size={30}
-    //             color={isDarkTheme ? "white" : "#67104c"}
-    //             style={{ marginLeft: 5 }}
-    //           />
-    //         </TouchableOpacity>
-    //       ),
-    //     })}
-    //   />
-    //   <MainStack.Screen
-    //     name="ForgotPassword"
-    //     component={Components.ForgotPassword}
-    //     options={{ headerShown: false }}
-    //   />
-    //   <MainStack.Screen
-    //     name="Support"
-    //     component={Components.Support}
-    //     options={{ headerShown: false }}
-    //   />
-    //   <MainStack.Screen
-    //     name="Phonetic"
-    //     component={Components.Phonetic}
-    //     options={({ navigation }) => ({
-    //       title: ` ${t("LAT.phonetic")}`,
-    //       headerTitleAlign: "center",
-    //       headerStyle: {
-    //         backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //       },
-    //       headerShadowVisible: false,
-    //       headerTintColor: isDarkTheme ? "white" : "#67104c",
-    //       headerLeft: () => (
-    //         <TouchableOpacity onPress={() => navigation.goBack()}>
-    //           <Icon
-    //             name="arrowleft"
-    //             size={30}
-    //             color={isDarkTheme ? "white" : "#67104c"}
-    //             style={{ marginLeft: 5 }}
-    //           />
-    //         </TouchableOpacity>
-    //       ),
-    //     })}
-    //   />
-    //   <MainStack.Screen
-    //     name="Verbs"
-    //     component={Components.Verbs}
-    //     options={({ navigation }) => ({
-    //       title: ` ${t("LAT.verbs")}`,
-    //       headerTitleAlign: "center",
-    //       headerStyle: {
-    //         backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //       },
-    //       headerShadowVisible: false,
-    //       headerTintColor: isDarkTheme ? "white" : "#67104c",
-    //       headerLeft: () => (
-    //         <TouchableOpacity onPress={() => navigation.goBack()}>
-    //           <Icon
-    //             name="arrowleft"
-    //             size={30}
-    //             color={isDarkTheme ? "white" : "#67104c"}
-    //             style={{ marginLeft: 5 }}
-    //           />
-    //         </TouchableOpacity>
-    //       ),
-    //     })}
-    //   />
-    //   <MainStack.Screen
-    //     name="LearnOrTrainTopic"
-    //     component={Components.LearnOrTrainTopic}
-    //     options={({ navigation, route }) => {
-    //       const topicName = route.params?.topicName ?? "";
-    //       return {
-    //         title: topicName,
-    //         headerTitleAlign: "center",
-    //         headerStyle: {
-    //           backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //         },
-    //         headerShadowVisible: false,
-    //         headerTintColor: isDarkTheme ? "white" : "#67104c",
-    //         headerLeft: () => (
-    //           <TouchableOpacity onPress={() => navigation.goBack()}>
-    //             <Icon
-    //               name="arrowleft"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //               style={{ marginLeft: 5 }}
-    //             />
-    //           </TouchableOpacity>
-    //         ),
-    //         headerRight: () => (
-    //           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-    //             <Icon
-    //               name="home"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //               style={{ marginLeft: 5 }}
-    //             />
-    //           </TouchableOpacity>
-    //         ),
-    //       };
-    //     }}
-    //   />
-    //   <MainStack.Screen
-    //     name="Learn"
-    //     component={Components.Learn}
-    //     options={({ navigation, route }) => {
-    //       const { topicName } = route.params;
-    //       return {
-    //         title: topicName,
-    //         headerTitleAlign: "center",
-    //         headerStyle: {
-    //           backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //         },
-    //         headerShadowVisible: false,
-    //         headerTintColor: isDarkTheme ? "white" : "#67104c",
-    //         headerLeft: () => (
-    //           <TouchableOpacity
-    //             onPress={() =>
-    //               navigation.navigate("LearnOrTrainTopic", { topicName })
-    //             }
-    //           >
-    //             <Icon
-    //               name="arrowleft"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //               style={{ marginLeft: 5 }}
-    //             />
-    //           </TouchableOpacity>
-    //         ),
-    //         headerRight: () => (
-    //           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-    //             <Icon
-    //               name="home"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //               style={{ marginLeft: 5 }}
-    //             />
-    //           </TouchableOpacity>
-    //         ),
-    //       };
-    //     }}
-    //   />
+              <TouchableOpacity onPress={toggleTheme}>
+                <MaterialIcons
+                  name="light-mode"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleLogout}>
+                <Ionicons
+                  name="log-out-outline"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                />
+              </TouchableOpacity>
+            </View>
+          ),
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          headerLeft: () => null,
+        })}
+      />
+      <MainStack.Screen
+        name="StudyAndTrain"
+        component={Components.StudyAndTrain}
+        options={({navigation}) => ({
+          title: ` ${t('LAT.lat')}`,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign
+                name="arrowleft"
+                size={30}
+                color={isDarkTheme ? 'white' : '#67104c'}
+                style={{marginLeft: 5}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <MainStack.Screen
+        name="Vocab"
+        component={Components.Vocab}
+        options={({navigation}) => ({
+          title: ` ${t('LAT.vocab')}`,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign
+                name="arrowleft"
+                size={30}
+                color={isDarkTheme ? 'white' : '#67104c'}
+                style={{marginLeft: 5}}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+              <AntDesign
+                name="home"
+                size={30}
+                color={isDarkTheme ? 'white' : '#67104c'}
+                style={{marginLeft: 5}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
+      <MainStack.Screen
+        name="Verbs"
+        component={Components.Verbs}
+        options={({navigation}) => ({
+          title: ` ${t('LAT.verbs')}`,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign
+                name="arrowleft"
+                size={30}
+                color={isDarkTheme ? 'white' : '#67104c'}
+                style={{marginLeft: 5}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <MainStack.Screen
+        name="LearnOrTrainTopic"
+        component={Components.LearnOrTrainTopic}
+        options={({navigation, route}) => {
+          const {params} = route as {params: RouteParams};
+          const topicName = params?.topicName ?? '';
+          return {
+            title: topicName,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: isDarkTheme ? '#67104c' : 'white',
+            },
+            headerShadowVisible: false,
+            headerTintColor: isDarkTheme ? 'white' : '#67104c',
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <AntDesign
+                  name="arrowleft"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                  style={{marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <AntDesign
+                  name="home"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                  style={{marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            ),
+          };
+        }}
+      />
+      <MainStack.Screen
+        name="Learn"
+        component={Components.Learn}
+        options={({navigation, route}) => {
+          const {params} = route as {params: RouteParams};
+          const topicName = params?.topicName ?? '';
+          return {
+            title: topicName,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: isDarkTheme ? '#67104c' : 'white',
+            },
+            headerShadowVisible: false,
+            headerTintColor: isDarkTheme ? 'white' : '#67104c',
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('LearnOrTrainTopic', {topicName})
+                }>
+                <AntDesign
+                  name="arrowleft"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                  style={{marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <AntDesign
+                  name="home"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                  style={{marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            ),
+          };
+        }}
+      />
+      <MainStack.Screen
+        name="LessonsBySubscription"
+        component={Components.LessonsBySubscription}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="ForgotPassword"
+        component={Components.ForgotPassword}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Support"
+        component={Components.Support}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Phonetic"
+        component={Components.Phonetic}
+        options={({navigation}) => ({
+          title: ` ${t('LAT.phonetic')}`,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign
+                name="arrowleft"
+                size={30}
+                color={isDarkTheme ? 'white' : '#67104c'}
+                style={{marginLeft: 5}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+    </MainStack.Navigator>
+
     //   <MainStack.Screen
     //     name="Train"
     //     component={Components.Train}
@@ -457,17 +458,16 @@ export const AppNavigator = (): JSX.Element => {
   );
 };
 
-// Стилі для лоадера
-// const styles = StyleSheet.create({
-//   loadingContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   headerContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'space-between',
-//     width: '95%',
-//   },
-// });
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '95%',
+  },
+});

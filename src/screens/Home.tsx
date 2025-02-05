@@ -6,6 +6,8 @@ import {
   Pressable,
   Image,
 } from 'react-native';
+import React from 'react';
+
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -14,12 +16,9 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 
 export const Home = (): JSX.Element => {
-  const {t, i18n} = useTranslation();
+  const {t} = useTranslation();
   const navigation = useNavigation<NavigationProps<'Home'>>();
   const isDarkTheme = useSelector(selectTheme);
-  const changeLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
-  };
 
   return (
     <SafeAreaView

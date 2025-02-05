@@ -16,10 +16,14 @@ export type RootStackParamList = {
   Phonetic: undefined;
   Verbs: undefined;
   LearnOrTrainTopic: {topicName: string};
-  Learn: {topicName: string};
-  Train: {topicName: string};
-  WordLearningScreen: undefined;
-  TrainingLevel: {topicName: string};
+  Learn: {topicName: string | undefined};
+  Train: {topicName: string | undefined};
+  WordLearningScreen: {
+    count: number;
+    topicName: string;
+    wordItem: any;
+  };
+  TrainingLevel: {topicName: string; level: number; progress: any};
 };
 
 // Тип для навігації

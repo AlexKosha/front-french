@@ -13,21 +13,22 @@ export interface AuthResponse {
   user: User;
 }
 
-interface UpdateUserBody {
+export interface UpdateUserBody {
   name?: string;
   email?: string;
+  birthDate?: string;
 }
 
-interface UpdatePasswordBody {
-  oldPassword: string;
+export interface UpdatePasswordBody {
+  password: string;
   newPassword: string;
 }
 
-interface ThemeUpdateBody {
+export interface ThemeUpdateBody {
   theme: boolean;
 }
 
-interface LanguageUpdateBody {
+export interface LanguageUpdateBody {
   lng: string;
 }
 
@@ -36,7 +37,8 @@ interface ForgotPasswordBody {
 }
 
 interface RestorePasswordBody {
-  newPassword: string;
+  email: string;
+  password: string;
 }
 
 // Створення axios-інстансу

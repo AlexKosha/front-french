@@ -8,7 +8,7 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 import {useDispatch} from 'react-redux';
 import {useTranslation} from 'react-i18next';
-import '../../i18n';
+// import '../../i18n';
 import {
   StyleSheet,
   Alert,
@@ -37,7 +37,7 @@ import {NavigationProps} from '../helpers/navigationTypes';
 dayjs.extend(localizedFormat);
 dayjs.locale('en'); // встановлення локалі за замовчуванням
 
-export const Registration = () => {
+export const Registration = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Registration'>>();
   const dispatch = useDispatch<AppDispatch>();
 
