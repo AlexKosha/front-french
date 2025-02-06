@@ -8,4 +8,7 @@ export {LearnOrTrainTopic} from './LearnOrTrainTopic';
 export {Verbs} from './Verbs';
 export {Vocab} from './Vocab';
 export {Learn} from './Learn';
+export {Train} from './Train';
+export {TrainingLevel} from './TrainingLevel';
+export {WordLearningScreen} from './WordLearningScreen';
 export {Phonetic} from './Phonetic';

@@ -14,10 +14,9 @@ import * as Screens from '../screens';
 import * as Components from '../components';
 // import {setTheme} from '../store/auth/authSlice';
 import {AppDispatch} from '../store/store';
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
 import {selectTheme} from '../store/auth/selector';
 import {setTheme} from '../store/auth/authSlice';
-import {RouteParams} from './LearnOrTrainTopic';
 
 const MainStack = createNativeStackNavigator();
 
@@ -86,6 +85,25 @@ export const AppNavigator = (): JSX.Element => {
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
+  };
+
+  const handleGoHome = () => {
+    Alert.alert(
+      'Попередження',
+      'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
+      [
+        {
+          text: 'Залишитись',
+          onPress: () => console.log('Залишаємося на ст'),
+          style: 'cancel',
+        },
+        {
+          text: 'Вийти',
+          onPress: () => navigat.navigate('Home'),
+          style: 'destructive',
+        },
+      ],
+    );
   };
 
   return (
@@ -268,7 +286,8 @@ export const AppNavigator = (): JSX.Element => {
         name="LearnOrTrainTopic"
         component={Components.LearnOrTrainTopic}
         options={({navigation, route}) => {
-          const {params} = route as {params: RouteParams};
+          const params =
+            route.params as RouteProps<'LearnOrTrainTopic'>['params'];
           const topicName = params?.topicName ?? '';
           return {
             title: topicName,
@@ -305,7 +324,47 @@ export const AppNavigator = (): JSX.Element => {
         name="Learn"
         component={Components.Learn}
         options={({navigation, route}) => {
-          const {params} = route as {params: RouteParams};
+          const params = route.params as RouteProps<'Learn'>['params'];
+          const topicName = params?.topicName ?? '';
+          return {
+            title: topicName,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: isDarkTheme ? '#67104c' : 'white',
+            },
+            headerShadowVisible: false,
+            headerTintColor: isDarkTheme ? 'white' : '#67104c',
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('LearnOrTrainTopic', {topicName})
+                }>
+                <AntDesign
+                  name="arrowleft"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                  style={{marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <AntDesign
+                  name="home"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                  style={{marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            ),
+          };
+        }}
+      />
+      <MainStack.Screen
+        name="Train"
+        component={Components.Train}
+        options={({navigation, route}) => {
+          const params = route.params as RouteProps<'Train'>['params'];
           const topicName = params?.topicName ?? '';
           return {
             title: topicName,
@@ -379,81 +438,42 @@ export const AppNavigator = (): JSX.Element => {
           ),
         })}
       />
+      <MainStack.Screen
+        name="WordLearningScreen"
+        component={Components.WordLearningScreen}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="TrainingLevel"
+        component={Components.TrainingLevel}
+        options={({route}) => {
+          const params = route.params as RouteProps<'Train'>['params'];
+          const topicName = params?.topicName ?? '';
+          return {
+            title: topicName,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: isDarkTheme ? '#67104c' : 'white',
+            },
+            headerShadowVisible: false,
+            headerTintColor: isDarkTheme ? 'white' : '#67104c',
+            headerBackVisible: false,
+            headerLeft: () => null,
+            headerRight: () => (
+              <TouchableOpacity onPress={handleGoHome}>
+                <AntDesign
+                  name="home"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                  style={{marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            ),
+          };
+        }}
+      />
     </MainStack.Navigator>
 
-    //   <MainStack.Screen
-    //     name="Train"
-    //     component={Components.Train}
-    //     options={({ navigation, route }) => {
-    //       const topicName = route.params?.topicName ?? "";
-    //       return {
-    //         title: topicName,
-    //         headerTitleAlign: "center",
-    //         headerStyle: {
-    //           backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //         },
-    //         headerShadowVisible: false,
-    //         headerTintColor: isDarkTheme ? "white" : "#67104c",
-    //         headerLeft: () => (
-    //           <TouchableOpacity
-    //             onPress={() =>
-    //               navigation.navigate("LearnOrTrainTopic", { topicName })
-    //             }
-    //           >
-    //             <Icon
-    //               name="arrowleft"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //               style={{ marginLeft: 5 }}
-    //             />
-    //           </TouchableOpacity>
-    //         ),
-    //         headerRight: () => (
-    //           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-    //             <Icon
-    //               name="home"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //               style={{ marginLeft: 5 }}
-    //             />
-    //           </TouchableOpacity>
-    //         ),
-    //       };
-    //     }}
-    //   />
-    //   <MainStack.Screen
-    //     name="WordLearningScreen"
-    //     component={Components.WordLearningScreen}
-    //     options={{ headerShown: false }}
-    //   />
-    //   <MainStack.Screen
-    //     name="TrainingLevel"
-    //     component={Components.TrainingLevel}
-    //     options={({ route }) => {
-    //       const { topicName } = route.params;
-    //       return {
-    //         title: topicName,
-    //         headerTitleAlign: "center",
-    //         headerStyle: {
-    //           backgroundColor: isDarkTheme ? "#67104c" : "white",
-    //         },
-    //         headerShadowVisible: false,
-    //         headerTintColor: isDarkTheme ? "white" : "#67104c",
-    //         headerBackVisible: false,
-    //         headerLeft: () => null,
-    //         headerRight: () => (
-    //           <TouchableOpacity onPress={handleGoHome}>
-    //             <Icon
-    //               name="home"
-    //               size={30}
-    //               color={isDarkTheme ? "white" : "#67104c"}
-    //               style={{ marginLeft: 5 }}
-    //             />
-    //           </TouchableOpacity>
-    //         ),
-    //       };
-    //     }}
-    //   />
     // </MainStack.Navigator>
   );
 };

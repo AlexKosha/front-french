@@ -55,7 +55,7 @@ export const Learn = () => {
   const handlePress = (count: number, wordItem = null) => {
     navigation.navigate('WordLearningScreen', {
       count,
-      topicName,
+      topicName: topicName ?? '',
       wordItem,
     });
   };

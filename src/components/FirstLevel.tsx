@@ -2,10 +2,21 @@ import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 // import Icon from 'react-native-vector-icons/AntDesign';
 import {LevelComponent} from './LevelComponent';
+import {WordItem} from './WordLearningScreen';
+
+export interface WordProgress {
+  world: string;
+  _id: string;
+  translationEN: string;
+  translationUK: string;
+  image: string;
+  audio: string;
+  completed: number[];
+}
 
 export interface LevelProps {
   level: number;
-  progress: any[]; // Або конкретний тип даних, якщо знаєте його структуру
+  progress: WordProgress[]; // Або конкретний тип даних, якщо знаєте його структуру
   topicName: string;
 }
 
@@ -14,7 +25,7 @@ export const FirstLevel: React.FC<LevelProps> = ({
   progress,
   topicName,
 }) => {
-  const renderContent = (currentItem: any) => (
+  const renderContent = (currentItem: WordItem) => (
     <View
       style={{
         flexDirection: 'row',
@@ -38,7 +49,7 @@ export const FirstLevel: React.FC<LevelProps> = ({
   );
 
   const renderChoices = (
-    choices: any,
+    choices: WordItem[],
     handleChoice: any,
     isDarkTheme: boolean,
   ) => (
@@ -49,7 +60,7 @@ export const FirstLevel: React.FC<LevelProps> = ({
         justifyContent: 'space-around',
         alignItems: 'center',
       }}>
-      {choices.map((choice: any) => (
+      {choices.map((choice: WordItem) => (
         <TouchableOpacity
           key={choice._id}
           onPress={() => handleChoice(choice)}

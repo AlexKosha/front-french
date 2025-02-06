@@ -23,7 +23,7 @@ interface LevelProps {
   ) => JSX.Element;
 }
 
-interface WordStat {
+export interface WordStat {
   word: WordItem;
   correctCount: number;
 }
@@ -214,6 +214,7 @@ export const LevelComponent: React.FC<LevelProps> = ({
         {renderProgress()}
         {renderChoices(choices, handleChoice, isDarkTheme)}
         {currentItem ? renderContent(currentItem) : null}
+        {/* {renderContent(currentItem, playSound, isDarkTheme, isPlaying)} */}
       </SafeAreaView>
     );
   }
