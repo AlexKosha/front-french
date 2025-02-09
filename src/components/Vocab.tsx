@@ -1,4 +1,4 @@
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 import React from 'react';
 import {Pressable, SafeAreaView, Text, View, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -13,13 +13,13 @@ import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 
 export const Vocab = (): JSX.Element => {
-  const {i18n} = useTranslation();
+  // const {i18n} = useTranslation();
   const isDarkTheme = useSelector(selectTheme);
   const navigation = useNavigation<NavigationProps<'Vocab'>>();
   const vocabData = useSelector(selectVocab);
   const topicsData = useSelector(selectTopic);
   const dispatch = useDispatch<AppDispatch>();
-  const currentLanguage = i18n.language;
+  // const currentLanguage = i18n.language;
 
   const handleGetWorlds = async (id: string, name: string) => {
     try {
@@ -60,7 +60,7 @@ export const Vocab = (): JSX.Element => {
             },
           ]}>
           {item.name} /{' '}
-          {currentLanguage === 'uk' ? item.translationUK : item.translationEN}
+          {/* {currentLanguage === 'uk' ? item.translationUK : item.translationEN} */}
         </Text>
       </Pressable>
     );

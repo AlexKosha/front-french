@@ -7,8 +7,6 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import {useDispatch} from 'react-redux';
-import {useTranslation} from 'react-i18next';
-// import '../../i18n';
 import {
   StyleSheet,
   Alert,
@@ -28,14 +26,15 @@ import {handleChange} from '../helpers/handleChangeInput';
 import {getProfileThunk, registerThunk} from '../store/auth/authThunks';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import 'dayjs/locale/uk'; // імпорт української локалі
-import 'dayjs/locale/en'; // англійська локаль
+import 'dayjs/locale/uk';
+import 'dayjs/locale/en';
 import {defaultStyles} from './defaultStyles';
 import {AppDispatch} from '../store/store';
 import {NavigationProps} from '../helpers/navigationTypes';
-
-dayjs.extend(localizedFormat);
-dayjs.locale('en'); // встановлення локалі за замовчуванням
+import {useLocalization} from '../locale/LocalizationContext';
+import {translations} from '../locale/translations';
+import {useTranslationHelper} from '../locale/useTranslation';
+// import {SafeAreaView} from 'react-native-safe-area-context';
 
 export const Registration = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Registration'>>();
@@ -60,7 +59,25 @@ export const Registration = (): JSX.Element => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-  const {t, i18n} = useTranslation();
+  const {locale, setLocale} = useLocalization();
+
+  const {
+    registerText,
+    nameText,
+    dateOfBirth,
+    emailText,
+    passwordText,
+    createAccText,
+    agreeTermsText,
+    letsAcq,
+    alreadyAccount,
+    login,
+  } = useTranslationHelper();
+
+  const changeLanguageHandler = () => {
+    const newLang = locale === 'en' ? 'uk' : 'en';
+    setLocale(newLang);
+  };
 
   const handleRegister = async () => {
     try {
@@ -68,10 +85,10 @@ export const Registration = (): JSX.Element => {
       if (registerThunk.fulfilled.match(resultAction)) {
         // setFormData({ name: "", birthDate: "", email: "", password: "" });
         navigation.navigate('Home');
-        Alert.alert('', t('alert.welcome'), [{text: t('alert.close')}]);
+        // Alert.alert('', t('alert.welcome'), [{text: t('alert.close')}]);
       } else {
         // Alert.alert("Error", resultAction.error.message);
-        Alert.alert('', t('alert.registerError'), [{text: t('alert.close')}]);
+        // Alert.alert('', t('alert.registerError'), [{text: t('alert.close')}]);
       }
     } catch (error: any) {
       console.log('Registration failed:', error);
@@ -85,7 +102,7 @@ export const Registration = (): JSX.Element => {
     Validate.validateName,
     setFormErrors,
     'nameError',
-    t('validation.name'),
+    'LOCALIZE',
   );
 
   const handleBirthDateChange = handleChange(
@@ -94,7 +111,7 @@ export const Registration = (): JSX.Element => {
     Validate.validateBirthDate,
     setFormErrors,
     'birthDateError',
-    t('validation.birthDate'),
+    'LOCALIZE',
   );
 
   const handleEmailChange = handleChange(
@@ -103,7 +120,7 @@ export const Registration = (): JSX.Element => {
     Validate.validateEmail,
     setFormErrors,
     'emailError',
-    t('validation.email'),
+    'LOCALIZE',
   );
 
   const handlePasswordChange = handleChange(
@@ -112,19 +129,8 @@ export const Registration = (): JSX.Element => {
     Validate.validatePassword,
     setFormErrors,
     'passwordError',
-    t('validation.password'),
+    'LOCALIZE',
   );
-
-  // const validateForm = () => {
-  //   const isNameValid: boolean = formData.name && !formErrors.nameError;
-  //   const isDateOfBirthValid = formData.birthDate && !formErrors.birthDateError;
-  //   const isEmailValid = formData.email && !formErrors.emailError;
-  //   const isPasswordValid = formData.password && !formErrors.passwordError;
-
-  //   setIsFormValid(
-  //     isNameValid && isDateOfBirthValid && isEmailValid && isPasswordValid,
-  //   );
-  // };
 
   useEffect(() => {
     const validateForm = () => {
@@ -142,14 +148,6 @@ export const Registration = (): JSX.Element => {
 
     validateForm();
   }, [formData, formErrors]);
-
-  const changeLanguage = (lang: string) => {
-    // i18n.changeLanguage(lang);
-    // dispatch(getProfileThunk());
-    i18n.changeLanguage(lang); // змінюємо мову для i18next
-    dayjs.locale(lang); // змінюємо локаль для dayjs
-    dispatch(getProfileThunk()); // при необхідності, повторно отримуємо дані проs
-  };
 
   const renderError = (error: any, errorMessage: any) => {
     return error ? <Text style={errorMessage}>{error}</Text> : null;
@@ -177,19 +175,6 @@ export const Registration = (): JSX.Element => {
     } else {
       toggleDatePicker();
     }
-    // if (type === 'set') {
-    //   const currentDate = selectedDate;
-    //   setDate(currentDate);
-    //   if (Platform.OS === 'android') {
-    //     toggleDatePicker();
-    //     setFormData(prevState => ({
-    //       ...prevState,
-    //       birthDate: formatDate(currentDate),
-    //     }));
-    //   }
-    // } else {
-    //   toggleDatePicker();
-    // }
   };
 
   const confirmIOSDate = () => {
@@ -206,9 +191,6 @@ export const Registration = (): JSX.Element => {
     let year = newDate.getFullYear();
     let month: number = newDate.getMonth() + 1;
     let day: number = newDate.getDate();
-
-    // month = month < 10 ? `0${month}` : month;
-    // day = day < 10 ? `0${day}` : day;
 
     // Перетворюємо числа в рядки для формату, але залишаємо їх як числа для операцій
     const formattedMonth = month < 10 ? `0${month}` : month.toString();
@@ -230,29 +212,21 @@ export const Registration = (): JSX.Element => {
         // }
       >
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-          {/*  backgroundColor: isDarkTheme ? "#67104c" : "white", */}
           <View style={{flex: 1, marginHorizontal: 22}}>
             <View style={{marginVertical: 22}}>
               <View>
-                <Pressable
-                  onPress={() =>
-                    changeLanguage(i18n.language === 'en' ? 'uk' : 'en')
-                  }>
+                <Pressable onPress={changeLanguageHandler}>
                   <MaterialIcons name="language" size={26} color="#67104c" />
                 </Pressable>
               </View>
-              <Text style={[defaultStyles.headerText, {color: 'black'}]}>
-                {t('rg.register')}
-              </Text>
-              <Text style={{fontSize: 16, color: 'black'}}>
-                {t('rg.letsAcq')}
-              </Text>
+              <Text style={[defaultStyles.headerText, {color: 'black'}]}></Text>
+              <Text style={{fontSize: 16, color: 'black'}}>{letsAcq}</Text>
             </View>
             <View style={{marginBottom: 12}}>
-              <Text style={defaultStyles.labelText}>{t('rg.name')}</Text>
+              <Text style={defaultStyles.labelText}>{nameText}</Text>
               <View style={defaultStyles.boxInput}>
                 <TextInput
-                  placeholder={t('rg.placeName')}
+                  placeholder={translations.rg.placeName[locale as 'en' | 'uk']}
                   // placeholderTextColor="#f89fa1"
                   keyboardType="default"
                   value={formData.name}
@@ -264,7 +238,7 @@ export const Registration = (): JSX.Element => {
             </View>
 
             <View style={{marginBottom: 12}}>
-              <Text style={defaultStyles.labelText}>{t('rg.dateOfBirth')}</Text>
+              <Text style={defaultStyles.labelText}>{dateOfBirth}</Text>
 
               {showPicker && (
                 <DateTimePicker
@@ -272,7 +246,7 @@ export const Registration = (): JSX.Element => {
                   display="spinner"
                   value={date}
                   onChange={onChange}
-                  locale={i18n.language}
+                  // locale={i18n.language}
                   style={styles.datePicker}
                   maximumDate={new Date()}
                   minimumDate={new Date('1950-1-1')}
@@ -284,14 +258,14 @@ export const Registration = (): JSX.Element => {
                     style={[styles.pickerButton, styles.cancelButton]}
                     onPress={toggleDatePicker}>
                     <Text style={[defaultStyles.btnText, {color: 'white'}]}>
-                      {t('btn.cancel')}
+                      {/* {t('btn.cancel')} */}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.pickerButton, styles.confirmButton]}
                     onPress={confirmIOSDate}>
                     <Text style={[defaultStyles.btnText, {color: 'white'}]}>
-                      {t('btn.confirm')}
+                      {/* {t('btn.confirm')} */}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -299,8 +273,9 @@ export const Registration = (): JSX.Element => {
               {!showPicker && (
                 <Pressable onPress={toggleDatePicker}>
                   <TextInput
-                    placeholder={t('rg.placeDoB')}
-                    // placeholderTextColor="#f89fa1"
+                    placeholder={
+                      translations.rg.placeDoB[locale as 'en' | 'uk']
+                    }
                     // keyboardType="numeric"
                     value={formData.birthDate}
                     style={styles.textInut}
@@ -314,11 +289,12 @@ export const Registration = (): JSX.Element => {
             </View>
 
             <View style={{marginBottom: 12}}>
-              <Text style={defaultStyles.labelText}>{t('rg.email')}</Text>
+              <Text style={defaultStyles.labelText}>{emailText}</Text>
               <View style={defaultStyles.boxInput}>
                 <TextInput
-                  placeholder={t('rg.placeEmail')}
-                  // placeholderTextColor="#f89fa1"
+                  placeholder={
+                    translations.rg.placeEmail[locale as 'en' | 'uk']
+                  }
                   keyboardType="email-address"
                   value={formData.email}
                   style={{width: '100%'}}
@@ -329,11 +305,10 @@ export const Registration = (): JSX.Element => {
             </View>
 
             <View style={{marginBottom: 12}}>
-              <Text style={defaultStyles.labelText}>{t('rg.password')}</Text>
+              <Text style={defaultStyles.labelText}>{passwordText}</Text>
               <View style={defaultStyles.boxInput}>
                 <TextInput
-                  placeholder={t('rg.placePass')}
-                  // placeholderTextColor="#f89fa1"
+                  placeholder={translations.rg.placePass[locale as 'en' | 'uk']}
                   secureTextEntry={!isPasswordVisible}
                   value={formData.password}
                   style={{width: '100%'}}
@@ -359,7 +334,7 @@ export const Registration = (): JSX.Element => {
                 onPress={toggleCheckBox}
                 color={isChecked ? '#67104c' : '#67104c'}
               />
-              <Text style={{marginLeft: 5}}>{t('rg.agreeTerms')}</Text>
+              <Text style={{marginLeft: 5}}>{agreeTerms}</Text>
             </View> */}
             <View style={{flexDirection: 'row', marginVertical: 6}}>
               <View style={{marginRight: 8}}>
@@ -369,7 +344,7 @@ export const Registration = (): JSX.Element => {
                   color="#67104c"
                 />
               </View>
-              <Text style={{marginLeft: 5}}>{t('rg.agreeTerms')}</Text>
+              <Text style={{marginLeft: 5}}>{agreeTermsText}</Text>
             </View>
             <Pressable
               style={[
@@ -386,17 +361,17 @@ export const Registration = (): JSX.Element => {
                   fontWeight: 'bold',
                   textAlign: 'center',
                 }}>
-                {t('rg.createAcc')}
+                {createAccText}
               </Text>
             </Pressable>
 
             <View style={[defaultStyles.linkBox, {marginVertical: 22}]}>
               <Text style={{fontSize: 16, color: 'black'}}>
-                {t('rg.alreadyAccount')}
+                {alreadyAccount}
               </Text>
               <Pressable onPress={() => navigation.navigate('Login')}>
                 <Text style={[defaultStyles.linkText, {color: '#67104c'}]}>
-                  {t('rg.login')}
+                  {login}
                 </Text>
               </Pressable>
             </View>

@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 import {
   SafeAreaView,
   Text,

@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import {useTranslation} from 'react-i18next';
-// import '../../i18n';
 import {
   Pressable,
   SafeAreaView,
@@ -20,6 +18,9 @@ import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
+import {useLocalization} from '../locale/LocalizationContext';
+import {translations} from '../locale/translations';
+import {useTranslationHelper} from '../locale/useTranslation';
 
 export const Login = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Login'>>();
@@ -30,9 +31,15 @@ export const Login = (): JSX.Element => {
   const [email, setEmail] = useState('');
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  // const [isFormValid, setIsFormValid] = useState(false);
+  const {locale, setLocale} = useLocalization();
 
-  const {t, i18n} = useTranslation();
+  const {emailText, passwordText, login, welcomeBack} = useTranslationHelper();
+
+  const changeLanguageHandler = () => {
+    const newLang = locale === 'en' ? 'uk' : 'en';
+    setLocale(newLang);
+  };
+  // const [isFormValid, setIsFormValid] = useState(false);
 
   const validateForm = () => {
     console.log('231');
@@ -49,7 +56,7 @@ export const Login = (): JSX.Element => {
         navigation.navigate('Home');
       } else {
         // Тут можна обробити помилку, якщо потрібно
-        Alert.alert('', t('alert.loginError'), [{text: t('alert.close')}]);
+        // Alert.alert('', t('alert.loginError'), [{text: t('alert.close')}]);
       }
     } catch (error: any) {
       console.log('Login failed:', error);
@@ -76,19 +83,12 @@ export const Login = (): JSX.Element => {
     }
   };
 
-  const changeLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
-  };
-
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: isDarkTheme ? '#67104c' : 'white'}}>
       <View style={defaultStyles.container}>
         <View style={defaultStyles.headerBox}>
-          <Pressable
-            onPress={() =>
-              changeLanguage(i18n.language === 'en' ? 'uk' : 'en')
-            }>
+          <Pressable onPress={changeLanguageHandler}>
             <MaterialIcons
               name="language"
               size={26}
@@ -104,7 +104,7 @@ export const Login = (): JSX.Element => {
                 color: isDarkTheme ? 'white' : 'black',
               },
             ]}>
-            {t('rg.welcomeBack')}
+            {welcomeBack}
           </Text>
         </View>
 
@@ -116,7 +116,7 @@ export const Login = (): JSX.Element => {
                 color: isDarkTheme ? 'white' : 'black',
               },
             ]}>
-            {t('rg.email')}
+            {emailText}
           </Text>
           <View
             style={[
@@ -126,7 +126,7 @@ export const Login = (): JSX.Element => {
               },
             ]}>
             <TextInput
-              placeholder={t('rg.placeEmail')}
+              placeholder={translations.rg.placeEmail[locale as 'en' | 'uk']}
               value={email}
               placeholderTextColor={isDarkTheme ? 'lightgray' : undefined}
               keyboardType="email-address"
@@ -144,7 +144,7 @@ export const Login = (): JSX.Element => {
                 color: isDarkTheme ? 'white' : 'black',
               },
             ]}>
-            {t('rg.password')}
+            {passwordText}
           </Text>
           <View
             style={[
@@ -154,7 +154,7 @@ export const Login = (): JSX.Element => {
               },
             ]}>
             <TextInput
-              placeholder={t('rg.placePass')}
+              placeholder={translations.rg.placePass[locale as 'en' | 'uk']}
               value={password}
               placeholderTextColor={isDarkTheme ? 'lightgray' : undefined}
               secureTextEntry={!isPasswordVisible}
@@ -196,7 +196,7 @@ export const Login = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {t('rg.login')}
+            {login}
           </Text>
         </Pressable>
 
@@ -208,7 +208,7 @@ export const Login = (): JSX.Element => {
             },
           ]}>
           <Text style={{fontSize: 16, color: isDarkTheme ? 'white' : 'black'}}>
-            {t('rg.dontHaveAcc')}
+            {/* {t('rg.dontHaveAcc')} */}
           </Text>
           <Pressable onPress={() => navigation.navigate('Registration')}>
             <Text
@@ -218,7 +218,7 @@ export const Login = (): JSX.Element => {
                   color: isDarkTheme ? 'white' : '#67104c',
                 },
               ]}>
-              {t('rg.register')}
+              {/* {t('rg.register')} */}
             </Text>
           </Pressable>
         </View>
@@ -228,7 +228,7 @@ export const Login = (): JSX.Element => {
               fontSize: 16,
               color: isDarkTheme ? 'white' : 'black',
             }}>
-            {t('rg.haveAccButForgotPass')}
+            {/* {t('rg.haveAccButForgotPass')} */}
           </Text>
           <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
             <Text
@@ -238,7 +238,7 @@ export const Login = (): JSX.Element => {
                   color: isDarkTheme ? 'white' : '#67104c',
                 },
               ]}>
-              {t('rg.resetPassHere')}
+              {/* {t('rg.resetPassHere')} */}
             </Text>
           </Pressable>
         </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,7 +11,7 @@ import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 
 export const StudyAndTrain = (): JSX.Element => {
-  const {t} = useTranslation();
+  // const {t} = useTranslation();
   const isDarkTheme = useSelector(selectTheme);
   const topicsData = useSelector(selectTopic);
   const navigation = useNavigation<NavigationProps<'StudyAndTrain'>>();
@@ -62,7 +62,7 @@ export const StudyAndTrain = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {t('LAT.vocab')}
+            {/* {t('LAT.vocab')} */}
           </Text>
         </Pressable>
         <Pressable
@@ -78,7 +78,7 @@ export const StudyAndTrain = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {t('LAT.phonetic')}
+            {/* {t('LAT.phonetic')} */}
           </Text>
         </Pressable>
         <Pressable
@@ -94,7 +94,7 @@ export const StudyAndTrain = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {t('LAT.verbs')}
+            {/* {t('LAT.verbs')} */}
           </Text>
         </Pressable>
       </View>

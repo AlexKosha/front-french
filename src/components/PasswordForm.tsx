@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 // import '../../i18n';
 import Feather from 'react-native-vector-icons/Feather';
 import {
@@ -26,14 +26,14 @@ const PasswordForm = (): JSX.Element => {
     newPassword: '',
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {t} = useTranslation();
+  // const {t} = useTranslation();
 
   const updateUserPass = async () => {
     try {
       const resultAction = await dispatch(updaterPasswordThunk(userPass));
       if (updaterPasswordThunk.fulfilled.match(resultAction)) {
         setUserPass({password: '', newPassword: ''});
-        Alert.alert('', t('alert.passwordChanged'), [{text: t('alert.close')}]);
+        // Alert.alert('', t('alert.passwordChanged'), [{text: t('alert.close')}]);
         console.log('Пароль успішно змінено');
       } else {
         Alert.alert('Error', resultAction.error.message);
@@ -54,7 +54,7 @@ const PasswordForm = (): JSX.Element => {
               color: theme ? 'white' : 'black',
             },
           ]}>
-          {t('rg.password')}
+          {/* {t('rg.password')} */}
         </Text>
         <View
           style={[
@@ -64,7 +64,7 @@ const PasswordForm = (): JSX.Element => {
             },
           ]}>
           <TextInput
-            placeholder={t('rg.placePass')}
+            // placeholder={t('rg.placePass')}
             secureTextEntry={!isPasswordVisible}
             placeholderTextColor={theme ? 'white' : undefined}
             keyboardType="default"
@@ -102,7 +102,7 @@ const PasswordForm = (): JSX.Element => {
               color: theme ? 'white' : 'black',
             },
           ]}>
-          {t('rg.newPassword')}
+          {/* {t('rg.newPassword')} */}
         </Text>
         <View
           style={[
@@ -112,7 +112,7 @@ const PasswordForm = (): JSX.Element => {
             },
           ]}>
           <TextInput
-            placeholder={t('rg.placeNewPassword')}
+            // placeholder={t('rg.placeNewPassword')}
             placeholderTextColor={theme ? 'white' : undefined}
             keyboardType="default"
             value={userPass.newPassword}
@@ -157,7 +157,7 @@ const PasswordForm = (): JSX.Element => {
               color: theme ? '#67104c' : 'white',
             },
           ]}>
-          {t('rg.saveChanges')}
+          {/* {t('rg.saveChanges')} */}
         </Text>
       </Pressable>
     </SafeAreaView>

@@ -11,7 +11,7 @@ import {
 // import {Audio} from 'expo-av';
 // import Icon from 'react-native-vector-icons/AntDesign';
 import {useRoute, useNavigation} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 import {selectThemeWordId, selectVocab} from '../store/vocab/selectors';
@@ -39,7 +39,7 @@ export const WordLearningScreen = () => {
   const id = useSelector(selectThemeWordId);
   const navigation = useNavigation<NavigationProps<'WordLearningScreen'>>();
 
-  const {t, i18n} = useTranslation();
+  // const {t, i18n} = useTranslation();
   const vocabData = useSelector(selectVocab);
   const route = useRoute<RouteProps<'WordLearningScreen'>>();
   const {count, topicName, wordItem} = route.params;
@@ -56,7 +56,7 @@ export const WordLearningScreen = () => {
     isSingleWordMode ? [wordItem] : [],
   );
 
-  const currentLanguage = i18n.language;
+  // const currentLanguage = i18n.language;
 
   const filteredWords = vocabData.filter(word => word.themeId === id);
 
@@ -203,7 +203,7 @@ export const WordLearningScreen = () => {
                 color: isDarkTheme ? 'white' : '#67104c',
                 fontSize: 16,
               }}>
-              {t('LAT.word')}: {currentIndex + 1}
+              {/* {t('LAT.word')}: {currentIndex + 1} */}
             </Text>
           )}
 
@@ -228,9 +228,9 @@ export const WordLearningScreen = () => {
               marginTop: 20,
               color: isDarkTheme ? 'white' : '#67104c',
             }}>
-            {currentLanguage === 'uk'
+            {/* {currentLanguage === 'uk'
               ? selectedWords[currentIndex]?.translationUK
-              : selectedWords[currentIndex]?.translationEN}
+              : selectedWords[currentIndex]?.translationEN} */}
           </Text>
 
           <View
@@ -258,7 +258,7 @@ export const WordLearningScreen = () => {
                       color: isDarkTheme ? '#67104c' : 'white',
                     },
                   ]}>
-                  {t('rg.back')}
+                  {/* {t('rg.back')} */}
                 </Text>
               </Pressable>
             )}
@@ -280,7 +280,7 @@ export const WordLearningScreen = () => {
                       color: isDarkTheme ? '#67104c' : 'white',
                     },
                   ]}>
-                  {t('btn.next')}
+                  {/* {t('btn.next')} */}
                 </Text>
               </Pressable>
             )}
@@ -294,7 +294,7 @@ export const WordLearningScreen = () => {
               marginBottom: 20,
               color: isDarkTheme ? 'white' : '#67104c',
             }}>
-            {t('LAT.sessionCompleted')}
+            {/* {t('LAT.sessionCompleted')} */}
           </Text>
           {!allWordsCompleted && (
             <TouchableOpacity
@@ -312,7 +312,7 @@ export const WordLearningScreen = () => {
                     color: isDarkTheme ? '#67104c' : 'white',
                   },
                 ]}>
-                {t('btn.repeat')}
+                {/* {t('btn.repeat')} */}
               </Text>
             </TouchableOpacity>
           )}
@@ -331,7 +331,7 @@ export const WordLearningScreen = () => {
                   color: isDarkTheme ? '#67104c' : 'white',
                 },
               ]}>
-              {t('btn.train')}
+              {/* {t('btn.train')} */}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -349,7 +349,7 @@ export const WordLearningScreen = () => {
                   color: isDarkTheme ? '#67104c' : 'white',
                 },
               ]}>
-              {allWordsCompleted ? t('btn.goBack') : t('btn.chooseCount')}
+              {/* {allWordsCompleted ? t('btn.goBack') : t('btn.chooseCount')} */}
             </Text>
           </TouchableOpacity>
         </View>

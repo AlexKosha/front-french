@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 // import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 // import '../../i18n';
 import {
   SafeAreaView,
@@ -38,7 +38,7 @@ export const Profile = (): JSX.Element => {
     email: user.email || '',
   });
 
-  const {t} = useTranslation();
+  // const {t} = useTranslation();
 
   const isDarkTheme = useSelector(selectTheme);
 
@@ -53,7 +53,7 @@ export const Profile = (): JSX.Element => {
     try {
       const resultAction = await dispatch(updaterUserDataThunk(updatedUser));
       if (updaterUserDataThunk.fulfilled.match(resultAction)) {
-        Alert.alert('', t('alert.dataChanged'), [{text: t('alert.close')}]);
+        // Alert.alert('', t('alert.dataChanged'), [{text: t('alert.close')}]);
       } else {
         Alert.alert('Error', resultAction.error.message);
       }
@@ -108,7 +108,7 @@ export const Profile = (): JSX.Element => {
                   color: isDarkTheme ? 'white' : 'black',
                 },
               ]}>
-              {t('rg.hello')}, {userInfo.name ? userInfo.name : 'Guest'} !
+              {/* {t('rg.hello')}, {userInfo.name ? userInfo.name : 'Guest'} ! */}
             </Text>
             <ProgressBar
               croissants={userData.croissants}
@@ -124,7 +124,7 @@ export const Profile = (): JSX.Element => {
                     color: isDarkTheme ? 'white' : 'black',
                   },
                 ]}>
-                {t('rg.name')}
+                {/* {t('rg.name')} */}
               </Text>
               <View
                 style={[
@@ -134,7 +134,7 @@ export const Profile = (): JSX.Element => {
                   },
                 ]}>
                 <TextInput
-                  placeholder={t('rg.name')}
+                  // placeholder={t('rg.name')}
                   placeholderTextColor={isDarkTheme ? 'white' : 'black'}
                   keyboardType="default"
                   value={userInfo.name}
@@ -157,7 +157,7 @@ export const Profile = (): JSX.Element => {
                     color: isDarkTheme ? 'white' : 'black',
                   },
                 ]}>
-                {t('rg.email')}
+                {/* {t('rg.email')} */}
               </Text>
               <View
                 style={[
@@ -167,7 +167,7 @@ export const Profile = (): JSX.Element => {
                   },
                 ]}>
                 <TextInput
-                  placeholder={t('rg.placeNewEmail')}
+                  // placeholder={t('rg.placeNewEmail')}
                   // color={isDarkTheme ? 'white' : 'black'}
                   placeholderTextColor={isDarkTheme ? 'white' : 'black'}
                   value={userInfo.email}
@@ -196,7 +196,7 @@ export const Profile = (): JSX.Element => {
                     color: isDarkTheme ? '#67104c' : 'white',
                   },
                 ]}>
-                {t('rg.saveChanges')}
+                {/* {t('rg.saveChanges')} */}
               </Text>
             </Pressable>
             <PasswordForm />

@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 
@@ -10,7 +10,7 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 
 export const Phonetic = (): JSX.Element => {
-  const {t} = useTranslation();
+  // const {t} = useTranslation();
   const isDarkTheme = useSelector(selectTheme);
   const navigation = useNavigation<NavigationProps<'Phonetic'>>();
 
@@ -34,7 +34,7 @@ export const Phonetic = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {t('LAT.phonetic')}
+            {/* {t('LAT.phonetic')} */}
           </Text>
         </Pressable>
       </View>

@@ -7,41 +7,39 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-
-import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {defaultStyles} from '../components/defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
+import {useLocalization} from '../locale/LocalizationContext';
+import {translations} from '../locale/translations';
+import {useTranslationHelper} from '../locale/useTranslation';
 
 export const Home = (): JSX.Element => {
-  const {t} = useTranslation();
   const navigation = useNavigation<NavigationProps<'Home'>>();
   const isDarkTheme = useSelector(selectTheme);
 
+  const {locale, setLocale} = useLocalization();
+
+  const {welcome, studyAndTrain, lessonsBySubscr} = useTranslationHelper();
+
   return (
     <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: isDarkTheme ? '#67104c' : 'white',
-      }}>
+      style={[
+        styles.safeArea,
+        {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
+      ]}>
       <View style={defaultStyles.container}>
         <Text
           style={[
             styles.welcomeText,
             {color: isDarkTheme ? 'white' : 'black'},
           ]}>
-          {t('hm.welcome')}
+          {welcome}
         </Text>
 
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center', // Центруємо по вертикалі
-            alignItems: 'center', // Центруємо по горизонталі
-            marginTop: 20,
-          }}>
+        <View style={styles.buttonContainer}>
           <Pressable
             style={[
               defaultStyles.button,
@@ -53,7 +51,7 @@ export const Home = (): JSX.Element => {
                 defaultStyles.btnText,
                 {color: isDarkTheme ? '#67104c' : 'white'},
               ]}>
-              {t('rg.studyAndTrain')}
+              {studyAndTrain}
             </Text>
           </Pressable>
 
@@ -68,31 +66,20 @@ export const Home = (): JSX.Element => {
                 defaultStyles.btnText,
                 {color: isDarkTheme ? '#67104c' : 'white'},
               ]}>
-              {t('rg.lessonsBySubscr')}
+              {lessonsBySubscr}
             </Text>
           </Pressable>
         </View>
       </View>
 
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 20,
-          left: '50%',
-          transform: [{translateX: -70}],
-          alignItems: 'center',
-        }}>
+      <View style={styles.logoContainer}>
         <Image
           source={
             isDarkTheme
               ? require('../images/whiteLogo.jpg')
               : require('../images/logo.jpg')
-          } //
-          style={{
-            width: 140,
-            height: 60,
-            resizeMode: 'contain',
-          }}
+          }
+          style={styles.logo}
         />
       </View>
     </SafeAreaView>
@@ -100,14 +87,30 @@ export const Home = (): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  safeArea: {
+    flex: 1,
   },
   welcomeText: {
     marginTop: 20,
     fontSize: 25,
-    textAlign: 'center', // Центруємо текст
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'center', // Центруємо по вертикалі
+    alignItems: 'center', // Центруємо по горизонталі
+    marginTop: 20,
+  },
+  logoContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: '50%',
+    transform: [{translateX: -70}],
+    alignItems: 'center',
+  },
+  logo: {
+    width: 140,
+    height: 60,
+    resizeMode: 'contain',
   },
 });

@@ -3,7 +3,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 import {
   Alert,
   Keyboard,
@@ -39,7 +39,7 @@ export const ForgotPassword = (): JSX.Element => {
   });
   const [isOtpCode, setIsOtpCode] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {t, i18n} = useTranslation();
+  // const {t, i18n} = useTranslation();
   const [emailValid, setEmailValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
 
@@ -53,7 +53,7 @@ export const ForgotPassword = (): JSX.Element => {
         password: '',
       });
       setIsOtpCode(true);
-      Alert.alert('', t('alert.codeOnMail'), [{text: t('alert.close')}]);
+      // Alert.alert('', t('alert.codeOnMail'), [{text: t('alert.close')}]);
     } catch (error) {
       console.log(error);
     }
@@ -66,7 +66,7 @@ export const ForgotPassword = (): JSX.Element => {
     };
     try {
       await restorePassword(formData.otp, newPassword);
-      Alert.alert('', t('alert.passwordChanged'), [{text: t('alert.close')}]);
+      // Alert.alert('', t('alert.passwordChanged'), [{text: t('alert.close')}]);
       navigation.navigate('Login');
     } catch (error) {
       console.log(error);

@@ -6,23 +6,26 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
+// import {useTranslation} from 'react-i18next';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {getProfileThunk, logoutThunk} from '../store/auth/authThunks';
 import * as Screens from '../screens';
-import * as Components from '../components';
+// import * as Components from '../components';
 // import {setTheme} from '../store/auth/authSlice';
 import {AppDispatch} from '../store/store';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
 import {selectTheme} from '../store/auth/selector';
 import {setTheme} from '../store/auth/authSlice';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {Registration} from './Registration';
+// import {Registration} from '.';
 
 const MainStack = createNativeStackNavigator();
 
 export const AppNavigator = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
-  const {t, i18n} = useTranslation();
+  // const {t, i18n} = useTranslation();
   const dispatch = useDispatch<AppDispatch>(); // Типізуємо dispatch
   const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
 
@@ -83,9 +86,9 @@ export const AppNavigator = (): JSX.Element => {
     }
   };
 
-  const changeLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
-  };
+  // const changeLanguage = (lang: string) => {
+  //   i18n.changeLanguage(lang);
+  // };
 
   const handleGoHome = () => {
     Alert.alert(
@@ -107,17 +110,24 @@ export const AppNavigator = (): JSX.Element => {
   };
 
   return (
+    // <SafeAreaView style={{flex: 1}}>
     <MainStack.Navigator>
       <MainStack.Screen
         name="Registration"
-        component={Components.Registration}
+        component={Registration}
         options={{headerShown: false}}
       />
-      <MainStack.Screen
+
+      {/* <MainStack.Screen
         name="Login"
-        component={Components.Login}
+        component={Login}
         options={{headerShown: false}}
-      />
+      /> */}
+    </MainStack.Navigator>
+    // </SafeAreaView>
+  );
+  {
+    /* 
       <MainStack.Screen
         name="Home"
         component={Screens.Home}
@@ -130,10 +140,7 @@ export const AppNavigator = (): JSX.Element => {
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
           headerLeft: () => (
-            <TouchableOpacity
-              onPress={() =>
-                changeLanguage(i18n.language === 'en' ? 'uk' : 'en')
-              }>
+            <TouchableOpacity>
               <MaterialIcons
                 name="language"
                 size={30}
@@ -167,10 +174,7 @@ export const AppNavigator = (): JSX.Element => {
                   color={isDarkTheme ? 'white' : '#67104c'}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  changeLanguage(i18n.language === 'en' ? 'uk' : 'en')
-                }>
+              <TouchableOpacity>
                 <MaterialIcons
                   name="language"
                   size={30}
@@ -206,7 +210,7 @@ export const AppNavigator = (): JSX.Element => {
         name="StudyAndTrain"
         component={Components.StudyAndTrain}
         options={({navigation}) => ({
-          title: ` ${t('LAT.lat')}`,
+          // title: ` ${t('LAT.lat')}`,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -229,7 +233,7 @@ export const AppNavigator = (): JSX.Element => {
         name="Vocab"
         component={Components.Vocab}
         options={({navigation}) => ({
-          title: ` ${t('LAT.vocab')}`,
+          // title: ` ${t('LAT.vocab')}`,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -263,7 +267,7 @@ export const AppNavigator = (): JSX.Element => {
         name="Verbs"
         component={Components.Verbs}
         options={({navigation}) => ({
-          title: ` ${t('LAT.verbs')}`,
+          // title: ` ${t('LAT.verbs')}`,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -419,7 +423,7 @@ export const AppNavigator = (): JSX.Element => {
         name="Phonetic"
         component={Components.Phonetic}
         options={({navigation}) => ({
-          title: ` ${t('LAT.phonetic')}`,
+          // title: ` ${t('LAT.phonetic')}`,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -471,11 +475,10 @@ export const AppNavigator = (): JSX.Element => {
             ),
           };
         }}
-      />
-    </MainStack.Navigator>
-
-    // </MainStack.Navigator>
-  );
+      /> */
+  }
+  // </MainStack.Navigator>
+  // );
 };
 
 const styles = StyleSheet.create({
