@@ -19,6 +19,7 @@ import {selectTheme} from '../store/auth/selector';
 import {setTheme} from '../store/auth/authSlice';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Registration} from './Registration';
+import {Login} from './Login';
 // import {Registration} from '.';
 
 const MainStack = createNativeStackNavigator();
@@ -118,16 +119,11 @@ export const AppNavigator = (): JSX.Element => {
         options={{headerShown: false}}
       />
 
-      {/* <MainStack.Screen
+      <MainStack.Screen
         name="Login"
         component={Login}
         options={{headerShown: false}}
-      /> */}
-    </MainStack.Navigator>
-    // </SafeAreaView>
-  );
-  {
-    /* 
+      />
       <MainStack.Screen
         name="Home"
         component={Screens.Home}
@@ -161,6 +157,12 @@ export const AppNavigator = (): JSX.Element => {
           ),
         })}
       />
+    </MainStack.Navigator>
+    // </SafeAreaView>
+  );
+  {
+    /* 
+      
       <MainStack.Screen
         name="Profile"
         component={Screens.Profile}

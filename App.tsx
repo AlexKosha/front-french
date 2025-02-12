@@ -24,11 +24,11 @@ export default function App(): JSX.Element {
                   <Text>Loading...</Text>
                 </View>
               }>
-              <Registration />
+              {/* <Registration /> */}
               {/* <Login /> */}
               {/* <Home /> */}
               {/* <SafeAreaProvider> */}
-              {/* <AppNavigator /> */}
+              <AppNavigator />
               {/* </SafeAreaProvider> */}
             </Suspense>
           </NavigationContainer>

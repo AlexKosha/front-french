@@ -76,6 +76,7 @@ android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
+    compileSdkVersion 34 
 
     namespace "com.french"
     defaultConfig {
@@ -84,6 +85,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        minSdkVersion 24
+        targetSdkVersion 34
     }
     signingConfigs {
         debug {
@@ -108,7 +111,6 @@ android {
 }
 
 dependencies {
-    // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
     if (hermesEnabled.toBoolean()) {
@@ -116,4 +118,15 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    // Додай це, якщо використовуєш підтримку AndroidX
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.core:core-ktx:1.13.1"
+
+    // Якщо у тебе є проблеми зі старими бібліотеками, можеш примусово замінити їх
+    configurations.all {
+        resolutionStrategy.force "androidx.appcompat:appcompat:1.6.1"
+        resolutionStrategy.force "androidx.core:core-ktx:1.13.1"
+    }
 }
+
