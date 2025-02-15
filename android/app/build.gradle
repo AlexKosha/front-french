@@ -123,6 +123,11 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.core:core-ktx:1.13.1"
 
+
+    // Додаємо бібліотеку gesture-handler
+    implementation 'com.swmansion.gesturehandler:react-native-gesture-handler:2.4.0'
+
+
     // Якщо у тебе є проблеми зі старими бібліотеками, можеш примусово замінити їх
     configurations.all {
         resolutionStrategy.force "androidx.appcompat:appcompat:1.6.1"

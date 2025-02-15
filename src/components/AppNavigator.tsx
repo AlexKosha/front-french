@@ -1,14 +1,14 @@
-/* eslint-disable react/no-unstable-nested-components */
-import {useDispatch, useSelector} from 'react-redux';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useDispatch, useSelector} from 'react-redux';
+// import {createStackNavigator} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
-// import {useTranslation} from 'react-i18next';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {getProfileThunk, logoutThunk} from '../store/auth/authThunks';
 import * as Screens from '../screens';
 // import * as Components from '../components';
@@ -111,7 +111,7 @@ export const AppNavigator = (): JSX.Element => {
   };
 
   return (
-    // <SafeAreaView style={{flex: 1}}>
+    // <NavigationContainer>
     <MainStack.Navigator>
       <MainStack.Screen
         name="Registration"
@@ -158,7 +158,7 @@ export const AppNavigator = (): JSX.Element => {
         })}
       />
     </MainStack.Navigator>
-    // </SafeAreaView>
+    // </NavigationContainer>
   );
   {
     /* 
