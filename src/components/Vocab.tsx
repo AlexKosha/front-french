@@ -1,7 +1,5 @@
-// import {useTranslation} from 'react-i18next';
-import React from 'react';
-import {Pressable, SafeAreaView, Text, View, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {Pressable, SafeAreaView, Text, View, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {selectTopic} from '../store/topic/selectors';
 import {getVocab} from '../store/vocab/vocabThunks';
@@ -11,15 +9,15 @@ import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
+import {useLocalization} from '../locale/LocalizationContext';
 
 export const Vocab = (): JSX.Element => {
-  // const {i18n} = useTranslation();
   const isDarkTheme = useSelector(selectTheme);
   const navigation = useNavigation<NavigationProps<'Vocab'>>();
   const vocabData = useSelector(selectVocab);
   const topicsData = useSelector(selectTopic);
   const dispatch = useDispatch<AppDispatch>();
-  // const currentLanguage = i18n.language;
+  const {locale, setLocale} = useLocalization();
 
   const handleGetWorlds = async (id: string, name: string) => {
     try {
@@ -60,7 +58,7 @@ export const Vocab = (): JSX.Element => {
             },
           ]}>
           {item.name} /{' '}
-          {/* {currentLanguage === 'uk' ? item.translationUK : item.translationEN} */}
+          {locale === 'uk' ? item.translationUK : item.translationEN}
         </Text>
       </Pressable>
     );

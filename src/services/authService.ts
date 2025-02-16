@@ -86,6 +86,9 @@ export const logout = async (): Promise<void> => {
 
 // Отримання профілю користувача
 export const getProfile = async (): Promise<User> => {
+  console.log('====================================');
+  console.log(instance.defaults.headers.common.Authorization);
+  console.log('====================================');
   const {data} = await instance.get<User>('/users/current', {
     headers: {
       'Cache-Control': 'no-cache',

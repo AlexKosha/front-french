@@ -1,20 +1,18 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import React from 'react';
-// import {useTranslation} from 'react-i18next';
-
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
-
 import {useSelector} from 'react-redux';
 import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
+import {useTranslationHelper} from '../locale/useTranslation';
 
 export const LearnOrTrainTopic = (): JSX.Element => {
-  // const {t} = useTranslation();
   const isDarkTheme = useSelector(selectTheme);
   const navigation = useNavigation<NavigationProps<'LearnOrTrainTopic'>>();
   const route = useRoute<RouteProps<'LearnOrTrainTopic'>>();
   const {topicName} = route.params;
+
+  const {learn, train} = useTranslationHelper();
 
   return (
     <SafeAreaView
@@ -42,7 +40,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {/* {t('LAT.learn')} */}
+            {learn}
           </Text>
         </Pressable>
         <Pressable
@@ -58,7 +56,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {/* {t('LAT.train')} */}
+            {train}
           </Text>
         </Pressable>
       </View>

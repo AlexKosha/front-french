@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -23,6 +24,9 @@ import {forgotPass, restorePassword} from '../services/authService';
 import * as Validate from '../helpers/validationInput';
 import {defaultStyles} from './defaultStyles';
 import {NavigationProps} from '../helpers/navigationTypes';
+import {useLocalization} from '../locale/LocalizationContext';
+import {useTranslationHelper} from '../locale/useTranslation';
+import {translations} from '../locale/translations';
 
 export const ForgotPassword = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'ForgotPassword'>>();
@@ -39,9 +43,22 @@ export const ForgotPassword = (): JSX.Element => {
   });
   const [isOtpCode, setIsOtpCode] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  // const {t, i18n} = useTranslation();
   const [emailValid, setEmailValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
+
+  const {locale, setLocale} = useLocalization();
+
+  const {
+    emailText,
+    clickHere,
+    techSupport,
+    sendCode,
+    saveChanges,
+    back,
+    newPassword,
+    send,
+    code,
+  } = useTranslationHelper();
 
   const handleSendOtpCode = async () => {
     try {
@@ -89,7 +106,8 @@ export const ForgotPassword = (): JSX.Element => {
     Validate.validateOtp,
     setFormErrors,
     'otpError',
-    t('validation.code'),
+    // t('validation.code'),
+    'LOCALIZE',
   );
 
   const handleEmailChange = handleChange(
@@ -98,7 +116,7 @@ export const ForgotPassword = (): JSX.Element => {
     Validate.validateEmail,
     setFormErrors,
     'emailError',
-    t('validation.email'),
+    'LOCALIZE',
   );
 
   const handlePasswordChange = handleChange(
@@ -107,7 +125,7 @@ export const ForgotPassword = (): JSX.Element => {
     Validate.validatePassword,
     setFormErrors,
     'passwordError',
-    t('validation.password'),
+    'LOCALIZE',
   );
 
   const renderError = (error: any, errorMessage: any) => {
@@ -128,8 +146,9 @@ export const ForgotPassword = (): JSX.Element => {
     validateForm();
   }, [formData, formErrors]);
 
-  const changeLanguage = (lang: string) => {
-    i18n.changeLanguage(lang);
+  const changeLanguageHandler = () => {
+    const newLang = locale === 'en' ? 'uk' : 'en';
+    setLocale(newLang);
   };
 
   return (
@@ -146,17 +165,14 @@ export const ForgotPassword = (): JSX.Element => {
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <AntDesign name="arrowleft" size={24} color="#67104c" />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  changeLanguage(i18n.language === 'en' ? 'uk' : 'en')
-                }>
+              <TouchableOpacity onPress={changeLanguageHandler}>
                 <MaterialIcons name="language" size={26} color="#67104c" />
               </TouchableOpacity>
             </View>
             {isOtpCode ? (
               <>
                 <View style={defaultStyles.boxForm}>
-                  <Text style={defaultStyles.labelText}>{t('rg.code')}</Text>
+                  <Text style={defaultStyles.labelText}>{code}</Text>
                   <View
                     style={[
                       defaultStyles.boxInput,
@@ -165,7 +181,9 @@ export const ForgotPassword = (): JSX.Element => {
                       },
                     ]}>
                     <TextInput
-                      placeholder={t('rg.placeCode')}
+                      placeholder={
+                        translations.rg.placeCode[locale as 'en' | 'uk']
+                      }
                       keyboardType="default"
                       style={styles.inputText}
                       onChangeText={handleOtpChange}
@@ -174,9 +192,7 @@ export const ForgotPassword = (): JSX.Element => {
                 </View>
 
                 <View style={defaultStyles.boxForm}>
-                  <Text style={defaultStyles.labelText}>
-                    {t('rg.newPassword')}
-                  </Text>
+                  <Text style={defaultStyles.labelText}>{newPassword}</Text>
                   <View
                     style={[
                       defaultStyles.boxInput,
@@ -185,7 +201,9 @@ export const ForgotPassword = (): JSX.Element => {
                       },
                     ]}>
                     <TextInput
-                      placeholder={t('rg.placeNewPassword')}
+                      placeholder={
+                        translations.rg.placeNewPassword[locale as 'en' | 'uk']
+                      }
                       secureTextEntry={!isPasswordVisible}
                       keyboardType="default"
                       value={formData.password}
@@ -200,9 +218,9 @@ export const ForgotPassword = (): JSX.Element => {
                       onPress={() => setIsPasswordVisible(!isPasswordVisible)}
                       style={{position: 'absolute', right: 12}}>
                       {isPasswordVisible === true ? (
-                        <Ionicons name="eye" size={24} color="#67104c" />
+                        <Feather name="eye" size={24} color="#67104c" />
                       ) : (
-                        <Ionicons name="eye-off" size={24} color="#67104c" />
+                        <Feather name="eye-off" size={24} color="#67104c" />
                       )}
                     </TouchableOpacity>
                   </View>
@@ -211,7 +229,7 @@ export const ForgotPassword = (): JSX.Element => {
                   style={[defaultStyles.button, {backgroundColor: '#67104c'}]}
                   onPress={handleBackToEmail}>
                   <Text style={[defaultStyles.btnText, {color: 'white'}]}>
-                    {t('rg.back')}
+                    {back}
                   </Text>
                 </Pressable>
                 <Pressable
@@ -223,7 +241,7 @@ export const ForgotPassword = (): JSX.Element => {
                   onPress={handleChangePassword}
                   disabled={!passwordValid}>
                   <Text style={[defaultStyles.btnText, {color: 'white'}]}>
-                    {t('rg.saveChanges')}
+                    {saveChanges}
                   </Text>
                 </Pressable>
               </>
@@ -237,12 +255,12 @@ export const ForgotPassword = (): JSX.Element => {
                         color: 'black',
                       },
                     ]}>
-                    {t('rg.sendCode')}
+                    {sendCode}
                   </Text>
                 </View>
 
                 <View style={[defaultStyles.boxForm, {padding: 0}]}>
-                  <Text style={defaultStyles.labelText}>{t('rg.email')}</Text>
+                  <Text style={defaultStyles.labelText}>{emailText}</Text>
                   <View
                     style={[
                       defaultStyles.boxInput,
@@ -251,7 +269,9 @@ export const ForgotPassword = (): JSX.Element => {
                       },
                     ]}>
                     <TextInput
-                      placeholder={t('rg.placeEmail')}
+                      placeholder={
+                        translations.rg.placeEmail[locale as 'en' | 'uk']
+                      }
                       keyboardType="email-address"
                       style={styles.inputText}
                       onChangeText={handleEmailChange}
@@ -267,7 +287,7 @@ export const ForgotPassword = (): JSX.Element => {
                   onPress={handleSendOtpCode}
                   disabled={!emailValid}>
                   <Text style={[defaultStyles.btnText, {color: 'white'}]}>
-                    {t('rg.send')}
+                    {send}
                   </Text>
                 </Pressable>
                 <View style={[defaultStyles.linkBox, {marginTop: 22}]}>
@@ -276,11 +296,11 @@ export const ForgotPassword = (): JSX.Element => {
                       fontSize: 16,
                       color: '#67104c',
                     }}>
-                    {t('rg.techSupport')}
+                    {techSupport}
                   </Text>
                   <Pressable onPress={() => navigation.navigate('Support')}>
                     <Text style={[defaultStyles.linkText, {color: '#67104c'}]}>
-                      {t('rg.clickHere')}
+                      {clickHere}
                     </Text>
                   </Pressable>
                 </View>

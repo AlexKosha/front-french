@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {
   Pressable,
@@ -33,12 +32,17 @@ export const Login = (): JSX.Element => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {locale, setLocale} = useLocalization();
 
-  const {emailText, passwordText, login, welcomeBack} = useTranslationHelper();
+  const {
+    emailText,
+    passwordText,
+    login,
+    welcomeBack,
+    dontHaveAcc,
+    haveAccButForgotPass,
+    registerText,
+    resetPassHere,
+  } = useTranslationHelper();
 
-  const changeLanguageHandler = () => {
-    const newLang = locale === 'en' ? 'uk' : 'en';
-    setLocale(newLang);
-  };
   // const [isFormValid, setIsFormValid] = useState(false);
 
   const validateForm = () => {
@@ -87,15 +91,6 @@ export const Login = (): JSX.Element => {
     <SafeAreaView
       style={{flex: 1, backgroundColor: isDarkTheme ? '#67104c' : 'white'}}>
       <View style={defaultStyles.container}>
-        <View style={defaultStyles.headerBox}>
-          <Pressable onPress={changeLanguageHandler}>
-            <MaterialIcons
-              name="language"
-              size={26}
-              color={isDarkTheme ? 'white' : '#67104c'}
-            />
-          </Pressable>
-        </View>
         <View style={{marginVertical: 22}}>
           <Text
             style={[
@@ -208,7 +203,7 @@ export const Login = (): JSX.Element => {
             },
           ]}>
           <Text style={{fontSize: 16, color: isDarkTheme ? 'white' : 'black'}}>
-            {/* {t('rg.dontHaveAcc')} */}
+            {dontHaveAcc}
           </Text>
           <Pressable onPress={() => navigation.navigate('Registration')}>
             <Text
@@ -218,7 +213,7 @@ export const Login = (): JSX.Element => {
                   color: isDarkTheme ? 'white' : '#67104c',
                 },
               ]}>
-              {/* {t('rg.register')} */}
+              {registerText}
             </Text>
           </Pressable>
         </View>
@@ -228,7 +223,7 @@ export const Login = (): JSX.Element => {
               fontSize: 16,
               color: isDarkTheme ? 'white' : 'black',
             }}>
-            {/* {t('rg.haveAccButForgotPass')} */}
+            {haveAccButForgotPass}
           </Text>
           <Pressable onPress={() => navigation.navigate('ForgotPassword')}>
             <Text
@@ -238,7 +233,7 @@ export const Login = (): JSX.Element => {
                   color: isDarkTheme ? 'white' : '#67104c',
                 },
               ]}>
-              {/* {t('rg.resetPassHere')} */}
+              {resetPassHere}
             </Text>
           </Pressable>
         </View>

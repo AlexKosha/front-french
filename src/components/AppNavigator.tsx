@@ -10,7 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useEffect} from 'react';
 import {getProfileThunk, logoutThunk} from '../store/auth/authThunks';
-import * as Screens from '../screens';
+// import * as Screens from '../screens';
 // import * as Components from '../components';
 // import {setTheme} from '../store/auth/authSlice';
 import {AppDispatch} from '../store/store';
@@ -20,6 +20,20 @@ import {setTheme} from '../store/auth/authSlice';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Registration} from './Registration';
 import {Login} from './Login';
+import {Verbs} from './Verbs';
+import {Vocab} from './Vocab';
+import {StudyAndTrain} from './StudyAndTrain';
+import {Home, Profile} from '../screens';
+import {ForgotPassword} from './ForgotPassword';
+import {Support} from './Support';
+import {Phonetic} from './Phonetic';
+import {LearnOrTrainTopic} from './LearnOrTrainTopic';
+import {Learn} from './Learn';
+import {WordLearningScreen} from './WordLearningScreen';
+import {Train} from './Train';
+import {LessonsBySubscription} from './LessonsBySubscription';
+import {TrainingLevel} from './TrainingLevel';
+import {useLocalization} from '../locale/LocalizationContext';
 // import {Registration} from '.';
 
 const MainStack = createNativeStackNavigator();
@@ -29,6 +43,13 @@ export const AppNavigator = (): JSX.Element => {
   // const {t, i18n} = useTranslation();
   const dispatch = useDispatch<AppDispatch>(); // Типізуємо dispatch
   const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
+
+  const {locale, setLocale} = useLocalization();
+
+  const changeLanguageHandler = () => {
+    const newLang = locale === 'en' ? 'uk' : 'en';
+    setLocale(newLang);
+  };
 
   // const handleLogout = async () => {
   //   try {
@@ -111,7 +132,6 @@ export const AppNavigator = (): JSX.Element => {
   };
 
   return (
-    // <NavigationContainer>
     <MainStack.Navigator>
       <MainStack.Screen
         name="Registration"
@@ -124,9 +144,21 @@ export const AppNavigator = (): JSX.Element => {
         component={Login}
         options={{headerShown: false}}
       />
+
+      <MainStack.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="Support"
+        component={Support}
+        options={{headerShown: false}}
+      />
+
       <MainStack.Screen
         name="Home"
-        component={Screens.Home}
+        component={Home}
         options={({navigation}) => ({
           headerTitle: () => null, // Приховуємо текст заголовка
           title: undefined,
@@ -157,15 +189,9 @@ export const AppNavigator = (): JSX.Element => {
           ),
         })}
       />
-    </MainStack.Navigator>
-    // </NavigationContainer>
-  );
-  {
-    /* 
-      
       <MainStack.Screen
         name="Profile"
-        component={Screens.Profile}
+        component={Profile}
         options={({navigation}) => ({
           headerTitle: () => (
             <View style={[styles.headerContainer, {paddingRight: 20}]}>
@@ -176,7 +202,7 @@ export const AppNavigator = (): JSX.Element => {
                   color={isDarkTheme ? 'white' : '#67104c'}
                 />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={changeLanguageHandler}>
                 <MaterialIcons
                   name="language"
                   size={30}
@@ -210,7 +236,7 @@ export const AppNavigator = (): JSX.Element => {
       />
       <MainStack.Screen
         name="StudyAndTrain"
-        component={Components.StudyAndTrain}
+        component={StudyAndTrain}
         options={({navigation}) => ({
           // title: ` ${t('LAT.lat')}`,
           headerTitleAlign: 'center',
@@ -233,7 +259,7 @@ export const AppNavigator = (): JSX.Element => {
       />
       <MainStack.Screen
         name="Vocab"
-        component={Components.Vocab}
+        component={Vocab}
         options={({navigation}) => ({
           // title: ` ${t('LAT.vocab')}`,
           headerTitleAlign: 'center',
@@ -267,7 +293,7 @@ export const AppNavigator = (): JSX.Element => {
 
       <MainStack.Screen
         name="Verbs"
-        component={Components.Verbs}
+        component={Verbs}
         options={({navigation}) => ({
           // title: ` ${t('LAT.verbs')}`,
           headerTitleAlign: 'center',
@@ -289,8 +315,31 @@ export const AppNavigator = (): JSX.Element => {
         })}
       />
       <MainStack.Screen
+        name="Phonetic"
+        component={Phonetic}
+        options={({navigation}) => ({
+          // title: ` ${t('LAT.phonetic')}`,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign
+                name="arrowleft"
+                size={30}
+                color={isDarkTheme ? 'white' : '#67104c'}
+                style={{marginLeft: 5}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <MainStack.Screen
         name="LearnOrTrainTopic"
-        component={Components.LearnOrTrainTopic}
+        component={LearnOrTrainTopic}
         options={({navigation, route}) => {
           const params =
             route.params as RouteProps<'LearnOrTrainTopic'>['params'];
@@ -326,9 +375,10 @@ export const AppNavigator = (): JSX.Element => {
           };
         }}
       />
+
       <MainStack.Screen
         name="Learn"
-        component={Components.Learn}
+        component={Learn}
         options={({navigation, route}) => {
           const params = route.params as RouteProps<'Learn'>['params'];
           const topicName = params?.topicName ?? '';
@@ -367,8 +417,13 @@ export const AppNavigator = (): JSX.Element => {
         }}
       />
       <MainStack.Screen
+        name="WordLearningScreen"
+        component={WordLearningScreen}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
         name="Train"
-        component={Components.Train}
+        component={Train}
         options={({navigation, route}) => {
           const params = route.params as RouteProps<'Train'>['params'];
           const topicName = params?.topicName ?? '';
@@ -406,52 +461,10 @@ export const AppNavigator = (): JSX.Element => {
           };
         }}
       />
-      <MainStack.Screen
-        name="LessonsBySubscription"
-        component={Components.LessonsBySubscription}
-        options={{headerShown: false}}
-      />
-      <MainStack.Screen
-        name="ForgotPassword"
-        component={Components.ForgotPassword}
-        options={{headerShown: false}}
-      />
-      <MainStack.Screen
-        name="Support"
-        component={Components.Support}
-        options={{headerShown: false}}
-      />
-      <MainStack.Screen
-        name="Phonetic"
-        component={Components.Phonetic}
-        options={({navigation}) => ({
-          // title: ` ${t('LAT.phonetic')}`,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: isDarkTheme ? '#67104c' : 'white',
-          },
-          headerShadowVisible: false,
-          headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <AntDesign
-                name="arrowleft"
-                size={30}
-                color={isDarkTheme ? 'white' : '#67104c'}
-                style={{marginLeft: 5}}
-              />
-            </TouchableOpacity>
-          ),
-        })}
-      />
-      <MainStack.Screen
-        name="WordLearningScreen"
-        component={Components.WordLearningScreen}
-        options={{headerShown: false}}
-      />
+
       <MainStack.Screen
         name="TrainingLevel"
-        component={Components.TrainingLevel}
+        component={TrainingLevel}
         options={({route}) => {
           const params = route.params as RouteProps<'Train'>['params'];
           const topicName = params?.topicName ?? '';
@@ -477,10 +490,14 @@ export const AppNavigator = (): JSX.Element => {
             ),
           };
         }}
-      /> */
-  }
-  // </MainStack.Navigator>
-  // );
+      />
+      <MainStack.Screen
+        name="LessonsBySubscription"
+        component={LessonsBySubscription}
+        options={{headerShown: false}}
+      />
+    </MainStack.Navigator>
+  );
 };
 
 const styles = StyleSheet.create({

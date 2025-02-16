@@ -1,7 +1,5 @@
-import React from 'react';
-// import {useTranslation} from 'react-i18next';
-import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getTopic} from '../store/topic/topicThunk';
 import {selectTopic} from '../store/topic/selectors';
@@ -9,13 +7,15 @@ import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
+import {useTranslationHelper} from '../locale/useTranslation';
 
 export const StudyAndTrain = (): JSX.Element => {
-  // const {t} = useTranslation();
   const isDarkTheme = useSelector(selectTheme);
   const topicsData = useSelector(selectTopic);
   const navigation = useNavigation<NavigationProps<'StudyAndTrain'>>();
   const dispatch = useDispatch<AppDispatch>();
+
+  const {phonetic, vocab, verbs} = useTranslationHelper();
 
   const handleGetTheme = async () => {
     try {
@@ -62,7 +62,7 @@ export const StudyAndTrain = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {/* {t('LAT.vocab')} */}
+            {vocab}
           </Text>
         </Pressable>
         <Pressable
@@ -78,7 +78,7 @@ export const StudyAndTrain = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {/* {t('LAT.phonetic')} */}
+            {phonetic}
           </Text>
         </Pressable>
         <Pressable
@@ -94,7 +94,7 @@ export const StudyAndTrain = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {/* {t('LAT.verbs')} */}
+            {verbs}
           </Text>
         </Pressable>
       </View>

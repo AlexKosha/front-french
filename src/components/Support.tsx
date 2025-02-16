@@ -1,19 +1,21 @@
-import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
-// import {useTranslation} from 'react-i18next';
-// import '../../i18n';
 import {TouchableOpacity, View, SafeAreaView, Text} from 'react-native';
 import {NavigationProps} from '../helpers/navigationTypes';
+import {useTranslationHelper} from '../locale/useTranslation';
+import {useLocalization} from '../locale/LocalizationContext';
 
 export const Support = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Support'>>();
-  // const {t, i18n} = useTranslation();
+  const {locale, setLocale} = useLocalization();
+  const {support} = useTranslationHelper();
 
-  // const changeLanguage = (lang: string) => {
-  //   i18n.changeLanguage(lang);
-  // };
+  const changeLanguageHandler = () => {
+    const newLang = locale === 'en' ? 'uk' : 'en';
+    setLocale(newLang);
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View
@@ -26,7 +28,7 @@ export const Support = (): JSX.Element => {
         <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
           <AntDesign name="arrowleft" size={24} color="#67104c" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={changeLanguageHandler}>
           <MaterialIcons name="language" size={26} color="#67104c" />
         </TouchableOpacity>
       </View>
@@ -37,7 +39,7 @@ export const Support = (): JSX.Element => {
             marginVertical: 12,
             color: 'black',
           }}>
-          {/* {t('rg.support')} */}
+          {support}
         </Text>
       </View>
     </SafeAreaView>

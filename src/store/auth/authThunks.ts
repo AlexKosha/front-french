@@ -72,11 +72,12 @@ export const getProfileThunk = createAsyncThunk(
   '/users/current',
   async (_, thunkAPI) => {
     const state = thunkAPI.getState() as {auth: {token: string | null}};
+
     const token = state.auth.token;
     if (!token) {
       return thunkAPI.rejectWithValue('No token provided');
     }
-    setToken(`Bearer ${token}`);
+    setToken(token);
     try {
       const data = await getProfile();
       return data;

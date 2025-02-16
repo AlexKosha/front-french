@@ -56,7 +56,6 @@ export const TrainingLevel = () => {
       //       topicName={topicName}
       //     />
       //   );
-      // // Додайте інші рівні за потреби
       default:
         return <Text>Невідомий рівень</Text>;
     }

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {CheckBox} from 'react-native-btr';

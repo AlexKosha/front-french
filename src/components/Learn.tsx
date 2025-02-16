@@ -1,7 +1,6 @@
-import React, {useState, useCallback} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {useState, useCallback} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import {useTranslation} from 'react-i18next';
 import {
   SafeAreaView,
   Text,
@@ -16,20 +15,20 @@ import {useFocusEffect} from '@react-navigation/native';
 import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
+import {useLocalization} from '../locale/LocalizationContext';
+import {useTranslationHelper} from '../locale/useTranslation';
+import {translations} from '../locale/translations';
 
 export const Learn = () => {
-  const {t, i18n} = useTranslation();
   const route = useRoute<RouteProps<'Learn'>>();
+  const navigation = useNavigation<NavigationProps<'Learn'>>();
   const {topicName} = route.params;
   const isDarkTheme = useSelector(selectTheme);
-  const navigation = useNavigation<NavigationProps<'Learn'>>();
-
   const vocabData = useSelector(selectVocab);
   const [progress, setProgress] = useState(0);
-
   const [searchQuery, setSearchQuery] = useState('');
-
-  const currentLanguage = i18n.language;
+  const {locale, setLocale} = useLocalization();
+  const {completedWords, words} = useTranslationHelper();
 
   // Використовуємо useFocusEffect для оновлення при кожному поверненні на цей екран
   useFocusEffect(
@@ -74,7 +73,7 @@ export const Learn = () => {
     const searchText = searchQuery.trim().toLowerCase();
     const wordText = item.world.toLowerCase();
     const translationText =
-      currentLanguage === 'uk'
+      locale === 'uk'
         ? item.translationUK.toLowerCase()
         : item.translationEN.toLowerCase();
 
@@ -99,7 +98,7 @@ export const Learn = () => {
             },
           ]}>
           {item.world} /{' '}
-          {currentLanguage === 'uk' ? item.translationUK : item.translationEN}
+          {locale === 'uk' ? item.translationUK : item.translationEN}
         </Text>
       </TouchableOpacity>
     );
@@ -119,7 +118,7 @@ export const Learn = () => {
               marginBottom: 20,
               color: isDarkTheme ? 'white' : '#67104c',
             }}>
-            {progress}/{vocabData.length} {t('LAT.completedWords')}
+            {progress}/{vocabData.length} {completedWords}
           </Text>
           <TouchableOpacity
             style={[
@@ -150,7 +149,7 @@ export const Learn = () => {
               color: isDarkTheme ? 'white' : '#67104c',
               backgroundColor: isDarkTheme ? '#67104c' : 'white',
             }}
-            placeholder={t('LAT.search')}
+            placeholder={translations.LAT.search[locale as 'en' | 'uk']}
             placeholderTextColor={isDarkTheme ? 'white' : '#67104c'}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -179,7 +178,7 @@ export const Learn = () => {
               marginBottom: 20,
               color: isDarkTheme ? 'white' : '#67104c',
             }}>
-            {progress}/{vocabData.length} {t('LAT.completedWords')}
+            {progress}/{vocabData.length} {completedWords}
           </Text>
 
           {[5, 10, 15, 20].map(count => (
@@ -197,7 +196,7 @@ export const Learn = () => {
                     color: isDarkTheme ? '#67104c' : 'white',
                   },
                 ]}>
-                {count} {t('LAT.words')}
+                {count} {words}
               </Text>
             </TouchableOpacity>
           ))}
