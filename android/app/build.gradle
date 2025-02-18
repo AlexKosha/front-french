@@ -112,7 +112,6 @@ android {
 
 dependencies {
     implementation("com.facebook.react:react-android")
-
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
@@ -125,7 +124,7 @@ dependencies {
 
 
     // Додаємо бібліотеку gesture-handler
-    implementation 'com.swmansion.gesturehandler:react-native-gesture-handler:2.4.0'
+   
 
 
     // Якщо у тебе є проблеми зі старими бібліотеками, можеш примусово замінити їх
