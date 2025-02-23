@@ -1,7 +1,9 @@
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+// import Feather from 'react-native-vector-icons/Feather';
 import Feather from 'react-native-vector-icons/Feather';
+
 import {
   Pressable,
   SafeAreaView,
@@ -20,6 +22,7 @@ import {AppDispatch} from '../store/store';
 import {useLocalization} from '../locale/LocalizationContext';
 import {translations} from '../locale/translations';
 import {useTranslationHelper} from '../locale/useTranslation';
+import {Logo} from './Logo';
 
 export const Login = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Login'>>();
@@ -41,26 +44,25 @@ export const Login = (): JSX.Element => {
     haveAccButForgotPass,
     registerText,
     resetPassHere,
+    loginError,
+    close,
   } = useTranslationHelper();
 
-  // const [isFormValid, setIsFormValid] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const validateForm = () => {
-    console.log('231');
-    // setIsFormValid(email.trim().length > 0 && password.trim().length > 0);
+    setIsFormValid(email.trim().length > 0 && password.trim().length > 0);
   };
 
   const handleLogin = async () => {
     try {
       const resultAction = await dispatch(loginThunk({email, password}));
-      // Якщо реєстрація була успішною, `resultAction` не буде помилкою
       if (loginThunk.fulfilled.match(resultAction)) {
         setEmail('');
         setPassword('');
         navigation.navigate('Home');
       } else {
-        // Тут можна обробити помилку, якщо потрібно
-        // Alert.alert('', t('alert.loginError'), [{text: t('alert.close')}]);
+        Alert.alert('', loginError, [{text: close}]);
       }
     } catch (error: any) {
       console.log('Login failed:', error);
@@ -72,7 +74,7 @@ export const Login = (): JSX.Element => {
   const handleEmailChange = (text: string) => {
     setEmail(text.trim());
     if (text.trim().length === 0) {
-      // setIsFormValid(false);
+      setIsFormValid(false);
     } else {
       validateForm();
     }
@@ -81,7 +83,7 @@ export const Login = (): JSX.Element => {
   const handlePasswordChange = (text: string) => {
     setPassword(text.trim());
     if (text.trim().length === 0) {
-      // setIsFormValid(false);
+      setIsFormValid(false);
     } else {
       validateForm();
     }
@@ -91,18 +93,17 @@ export const Login = (): JSX.Element => {
     <SafeAreaView
       style={{flex: 1, backgroundColor: isDarkTheme ? '#67104c' : 'white'}}>
       <View style={defaultStyles.container}>
-        <View style={{marginVertical: 22}}>
-          <Text
-            style={[
-              defaultStyles.headerText,
-              {
-                color: isDarkTheme ? 'white' : 'black',
-              },
-            ]}>
-            {welcomeBack}
-          </Text>
-        </View>
+        <Text
+          style={[
+            defaultStyles.headerText,
+            {
+              color: isDarkTheme ? 'white' : 'black',
+            },
+          ]}>
+          {welcomeBack}
+        </Text>
 
+        {/* Email */}
         <View style={{marginBottom: 12}}>
           <Text
             style={[
@@ -131,6 +132,7 @@ export const Login = (): JSX.Element => {
           </View>
         </View>
 
+        {/* Password */}
         <View style={{marginBottom: 12}}>
           <Text
             style={[
@@ -176,6 +178,7 @@ export const Login = (): JSX.Element => {
           </View>
         </View>
 
+        {/* Login button */}
         <Pressable
           style={[
             defaultStyles.button,
@@ -195,6 +198,7 @@ export const Login = (): JSX.Element => {
           </Text>
         </Pressable>
 
+        {/* Links */}
         <View
           style={[
             defaultStyles.linkBox,
@@ -237,29 +241,10 @@ export const Login = (): JSX.Element => {
             </Text>
           </Pressable>
         </View>
-
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: '50%',
-            transform: [{translateX: -70}],
-            alignItems: 'center',
-          }}>
-          <Image
-            source={
-              isDarkTheme
-                ? require('../images/whiteLogo.jpg')
-                : require('../images/logo.jpg')
-            } //
-            style={{
-              width: 140,
-              height: 60,
-              resizeMode: 'contain',
-            }}
-          />
-        </View>
       </View>
+
+      {/* Logo */}
+      <Logo />
     </SafeAreaView>
   );
 };

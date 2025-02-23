@@ -171,11 +171,13 @@ export const Profile = (): JSX.Element => {
                   placeholder={
                     translations.rg.placeEmail[locale as 'en' | 'uk']
                   }
-                  // color={isDarkTheme ? 'white' : 'black'}
                   placeholderTextColor={isDarkTheme ? 'white' : 'black'}
                   value={userInfo.email}
                   keyboardType="email-address"
-                  style={{width: '100%'}}
+                  style={{
+                    width: '100%',
+                    color: isDarkTheme ? 'white' : 'black',
+                  }}
                   onChangeText={text =>
                     setUserInfo(prevInfo => ({...prevInfo, email: text}))
                   }

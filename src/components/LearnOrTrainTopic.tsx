@@ -1,5 +1,12 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {Pressable, SafeAreaView, Text, View} from 'react-native';
+import {
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+} from 'react-native';
 import {useSelector} from 'react-redux';
 import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
@@ -60,6 +67,32 @@ export const LearnOrTrainTopic = (): JSX.Element => {
           </Text>
         </Pressable>
       </View>
+
+      <View style={styles.logoContainer}>
+        <Image
+          source={
+            isDarkTheme
+              ? require('../images/logo-dark.jpg')
+              : require('../images/logo.jpg')
+          }
+          style={styles.logo}
+        />
+      </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  logoContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: '50%',
+    transform: [{translateX: -70}],
+    alignItems: 'center',
+  },
+  logo: {
+    width: 140,
+    height: 60,
+    resizeMode: 'contain',
+  },
+});

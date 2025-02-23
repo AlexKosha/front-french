@@ -76,7 +76,7 @@ export const Home = (): JSX.Element => {
         <Image
           source={
             isDarkTheme
-              ? require('../images/whiteLogo.jpg')
+              ? require('../images/logo-dark.jpg')
               : require('../images/logo.jpg')
           }
           style={styles.logo}

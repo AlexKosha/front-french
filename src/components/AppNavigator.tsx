@@ -167,16 +167,19 @@ export const AppNavigator = (): JSX.Element => {
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: () => (
-            <TouchableOpacity>
-              <MaterialIcons
-                name="language"
-                size={30}
-                color={isDarkTheme ? 'white' : '#67104c'}
-                style={{marginLeft: 5}}
-              />
-            </TouchableOpacity>
-          ),
+          // headerLeft: () => (
+          //   <TouchableOpacity>
+          //     <MaterialIcons
+          //       name="language"
+          //       size={30}
+          //       color={isDarkTheme ? 'white' : '#67104c'}
+          //       style={{marginLeft: 5}}
+          //     />
+          //   </TouchableOpacity>
+          // ),
+
+          headerLeft: () => null,
+
           headerRight: () => (
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
               <AntDesign
@@ -187,6 +190,7 @@ export const AppNavigator = (): JSX.Element => {
               />
             </TouchableOpacity>
           ),
+          headerBackVisible: false,
         })}
       />
       <MainStack.Screen

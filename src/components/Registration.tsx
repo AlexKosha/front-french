@@ -19,22 +19,21 @@ import {
   Keyboard,
   Platform,
   SafeAreaView,
-  Image,
 } from 'react-native';
 import * as Validate from '../helpers/validationInput';
 import {handleChange} from '../helpers/handleChangeInput';
-import {getProfileThunk, registerThunk} from '../store/auth/authThunks';
-import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import 'dayjs/locale/uk';
-import 'dayjs/locale/en';
+import {registerThunk} from '../store/auth/authThunks';
+// import dayjs from 'dayjs';
+// import localizedFormat from 'dayjs/plugin/localizedFormat';
+// import 'dayjs/locale/uk';
+// import 'dayjs/locale/en';
 import {defaultStyles} from './defaultStyles';
 import {AppDispatch} from '../store/store';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {translations} from '../locale/translations';
 import {useTranslationHelper} from '../locale/useTranslation';
-// import {SafeAreaView} from 'react-native-safe-area-context';
+import {Logo} from './Logo';
 
 export const Registration = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Registration'>>();
@@ -62,7 +61,6 @@ export const Registration = (): JSX.Element => {
   const {locale, setLocale} = useLocalization();
 
   const {
-    registerText,
     nameText,
     dateOfBirth,
     emailText,
@@ -72,6 +70,15 @@ export const Registration = (): JSX.Element => {
     letsAcq,
     alreadyAccount,
     login,
+    confirm,
+    cancel,
+    close,
+    welcomeAlert,
+    registerError,
+    name,
+    birthDate,
+    email,
+    password,
   } = useTranslationHelper();
 
   const changeLanguageHandler = () => {
@@ -83,12 +90,12 @@ export const Registration = (): JSX.Element => {
     try {
       const resultAction = await dispatch(registerThunk(formData));
       if (registerThunk.fulfilled.match(resultAction)) {
-        // setFormData({ name: "", birthDate: "", email: "", password: "" });
+        setFormData({name: '', birthDate: '', email: '', password: ''});
         navigation.navigate('Home');
-        // Alert.alert('', t('alert.welcome'), [{text: t('alert.close')}]);
+        Alert.alert('', welcomeAlert, [{text: close}]);
       } else {
-        // Alert.alert("Error", resultAction.error.message);
-        // Alert.alert('', t('alert.registerError'), [{text: t('alert.close')}]);
+        Alert.alert('Error', resultAction.error.message);
+        Alert.alert('', registerError, [{text: close}]);
       }
     } catch (error: any) {
       console.log('Registration failed:', error);
@@ -102,7 +109,7 @@ export const Registration = (): JSX.Element => {
     Validate.validateName,
     setFormErrors,
     'nameError',
-    'LOCALIZE',
+    name,
   );
 
   const handleBirthDateChange = handleChange(
@@ -111,7 +118,7 @@ export const Registration = (): JSX.Element => {
     Validate.validateBirthDate,
     setFormErrors,
     'birthDateError',
-    'LOCALIZE',
+    birthDate,
   );
 
   const handleEmailChange = handleChange(
@@ -120,7 +127,7 @@ export const Registration = (): JSX.Element => {
     Validate.validateEmail,
     setFormErrors,
     'emailError',
-    'LOCALIZE',
+    email,
   );
 
   const handlePasswordChange = handleChange(
@@ -129,7 +136,7 @@ export const Registration = (): JSX.Element => {
     Validate.validatePassword,
     setFormErrors,
     'passwordError',
-    'LOCALIZE',
+    password,
   );
 
   useEffect(() => {
@@ -212,22 +219,24 @@ export const Registration = (): JSX.Element => {
         // }
       >
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-          <View style={{flex: 1, marginHorizontal: 22}}>
-            <View style={{marginVertical: 22}}>
-              <View>
-                <Pressable onPress={changeLanguageHandler}>
-                  <MaterialIcons name="language" size={26} color="#67104c" />
-                </Pressable>
-              </View>
-              <Text style={[defaultStyles.headerText, {color: 'black'}]}></Text>
-              <Text style={{fontSize: 16, color: 'black'}}>{letsAcq}</Text>
-            </View>
+          <View style={{flex: 1, marginHorizontal: 20}}>
+            {/* Language and Header */}
+            <Pressable
+              onPress={changeLanguageHandler}
+              style={{marginBottom: 50}}>
+              <MaterialIcons name="language" size={26} color="#67104c" />
+            </Pressable>
+
+            <Text style={[defaultStyles.headerText, {color: 'black'}]}>
+              {letsAcq}
+            </Text>
+
+            {/* Name */}
             <View style={{marginBottom: 12}}>
               <Text style={defaultStyles.labelText}>{nameText}</Text>
               <View style={defaultStyles.boxInput}>
                 <TextInput
                   placeholder={translations.rg.placeName[locale as 'en' | 'uk']}
-                  // placeholderTextColor="#f89fa1"
                   keyboardType="default"
                   value={formData.name}
                   style={{width: '100%'}}
@@ -237,16 +246,16 @@ export const Registration = (): JSX.Element => {
               </View>
             </View>
 
+            {/* Date of Birth */}
             <View style={{marginBottom: 12}}>
               <Text style={defaultStyles.labelText}>{dateOfBirth}</Text>
-
               {showPicker && (
                 <DateTimePicker
                   mode="date"
                   display="spinner"
                   value={date}
                   onChange={onChange}
-                  // locale={i18n.language}
+                  locale={locale}
                   style={styles.datePicker}
                   maximumDate={new Date()}
                   minimumDate={new Date('1950-1-1')}
@@ -258,14 +267,14 @@ export const Registration = (): JSX.Element => {
                     style={[styles.pickerButton, styles.cancelButton]}
                     onPress={toggleDatePicker}>
                     <Text style={[defaultStyles.btnText, {color: 'white'}]}>
-                      {/* {t('btn.cancel')} */}
+                      {cancel}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.pickerButton, styles.confirmButton]}
                     onPress={confirmIOSDate}>
                     <Text style={[defaultStyles.btnText, {color: 'white'}]}>
-                      {/* {t('btn.confirm')} */}
+                      {confirm}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -276,7 +285,6 @@ export const Registration = (): JSX.Element => {
                     placeholder={
                       translations.rg.placeDoB[locale as 'en' | 'uk']
                     }
-                    // keyboardType="numeric"
                     value={formData.birthDate}
                     style={styles.textInut}
                     onChangeText={handleBirthDateChange}
@@ -288,6 +296,7 @@ export const Registration = (): JSX.Element => {
               {renderError(formErrors.birthDateError, [styles.errorMessage])}
             </View>
 
+            {/* Email */}
             <View style={{marginBottom: 12}}>
               <Text style={defaultStyles.labelText}>{emailText}</Text>
               <View style={defaultStyles.boxInput}>
@@ -304,6 +313,7 @@ export const Registration = (): JSX.Element => {
               </View>
             </View>
 
+            {/* Password */}
             <View style={{marginBottom: 12}}>
               <Text style={defaultStyles.labelText}>{passwordText}</Text>
               <View style={defaultStyles.boxInput}>
@@ -327,15 +337,7 @@ export const Registration = (): JSX.Element => {
               </View>
             </View>
 
-            {/* <View style={{flexDirection: 'row', marginVertical: 6}}>
-              <CheckBox
-                style={{marginRight: 8}}
-                checked={isChecked}
-                onPress={toggleCheckBox}
-                color={isChecked ? '#67104c' : '#67104c'}
-              />
-              <Text style={{marginLeft: 5}}>{agreeTerms}</Text>
-            </View> */}
+            {/* Checkbox */}
             <View style={{flexDirection: 'row', marginVertical: 6}}>
               <View style={{marginRight: 8}}>
                 <CheckBox
@@ -344,15 +346,18 @@ export const Registration = (): JSX.Element => {
                   color="#67104c"
                 />
               </View>
-              <Text style={{marginLeft: 5}}>{agreeTermsText}</Text>
+              <Text style={{marginLeft: 5, fontSize: 16}}>
+                {agreeTermsText}
+              </Text>
             </View>
+
+            {/* Register button */}
             <Pressable
               style={[
                 defaultStyles.button,
                 {backgroundColor: '#67104c'},
                 (!isFormValid || !isChecked) && styles.buttonDisabled,
               ]}
-              // title="Register"
               onPress={handleRegister}
               disabled={!isFormValid}>
               <Text
@@ -365,6 +370,7 @@ export const Registration = (): JSX.Element => {
               </Text>
             </Pressable>
 
+            {/* Login link */}
             <View style={[defaultStyles.linkBox, {marginVertical: 22}]}>
               <Text style={{fontSize: 16, color: 'black'}}>
                 {alreadyAccount}
@@ -377,23 +383,8 @@ export const Registration = (): JSX.Element => {
             </View>
           </View>
 
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 20,
-              left: '50%',
-              transform: [{translateX: -70}],
-              alignItems: 'center',
-            }}>
-            <Image
-              source={require('../images/logo.jpg')}
-              style={{
-                width: 140,
-                height: 60,
-                resizeMode: 'contain',
-              }}
-            />
-          </View>
+          {/* Logo */}
+          <Logo isRegistrationPage={true} />
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableOpacity>
@@ -421,38 +412,28 @@ export const styles = StyleSheet.create({
   },
   buttonDisabled: {backgroundColor: '#CCCCCC', pointerEvents: 'none'},
   datePicker: {
-    height: 120,
-    marginTop: -10,
+    // height: 120, не працює
+    marginTop: -15,
   },
   pickerButton: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 51,
-    width: 150,
+    height: 40,
+    width: 135,
     backgroundColor: 'gray',
+    borderRadius: 100,
   },
   pickerButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 10, // Відступ між кнопками і вибором дати
-    marginBottom: 10, // Відступ знизу
+    marginBottom: 10,
   },
-  // pickerButton: {
-  //   paddingVertical: 10,
-  //   paddingHorizontal: 20,
-  //   borderRadius: 5,
-  //   elevation: 2, // Тінь для Android
-  //   shadowColor: '#000', // Тінь для iOS
-  //   shadowOffset: {width: 0, height: 2},
-  //   shadowOpacity: 0.3,
-  //   shadowRadius: 4,
-  //   alignItems: 'center',
-  // },
   cancelButton: {
-    backgroundColor: '#555555', // Червоний колір для кнопки скасування
+    backgroundColor: '#555555',
   },
   confirmButton: {
-    backgroundColor: '#67104c', // Зелений колір для кнопки підтвердження
+    backgroundColor: '#67104c',
   },
 });

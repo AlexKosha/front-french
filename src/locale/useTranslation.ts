@@ -39,7 +39,7 @@ export const useTranslationHelper = () => {
     dontHaveAcc: getTranslation('rg', 'dontHaveAcc'),
     haveAccButForgotPass: getTranslation('rg', 'haveAccButForgotPass'),
     resetPassHere: getTranslation('rg', 'resetPassHere'),
-    code: getTranslation('validation', 'code'),
+
     send: getTranslation('rg', 'send'),
     newPassword: getTranslation('rg', 'newPassword'),
     back: getTranslation('rg', 'back'),
@@ -62,5 +62,16 @@ export const useTranslationHelper = () => {
     goBack: getTranslation('btn', 'goBack'),
     chooseCount: getTranslation('btn', 'chooseCount'),
     hello: getTranslation('rg', 'hello'),
+    cancel: getTranslation('btn', 'cancel'),
+    confirm: getTranslation('btn', 'confirm'),
+    welcomeAlert: getTranslation('alert', 'welcomeAlert'),
+    close: getTranslation('alert', 'close'),
+    registerError: getTranslation('alert', 'registerError'),
+    loginError: getTranslation('alert', 'loginError'),
+    name: getTranslation('validation', 'name'),
+    birthDate: getTranslation('validation', 'birthDate'),
+    email: getTranslation('validation', 'email'),
+    password: getTranslation('validation', 'password'),
+    code: getTranslation('validation', 'code'),
   };
 };
