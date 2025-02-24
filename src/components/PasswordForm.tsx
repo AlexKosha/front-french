@@ -27,7 +27,7 @@ const PasswordForm = (): JSX.Element => {
     newPassword: '',
   });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {locale, setLocale} = useLocalization();
+  const {locale} = useLocalization();
 
   const {passwordText, saveChanges, newPassword} = useTranslationHelper();
 

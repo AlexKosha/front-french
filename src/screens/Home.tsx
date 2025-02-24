@@ -1,12 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {
-  SafeAreaView,
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-} from 'react-native';
+import {SafeAreaView, Text, View, StyleSheet, Pressable} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
 import {defaultStyles} from '../components/defaultStyles';

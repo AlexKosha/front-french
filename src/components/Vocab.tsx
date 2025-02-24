@@ -10,6 +10,7 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {useLocalization} from '../locale/LocalizationContext';
+import React from 'react';
 
 export const Vocab = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
@@ -17,7 +18,7 @@ export const Vocab = (): JSX.Element => {
   const vocabData = useSelector(selectVocab);
   const topicsData = useSelector(selectTopic);
   const dispatch = useDispatch<AppDispatch>();
-  const {locale, setLocale} = useLocalization();
+  const {locale} = useLocalization();
 
   const handleGetWorlds = async (id: string, name: string) => {
     try {

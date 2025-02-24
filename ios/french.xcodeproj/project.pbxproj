@@ -12,6 +12,10 @@
 		21251BC3BFDB94573BC57D92 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		D56EFECFE8804A5E8887B342 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92E75749DB0E46A09D920C4D /* AntDesign.ttf */; };
+		BD6E61A7F94D409FB9661C56 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F595FB569A644078268A6D4 /* Feather.ttf */; };
+		57B3069613C94F1B9BA61C89 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C843D0FAF1A64359A1032D19 /* Ionicons.ttf */; };
+		BC3FBD81D2DD4EB9B0A9B9F7 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FEE1A3F7CBC04F29862F09BA /* MaterialIcons.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +29,10 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = french/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = french/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		92E75749DB0E46A09D920C4D /* AntDesign.ttf */ = {isa = PBXFileReference; name = "AntDesign.ttf"; path = "../assets/fonts/AntDesign.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4F595FB569A644078268A6D4 /* Feather.ttf */ = {isa = PBXFileReference; name = "Feather.ttf"; path = "../assets/fonts/Feather.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C843D0FAF1A64359A1032D19 /* Ionicons.ttf */ = {isa = PBXFileReference; name = "Ionicons.ttf"; path = "../assets/fonts/Ionicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FEE1A3F7CBC04F29862F09BA /* MaterialIcons.ttf */ = {isa = PBXFileReference; name = "MaterialIcons.ttf"; path = "../assets/fonts/MaterialIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +83,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				101BD8E6347246139C64BDAB /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -97,6 +106,18 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		101BD8E6347246139C64BDAB /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				92E75749DB0E46A09D920C4D /* AntDesign.ttf */,
+				4F595FB569A644078268A6D4 /* Feather.ttf */,
+				C843D0FAF1A64359A1032D19 /* Ionicons.ttf */,
+				FEE1A3F7CBC04F29862F09BA /* MaterialIcons.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -161,6 +182,10 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				21251BC3BFDB94573BC57D92 /* PrivacyInfo.xcprivacy in Resources */,
+				D56EFECFE8804A5E8887B342 /* AntDesign.ttf in Resources */,
+				BD6E61A7F94D409FB9661C56 /* Feather.ttf in Resources */,
+				57B3069613C94F1B9BA61C89 /* Ionicons.ttf in Resources */,
+				BC3FBD81D2DD4EB9B0A9B9F7 /* MaterialIcons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

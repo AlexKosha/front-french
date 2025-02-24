@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, SafeAreaView, Alert} from 'react-native';
-// import {Audio} from 'expo-av';
+import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -10,13 +10,12 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {WordItem} from './WordLearningScreen';
-import {Logo} from './Logo';
 
 interface LevelProps {
   level: number;
-  progress: any[]; // Або конкретний тип даних, якщо знаєте його структуру
+  progress: any[];
   topicName: string;
-  renderContent: (param: WordItem) => JSX.Element; // Функція, що приймає параметр та повертає JSX
+  renderContent: (param: WordItem, playText: () => void) => JSX.Element;
   renderChoices: (
     choices: any,
     handleChoice: any,
@@ -40,12 +39,42 @@ export const LevelComponent: React.FC<LevelProps> = ({
   const [currentItem, setCurrentItem] = useState<WordItem | null>(null);
   const [wordStats, setWordStats] = useState<WordStat[]>([]);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
-  // const [isPlaying, setIsPlaying] = useState(false);
-  // const [sound, setSound] = useState(null);
 
   const navigation = useNavigation<NavigationProps<'Train'>>();
   const dispatch = useDispatch<AppDispatch>();
   const isDarkTheme = useSelector(selectTheme);
+
+  useEffect(() => {
+    Tts.getInitStatus()
+      .then(() => {
+        Tts.setDefaultRate(0.6, true);
+        Tts.setDefaultPitch(1.5);
+        Tts.setDefaultLanguage('fr-FR').catch(err =>
+          console.log('Language not supported', err),
+        );
+      })
+      .catch(err => console.error('TTS Init Error:', err));
+  }, []);
+
+  // Функція для озвучки слова через TTS
+  const playText = useCallback(() => {
+    if (currentItem?.world) {
+      Tts.stop() // Зупиняємо будь-який попередній голос
+        .then(() => {
+          console.log(currentItem.world);
+          Tts.speak(currentItem.world, {
+            iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
+            rate: 0.9,
+            androidParams: {
+              KEY_PARAM_PAN: 0,
+              KEY_PARAM_VOLUME: 1,
+              KEY_PARAM_STREAM: 'STREAM_ALARM',
+            },
+          });
+        })
+        .catch(error => console.error('TTS language error:', error));
+    }
+  }, [currentItem]);
 
   const generateChoices = useCallback(
     (correctItem: WordItem) => {
@@ -68,7 +97,6 @@ export const LevelComponent: React.FC<LevelProps> = ({
   );
 
   const handleChoice = async (chosenItem: any) => {
-    // Перевіряємо, чи не є currentItem null або undefined
     if (currentItem && chosenItem._id === currentItem._id) {
       const updatedStats = wordStats.map((stat: any) =>
         stat.word._id === currentItem._id
@@ -115,28 +143,6 @@ export const LevelComponent: React.FC<LevelProps> = ({
     }
   };
 
-  // const playSound = async () => {
-  //   if (!currentItem?.audio || isPlaying) return;
-
-  //   try {
-  //     const {sound} = await Audio.Sound.createAsync(
-  //       {uri: currentItem.audio},
-  //       {},
-  //       status => {
-  //         if (status.didJustFinish) {
-  //           sound.unloadAsync();
-  //           setIsPlaying(false);
-  //         }
-  //       },
-  //     );
-  //     setSound(sound);
-  //     setIsPlaying(true);
-  //     await sound.playAsync();
-  //   } catch (error) {
-  //     console.error('Error playing sound:', error);
-  //   }
-  // };
-
   const setRandomItem = useCallback(
     (stats: any) => {
       const remainingItems = stats.filter((stat: any) => stat.correctCount < 3);
@@ -152,6 +158,11 @@ export const LevelComponent: React.FC<LevelProps> = ({
     },
     [generateChoices, navigation, topicName],
   );
+
+  // useEffect(() => {
+  //   Tts.setDefaultLanguage('fr-FR');
+  //   Tts.setDefaultRate(0.5);
+  // }, []);
 
   useEffect(() => {
     const initializeWordStats = () => {
@@ -192,31 +203,15 @@ export const LevelComponent: React.FC<LevelProps> = ({
     </View>
   );
 
-  if (level === 2) {
-    return (
-      <SafeAreaView
-        style={[
-          defaultStyles.container,
-          {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
-        ]}>
-        {renderProgress()}
-        {/* {renderContent(currentItem, playSound, isDarkTheme, isPlaying)} */}
-        {currentItem ? renderContent(currentItem) : null}
-        {renderChoices(choices, handleChoice, isDarkTheme)}
-      </SafeAreaView>
-    );
-  } else {
-    return (
-      <SafeAreaView
-        style={[
-          defaultStyles.container,
-          {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
-        ]}>
-        {renderProgress()}
-        {renderChoices(choices, handleChoice, isDarkTheme)}
-        {currentItem ? renderContent(currentItem) : null}
-        {/* {renderContent(currentItem, playSound, isDarkTheme, isPlaying)} */}
-      </SafeAreaView>
-    );
-  }
+  return (
+    <SafeAreaView
+      style={[
+        defaultStyles.container,
+        {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
+      ]}>
+      {renderProgress()}
+      {currentItem ? renderContent(currentItem, playText) : null}
+      {renderChoices(choices, handleChoice, isDarkTheme)}
+    </SafeAreaView>
+  );
 };

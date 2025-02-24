@@ -1,4 +1,5 @@
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
+import Tts from 'react-native-tts';
 import {
   SafeAreaView,
   Text,
@@ -39,7 +40,7 @@ export const WordLearningScreen = () => {
   const isDarkTheme = useSelector(selectTheme);
   const id = useSelector(selectThemeWordId);
   const navigation = useNavigation<NavigationProps<'WordLearningScreen'>>();
-  const {locale, setLocale} = useLocalization();
+  const {locale} = useLocalization();
   const {
     word,
     back,
@@ -109,11 +110,6 @@ export const WordLearningScreen = () => {
     if (!isSingleWordMode) {
       loadProgress();
     }
-    // return () => {
-    //   if (sound) {
-    //     sound.unloadAsync();
-    //   }
-    // };
   }, [
     totalShown,
     filteredWords.length,
@@ -154,33 +150,36 @@ export const WordLearningScreen = () => {
     }
   };
 
-  // const playSound = async () => {
-  //   try {
-  //     const audioUri = selectedWords[currentIndex]?.audio;
-  //     if (!audioUri) {
-  //       console.log('No audio available for this word.');
-  //       return;
-  //     }
-  //     const {sound} = await Audio.Sound.createAsync(
-  //       {uri: audioUri},
-  //       {},
-  //       onPlaybackStatusUpdate,
-  //     );
-  //     console.log(sound);
-  //     setSound(sound);
-  //     await sound.playAsync();
-  //     setIsPlaying(true);
-  //   } catch (error) {
-  //     console.error('Error playing sound:', error);
-  //     setIsPlaying(false);
-  //   }
-  // };
+  useEffect(() => {
+    Tts.getInitStatus()
+      .then(() => {
+        Tts.setDefaultRate(0.6, true);
+        Tts.setDefaultPitch(1.5);
+        Tts.setDefaultLanguage('fr-FR').catch(err =>
+          console.log('Language not supported', err),
+        );
+      })
+      .catch(err => console.error('TTS Init Error:', err));
+  }, []);
 
-  // const onPlaybackStatusUpdate = status => {
-  //   if (status.didJustFinish) {
-  //     setIsPlaying(false);
-  //   }
-  // };
+  // Функція для озвучки слова через TTS
+  const playSound = useCallback(() => {
+    if (selectedWords[currentIndex]?.world) {
+      Tts.stop() // Зупиняємо будь-який попередній голос
+        .then(() => {
+          Tts.speak(selectedWords[currentIndex]?.world, {
+            iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
+            rate: 0.9,
+            androidParams: {
+              KEY_PARAM_PAN: 0,
+              KEY_PARAM_VOLUME: 1,
+              KEY_PARAM_STREAM: 'STREAM_ALARM',
+            },
+          });
+        })
+        .catch(error => console.error('TTS language error:', error));
+    }
+  }, [currentIndex, selectedWords]);
 
   const handleTrainWords = () => {
     navigation.navigate('Train', {topicName});
@@ -217,9 +216,9 @@ export const WordLearningScreen = () => {
             source={{uri: selectedWords[currentIndex]?.image}}
             style={defaultStyles.image}
           />
-          {/* <TouchableOpacity onPress={playSound} disabled={isPlaying}>
-            <Icon name="sound" size={30} color={isPlaying ? 'gray' : 'black'} />
-          </TouchableOpacity> */}
+          <TouchableOpacity onPress={playSound}>
+            <Text>Play</Text>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: 30,

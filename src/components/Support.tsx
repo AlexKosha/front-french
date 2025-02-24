@@ -1,23 +1,16 @@
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {TouchableOpacity, View, SafeAreaView, Text} from 'react-native';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
-import {useLocalization} from '../locale/LocalizationContext';
 import {defaultStyles} from './defaultStyles';
 import {Logo} from './Logo';
 
 export const Support = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Support'>>();
 
-  const {locale, setLocale} = useLocalization();
   const {support} = useTranslationHelper();
-
-  const changeLanguageHandler = () => {
-    const newLang = locale === 'en' ? 'uk' : 'en';
-    setLocale(newLang);
-  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>

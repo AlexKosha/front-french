@@ -1,9 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Button, Alert, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  TextInput,
+} from 'react-native';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Voice from '@react-native-voice/voice';
 import {LevelProps} from './FirstLevel';
 import {WordStat} from './LevelComponent';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 export const SeventhLevel: React.FC<LevelProps> = ({
   progress,
@@ -16,10 +26,39 @@ export const SeventhLevel: React.FC<LevelProps> = ({
   const [wordStats, setWordStats] = useState<WordStat[]>([]);
 
   useEffect(() => {
+    const initVoice = async () => {
+      try {
+        // Перевіряємо, чи доступний модуль Voice
+        if (Voice && Voice.isAvailable) {
+          await Voice.isAvailable(); // Переконайтеся, що Voice доступний
+          Voice.onSpeechStart = onSpeechStart;
+          Voice.onSpeechEnd = stopRecording;
+          Voice.onSpeechResults = onSpeechResults;
+          Voice.onSpeechError = error => console.log('onSpeechError', error);
+        } else {
+          console.error('Voice module is not available');
+        }
+      } catch (e) {
+        console.error('Voice module not available:', e);
+      }
+    };
+
+    initVoice();
+
+    return () => {
+      Voice.removeAllListeners();
+    };
+  }, []);
+
+  useEffect(() => {
     const initializeWordStats = () => {
       const unfinishedWords = progress.filter(
         word => !word.completed.includes(level),
       );
+
+      console.log('Voice:', Voice);
+      console.log('Voice.start:', Voice?.start);
+      console.log('Voice.isRecognizing:', Voice?.isRecognizing);
 
       if (unfinishedWords.length === 0) {
         Alert.alert(
@@ -44,106 +83,145 @@ export const SeventhLevel: React.FC<LevelProps> = ({
   }, [level, progress]);
 
   // Поточне слово
-  const currentWord = wordStats[currentWordIndex]?.word.world || '';
+  // const currentWord = wordStats[currentWordIndex]?.word.world || '';
+
+  const onSpeechStart = (event: any) => {
+    console.log('Recording Started...', event);
+  };
 
   // Обробка результату
   const onSpeechResults = (event: any) => {
     if (event.value && event.value.length > 0) {
-      setRecognizedText(event.value[0]); // Беремо перший результат
+      const text = event.value[0];
+      console.log(text);
+      setRecognizedText(text); // Беремо перший результат
     }
   };
 
   // Почати запис
   const startRecording = async () => {
-    const hasPermission = await requestMicrophonePermission();
-    if (!hasPermission) return;
+    setIsRecording(true);
+    // const hasPermission = await requestMicrophonePermission();
+    // if (!hasPermission) return;
 
     try {
-      setIsRecording(true);
-      setRecognizedText('');
       await Voice.start('en-US');
+      // const isAvailable = await Voice.isRecognizing();
+      // if (!isAvailable) {
+      //   throw new Error('Voice recognition is not available on this device.');
+      // }
+
+      setRecognizedText('');
     } catch (e) {
       console.error('Error starting recording:', e);
     }
   };
 
+  // useEffect(() => {
+  //   const initVoice = async () => {
+  //     try {
+  //       if (!Voice._loaded) {
+  //         await Voice.isAvailable();
+  //       }
+  //     } catch (e) {
+  //       console.error('Voice module not available:', e);
+  //     }
+  //   };
+  //   initVoice();
+  // }, []);
+
   // Зупинити запис
   const stopRecording = async () => {
     try {
+      Voice.removeAllListeners();
       setIsRecording(false);
-      await Voice.stop();
+      // await Voice.stop();
     } catch (e) {
       console.error('Error stopping recording:', e);
     }
   };
 
   // Перевірка відповіді
-  const checkAnswer = () => {
-    if (recognizedText.trim().toLowerCase() === currentWord.toLowerCase()) {
-      Alert.alert('Правильно!', 'Ваше слово збігається!');
+  // const checkAnswer = () => {
+  //   if (recognizedText.trim().toLowerCase() === currentWord.toLowerCase()) {
+  //     Alert.alert('Правильно!', 'Ваше слово збігається!');
 
-      // Оновлення статистики
-      const updatedStats = [...wordStats];
-      updatedStats[currentWordIndex].correctCount += 1;
+  //     // Оновлення статистики
+  //     const updatedStats = [...wordStats];
+  //     updatedStats[currentWordIndex].correctCount += 1;
 
-      // Перевіряємо, чи можна перейти до наступного слова
-      // if (updatedStats[currentWordIndex].correctCount >= 3) {
-      //   // Якщо слово завершено, позначаємо його як пройдене
-      //   updatedStats[currentWordIndex].completed.push(level);
-      //   setCurrentWordIndex(prevIndex => prevIndex + 1);
-      // }
+  //     // Перевіряємо, чи можна перейти до наступного слова
+  //     // if (updatedStats[currentWordIndex].correctCount >= 3) {
+  //     //   // Якщо слово завершено, позначаємо його як пройдене
+  //     //   updatedStats[currentWordIndex].completed.push(level);
+  //     //   setCurrentWordIndex(prevIndex => prevIndex + 1);
+  //     // }
 
-      setWordStats(updatedStats);
-      setRecognizedText('');
-    } else {
-      Alert.alert('Неправильно', 'Спробуйте ще раз.');
-    }
-  };
+  //     setWordStats(updatedStats);
+  //     setRecognizedText('');
+  //   } else {
+  //     Alert.alert('Неправильно', 'Спробуйте ще раз.');
+  //   }
+  // };
 
   // Слухачі для Voice
-  useEffect(() => {
-    Voice.onSpeechResults = onSpeechResults;
-    return () => {
-      if (Voice.destroy) {
-        Voice.destroy().then(Voice.removeAllListeners);
-      }
-    };
-  }, []);
-  // Якщо всі слова завершені
-  if (currentWordIndex >= wordStats.length) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.completedText}>
-          Вітаємо! Ви завершили рівень "{topicName}"!
-        </Text>
-      </View>
-    );
-  }
+  // useEffect(() => {
+  //   Voice.onSpeechResults = onSpeechResults;
 
-  const requestMicrophonePermission = async () => {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      );
-      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-        Alert.alert('Дозвіл на мікрофон відхилено');
-        return false;
-      }
-    }
-    return true;
-  };
+  //   return () => {
+  //     Voice.removeAllListeners();
+  //   };
+  // }, []);
+
+  // Якщо всі слова завершені
+  // if (currentWordIndex >= wordStats.length) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text style={styles.completedText}>
+  //         Вітаємо! Ви завершили рівень "{topicName}"!
+  //       </Text>
+  //     </View>
+  //   );
+  // }
+
+  // const requestMicrophonePermission = async () => {
+  //   if (Platform.OS === 'android') {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+  //     );
+  //     if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+  //       Alert.alert('Дозвіл на мікрофон відхилено');
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.wordToSay}>Слово: {currentWord}</Text>
-      <Button
-        title={isRecording ? 'Запис йде...' : 'Натисніть, щоб говорити'}
-        onPress={isRecording ? stopRecording : startRecording}
-      />
-      <Text style={styles.recognizedText}>
-        Результат: {recognizedText || 'Ще нічого не розпізнано'}
-      </Text>
-      <Button title="Перевірити" onPress={checkAnswer} />
+      <SafeAreaView />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Type your message..."
+          value={recognizedText}
+          onChangeText={(text: string) => setRecognizedText(text)}
+        />
+        <TouchableOpacity
+          onPress={() => (!isRecording ? stopRecording() : startRecording())}
+          style={styles.voiceButton}>
+          {isRecording ? (
+            <Text style={styles.voiceButtonText}>•••</Text>
+          ) : (
+            <Image
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/512/4980/4980251.png',
+              }}
+              style={{width: 45, height: 45}}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -151,23 +229,53 @@ export const SeventhLevel: React.FC<LevelProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#FFF5E0',
+  },
+  messagesContainer: {
+    padding: 10,
+  },
+  messageBubble: {
+    maxWidth: '70%',
+    marginVertical: 5,
+    borderRadius: 10,
+    padding: 10,
+  },
+  messageText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  inputContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    padding: 10,
+    borderTopWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: 'white',
   },
-  wordToSay: {
+  input: {
+    flex: 1,
+    fontSize: 16,
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: '#EFEFEF',
+  },
+  voiceButton: {
+    marginLeft: 10,
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
   },
-  recognizedText: {
-    fontSize: 18,
-    marginVertical: 20,
+  voiceButtonText: {
+    fontSize: 24,
+    height: 45,
   },
-  completedText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: 'green',
-    textAlign: 'center',
+  sendButton: {
+    marginLeft: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#FF6969',
+    borderRadius: 20,
+  },
+  sendButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });

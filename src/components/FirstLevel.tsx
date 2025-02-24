@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
-// import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/AntDesign';
 import {LevelComponent} from './LevelComponent';
 import {WordItem} from './WordLearningScreen';
 
@@ -25,28 +25,35 @@ export const FirstLevel: React.FC<LevelProps> = ({
   progress,
   topicName,
 }) => {
-  const renderContent = (currentItem: WordItem, isDarkTheme?: boolean) => (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        marginVertical: 20,
-      }}>
-      <Text
+  const renderContent = (
+    currentItem: WordItem,
+    playText: any,
+    isDarkTheme?: boolean,
+  ) => {
+    console.log(currentItem);
+    return (
+      <View
         style={{
-          fontSize: 30,
-          textAlign: 'center',
-          fontWeight: 'bold',
-          color: isDarkTheme ? '#67104c' : 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          marginVertical: 20,
         }}>
-        {currentItem?.world}
-      </Text>
-      {/* <TouchableOpacity onPress={playSound}>
-        <Icon name="sound" size={30} color="#000" />
-      </TouchableOpacity> */}
-    </View>
-  );
+        <Text
+          style={{
+            fontSize: 30,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            color: isDarkTheme ? 'white' : '#67104c',
+          }}>
+          {currentItem?.world}
+        </Text>
+        <TouchableOpacity onPress={playText}>
+          <Icon name="sound" size={30} color="#000" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const renderChoices = (
     choices: WordItem[],

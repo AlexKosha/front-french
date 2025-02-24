@@ -1,7 +1,6 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import {
   Alert,
@@ -41,10 +40,10 @@ export const ForgotPassword = (): JSX.Element => {
   });
   const [isOtpCode, setIsOtpCode] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [emailValid, setEmailValid] = useState(false);
+  const [_, setEmailValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
 
-  const {locale, setLocale} = useLocalization();
+  const {locale} = useLocalization();
 
   const {
     emailText,
@@ -147,11 +146,6 @@ export const ForgotPassword = (): JSX.Element => {
 
     validateForm();
   }, [formData, formErrors]);
-
-  const changeLanguageHandler = () => {
-    const newLang = locale === 'en' ? 'uk' : 'en';
-    setLocale(newLang);
-  };
 
   return (
     <TouchableOpacity
