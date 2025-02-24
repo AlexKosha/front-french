@@ -168,9 +168,9 @@ export const ForgotPassword = (): JSX.Element => {
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <AntDesign name="arrowleft" size={24} color="#67104c" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={changeLanguageHandler}>
+              {/* <TouchableOpacity onPress={changeLanguageHandler}>
                 <MaterialIcons name="language" size={26} color="#67104c" />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             {isOtpCode ? (
@@ -318,7 +318,7 @@ export const ForgotPassword = (): JSX.Element => {
           </View>
 
           {/* Logo */}
-          <Logo />
+          <Logo isThemePage={true} />
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableOpacity>

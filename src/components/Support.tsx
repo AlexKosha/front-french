@@ -10,6 +10,7 @@ import {Logo} from './Logo';
 
 export const Support = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Support'>>();
+
   const {locale, setLocale} = useLocalization();
   const {support} = useTranslationHelper();
 
@@ -30,9 +31,9 @@ export const Support = (): JSX.Element => {
             onPress={() => navigation.navigate('ForgotPassword')}>
             <AntDesign name="arrowleft" size={24} color="#67104c" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={changeLanguageHandler}>
+          {/* <TouchableOpacity onPress={changeLanguageHandler}>
             <MaterialIcons name="language" size={26} color="#67104c" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={{marginVertical: 22}}>
           <Text
@@ -45,7 +46,7 @@ export const Support = (): JSX.Element => {
           </Text>
         </View>
       </View>
-      <Logo />
+      <Logo isThemePage={true} />
     </SafeAreaView>
   );
 };

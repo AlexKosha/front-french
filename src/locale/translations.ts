@@ -178,14 +178,26 @@ export const translations: Translations = {
     },
   },
   validation: {
-    name: {en: 'Name is required', uk: 'Ім’я обов’язкове'},
-    birthDate: {
-      en: 'Date of birth is required',
-      uk: 'Дата народження обов’язкова',
+    name: {
+      en: 'Start with a capital letter and a minimum of 3 letters',
+      uk: "Ім'я повинно починатися з великої літери, та мати мінімум три літери",
     },
-    email: {en: 'Email is required', uk: 'Електронна пошта обов’язкова'},
-    password: {en: 'Password is required', uk: 'Пароль обов’язковий'},
-    code: {en: 'Code is required', uk: 'Код обов’язковий'},
+    birthDate: {
+      en: 'User must be at least 14 years old',
+      uk: 'Користувачу повинно бути мінімум 14 років',
+    },
+    email: {
+      en: 'Enter a valid email address',
+      uk: 'Введіть коректну електронну адресу',
+    },
+    password: {
+      en: 'The password must contain at least 6 characters',
+      uk: 'Пароль повинен містити мінімум 6 символів',
+    },
+    code: {
+      en: 'Enter the code you received in the mail',
+      uk: 'Введіть код який прийшов вам на пошту',
+    },
   },
   LAT: {
     lat: {en: 'Latitude', uk: 'Широта'},

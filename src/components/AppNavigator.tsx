@@ -1,23 +1,20 @@
-import {NavigationContainer} from '@react-navigation/native';
+// import {NavigationContainer} from '@react-navigation/native';
+// import {createStackNavigator} from '@react-navigation/stack';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useDispatch, useSelector} from 'react-redux';
-// import {createStackNavigator} from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import * as Components from '../components';
 import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useEffect} from 'react';
 import {getProfileThunk, logoutThunk} from '../store/auth/authThunks';
-// import * as Screens from '../screens';
-// import * as Components from '../components';
-// import {setTheme} from '../store/auth/authSlice';
 import {AppDispatch} from '../store/store';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
 import {selectTheme} from '../store/auth/selector';
 import {setTheme} from '../store/auth/authSlice';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {Registration} from './Registration';
 import {Login} from './Login';
 import {Verbs} from './Verbs';
@@ -35,19 +32,18 @@ import {LessonsBySubscription} from './LessonsBySubscription';
 import {TrainingLevel} from './TrainingLevel';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
-// import {Registration} from '.';
 
 const MainStack = createNativeStackNavigator();
 
 export const AppNavigator = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
-  // const {t, i18n} = useTranslation();
   const dispatch = useDispatch<AppDispatch>(); // Типізуємо dispatch
   const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
 
   const {locale, setLocale} = useLocalization();
 
-  const {studyAndTrain, vocab, phonetic, verbs} = useTranslationHelper();
+  const {studyAndTrain, vocab, phonetic, verbs, lessonsBySubscr} =
+    useTranslationHelper();
 
   const changeLanguageHandler = () => {
     const newLang = locale === 'en' ? 'uk' : 'en';
@@ -69,6 +65,7 @@ export const AppNavigator = (): JSX.Element => {
   // };
 
   useEffect(() => {
+    // toggleTheme();
     const handleGetProfile = async (): Promise<void> => {
       try {
         const resultAction = await dispatch(getProfileThunk());
@@ -144,7 +141,7 @@ export const AppNavigator = (): JSX.Element => {
 
       <MainStack.Screen
         name="Login"
-        component={Login}
+        component={Components.Login}
         options={{headerShown: false}}
       />
 
@@ -163,26 +160,23 @@ export const AppNavigator = (): JSX.Element => {
         name="Home"
         component={Home}
         options={({navigation}) => ({
-          headerShown: false,
-          headerTitle: () => null, // Приховуємо текст заголовка
-          title: undefined,
+          title: '',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
           headerLeft: () => null,
-          headerRight: () => null,
-          // headerRight: () => (
-          //   <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          //     <AntDesign
-          //       name="setting"
-          //       size={30}
-          //       color={isDarkTheme ? 'white' : '#67104c'}
-          //       style={{marginRight: 5}}
-          //     />
-          //   </TouchableOpacity>
-          // ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+              <AntDesign
+                name="setting"
+                size={30}
+                color={isDarkTheme ? 'white' : '#67104c'}
+                style={{marginRight: 5}}
+              />
+            </TouchableOpacity>
+          ),
           headerBackVisible: false,
         })}
       />
@@ -491,7 +485,26 @@ export const AppNavigator = (): JSX.Element => {
       <MainStack.Screen
         name="LessonsBySubscription"
         component={LessonsBySubscription}
-        options={{headerShown: false}}
+        // options={{headerShown: false}}
+        options={({navigation}) => ({
+          title: lessonsBySubscr,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <AntDesign
+                name="arrowleft"
+                size={30}
+                color={isDarkTheme ? 'white' : '#67104c'}
+                style={{marginLeft: 5}}
+              />
+            </TouchableOpacity>
+          ),
+        })}
       />
     </MainStack.Navigator>
   );

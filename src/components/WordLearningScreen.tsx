@@ -11,7 +11,6 @@ import {
 // import {Audio} from 'expo-av';
 // import Icon from 'react-native-vector-icons/AntDesign';
 import {useRoute, useNavigation} from '@react-navigation/native';
-// import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 import {selectThemeWordId, selectVocab} from '../store/vocab/selectors';
@@ -225,15 +224,15 @@ export const WordLearningScreen = () => {
             style={{
               fontSize: 30,
               fontWeight: 'bold',
-              // color: isDarkTheme ? 'white' : '#67104c',
+              color: isDarkTheme ? 'white' : 'black',
             }}>
             {selectedWords[currentIndex]?.world}
           </Text>
           <Text
             style={{
               fontSize: 20,
-              marginTop: 20,
-              // color: isDarkTheme ? 'white' : '#67104c',
+              marginTop: 5,
+              color: isDarkTheme ? 'white' : 'black',
             }}>
             {locale === 'uk'
               ? selectedWords[currentIndex]?.translationUK

@@ -25,7 +25,7 @@ export const FirstLevel: React.FC<LevelProps> = ({
   progress,
   topicName,
 }) => {
-  const renderContent = (currentItem: WordItem) => (
+  const renderContent = (currentItem: WordItem, isDarkTheme?: boolean) => (
     <View
       style={{
         flexDirection: 'row',
@@ -38,7 +38,7 @@ export const FirstLevel: React.FC<LevelProps> = ({
           fontSize: 30,
           textAlign: 'center',
           fontWeight: 'bold',
-          color: '#000', // Тут можна додати підтримку теми через пропси, якщо потрібно
+          color: isDarkTheme ? '#67104c' : 'white',
         }}>
         {currentItem?.world}
       </Text>

@@ -23,6 +23,7 @@ import ProgressBar from '../components/ProgressBar';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {translations} from '../locale/translations';
 import {useLocalization} from '../locale/LocalizationContext';
+import {Logo} from '../components/Logo';
 
 type User = {
   name: string;
@@ -39,7 +40,8 @@ export const Profile = (): JSX.Element => {
     email: user.email || '',
   });
   const {locale, setLocale} = useLocalization();
-  const {hello, nameText, emailText, saveChanges} = useTranslationHelper();
+  const {hello, nameText, emailText, saveChanges, dataChanged, close} =
+    useTranslationHelper();
 
   const isDarkTheme = useSelector(selectTheme);
 
@@ -54,7 +56,7 @@ export const Profile = (): JSX.Element => {
     try {
       const resultAction = await dispatch(updaterUserDataThunk(updatedUser));
       if (updaterUserDataThunk.fulfilled.match(resultAction)) {
-        // Alert.alert('', t('alert.dataChanged'), [{text: t('alert.close')}]);
+        Alert.alert('', dataChanged, [{text: close}]);
       } else {
         Alert.alert('Error', resultAction.error.message);
       }
@@ -141,7 +143,7 @@ export const Profile = (): JSX.Element => {
                   value={userInfo.name}
                   style={{
                     width: '100%',
-                    color: isDarkTheme ? 'white' : 'black', // Колір тексту треба додати в `style`
+                    color: isDarkTheme ? 'white' : 'black',
                   }}
                   onChangeText={text =>
                     setUserInfo(prevInfo => ({...prevInfo, name: text}))
@@ -206,6 +208,7 @@ export const Profile = (): JSX.Element => {
             </Pressable>
             <PasswordForm />
           </View>
+          {/* <Logo /> */}
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableOpacity>

@@ -45,7 +45,7 @@ export const ThirdLevel: React.FC<LevelProps> = ({
           key={choice._id}
           onPress={() => handleChoice(choice)}
           style={{
-            backgroundColor: isDarkTheme ? '#67104c' : '#f2f2f2',
+            backgroundColor: isDarkTheme ? 'white' : '#67104c',
             padding: 15,
             borderRadius: 10,
             margin: 10,
@@ -55,7 +55,7 @@ export const ThirdLevel: React.FC<LevelProps> = ({
           <Text
             style={{
               fontSize: 20,
-              color: isDarkTheme ? 'white' : '#67104c',
+              color: isDarkTheme ? '#67104c' : 'white',
               textAlign: 'center',
             }}>
             {choice.world}

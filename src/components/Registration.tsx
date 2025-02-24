@@ -34,6 +34,8 @@ import {useLocalization} from '../locale/LocalizationContext';
 import {translations} from '../locale/translations';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from './Logo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setTheme} from '../store/auth/authSlice';
 
 export const Registration = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Registration'>>();
@@ -155,6 +157,21 @@ export const Registration = (): JSX.Element => {
 
     validateForm();
   }, [formData, formErrors]);
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const storedTheme = await AsyncStorage.getItem('theme');
+        if (storedTheme !== null) {
+          const parsedTheme = JSON.parse(storedTheme); // Конвертуємо з рядка в булеве значення
+          dispatch(setTheme(parsedTheme)); // Оновлюємо тему у Redux-стані
+        }
+      } catch (error) {
+        console.error('Failed to load theme:', error);
+      }
+    };
+    loadTheme();
+  });
 
   const renderError = (error: any, errorMessage: any) => {
     return error ? <Text style={errorMessage}>{error}</Text> : null;
@@ -384,7 +401,7 @@ export const Registration = (): JSX.Element => {
           </View>
 
           {/* Logo */}
-          <Logo isRegistrationPage={true} />
+          <Logo isThemePage={true} />
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableOpacity>

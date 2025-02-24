@@ -2,14 +2,14 @@ import {Image, View, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
 
-export const Logo = ({isRegistrationPage = false}) => {
+export const Logo = ({isThemePage = false}) => {
   const isDarkTheme = useSelector(selectTheme);
 
   return (
     <View style={styles.container}>
       <Image
         source={
-          isRegistrationPage
+          isThemePage
             ? require('../images/logo.jpg') // Завжди світле лого на сторінці реєстрації
             : isDarkTheme
             ? require('../images/logo-dark.jpg') // Темне лого для темної теми

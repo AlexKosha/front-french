@@ -8,10 +8,13 @@ import {ThirdLevel} from './ThirdLevel';
 // import {FourthLevel} from './FourtLevel';
 import {FifthLevel} from './FifthLevel';
 import {SixthLevel} from './SixthLevel';
+import {useSelector} from 'react-redux';
+import {selectTheme} from '../store/auth/selector';
 // import {SeventhLevel} from './SeventhLevel';
 
 export const TrainingLevel = () => {
   const route = useRoute<RouteProps<'TrainingLevel'>>();
+  const isDarkTheme = useSelector(selectTheme);
   const {level, topicName, progress} = route.params;
 
   const renderLevelComponent = () => {
@@ -62,6 +65,9 @@ export const TrainingLevel = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>{renderLevelComponent()}</SafeAreaView>
+    <SafeAreaView
+      style={{flex: 1, backgroundColor: isDarkTheme ? '#67104c' : 'white'}}>
+      {renderLevelComponent()}
+    </SafeAreaView>
   );
 };

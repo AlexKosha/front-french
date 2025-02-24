@@ -24,16 +24,6 @@ export const Home = (): JSX.Element => {
     <SafeAreaView
       style={{flex: 1, backgroundColor: isDarkTheme ? '#67104c' : 'white'}}>
       <View style={defaultStyles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-            <AntDesign
-              name="setting"
-              size={30}
-              color={isDarkTheme ? 'white' : '#67104c'}
-            />
-          </TouchableOpacity>
-        </View>
-
         <Text
           style={[
             styles.welcomeText,
@@ -83,10 +73,6 @@ export const Home = (): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
   welcomeText: {
     fontSize: 24,
     textAlign: 'center',

@@ -65,6 +65,7 @@ export const useTranslationHelper = () => {
     confirm: getTranslation('btn', 'confirm'),
     welcomeAlert: getTranslation('alert', 'welcomeAlert'),
     close: getTranslation('alert', 'close'),
+    dataChanged: getTranslation('alert', 'dataChanged'),
     registerError: getTranslation('alert', 'registerError'),
     loginError: getTranslation('alert', 'loginError'),
     codeOnMail: getTranslation('alert', 'codeOnMail'),
