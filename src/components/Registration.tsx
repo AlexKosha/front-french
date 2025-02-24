@@ -219,7 +219,7 @@ export const Registration = (): JSX.Element => {
         // }
       >
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-          <View style={{flex: 1, marginHorizontal: 20}}>
+          <View style={defaultStyles.container}>
             {/* Language and Header */}
             <Pressable
               onPress={changeLanguageHandler}

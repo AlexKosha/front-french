@@ -10,6 +10,7 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {WordItem} from './WordLearningScreen';
+import {Logo} from './Logo';
 
 interface LevelProps {
   level: number;

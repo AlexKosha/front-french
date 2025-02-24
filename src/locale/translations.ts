@@ -150,8 +150,8 @@ export const translations: Translations = {
   },
   hm: {
     welcome: {
-      en: 'Welcome! This is your Home Page',
-      uk: 'Привіт! Це твоя основна сторінка',
+      en: 'Welcome! This app will help you learn French easily and effectively. Here, you will find interactive lessons, pronunciation exercises, grammar and vocabulary training, as well as practical tasks to improve your skills.',
+      uk: 'Привіт! Цей додаток допоможе вам вивчити французьку мову легко та ефективно. Тут ви знайдете інтерактивні уроки, вправи на вимову, граматику та словниковий запас, а також зможете тренувати свої навички через практичні завдання',
     },
     studyAndTrain: {en: 'Study and Train', uk: 'Навчатися та грати'},
     lessonsBySubscr: {en: 'Lessons by subscription', uk: 'Уроки за підпискою'},
@@ -195,7 +195,7 @@ export const translations: Translations = {
     learn: {en: 'Learn', uk: 'Вчити'},
     train: {en: 'Train', uk: 'Тренуватися'},
     completedWords: {en: 'Completed Words', uk: 'Завершені слова'},
-    words: {en: 'Words', uk: 'Слова'},
+    words: {en: 'Words', uk: 'Слів'},
     word: {en: 'Word', uk: 'Слово'},
     sessionCompleted: {en: 'Session Completed', uk: 'Сесію завершено'},
     search: {en: 'Search', uk: 'Пошук'},

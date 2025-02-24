@@ -18,6 +18,7 @@ import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {translations} from '../locale/translations';
+import {Logo} from './Logo';
 
 export const Learn = () => {
   const route = useRoute<RouteProps<'Learn'>>();
@@ -163,6 +164,7 @@ export const Learn = () => {
           />
         </View>
       ) : (
+        // Choose 5,10,15 or 20 words
         <View
           style={[
             defaultStyles.btnContainer,
@@ -202,6 +204,9 @@ export const Learn = () => {
           ))}
         </View>
       )}
+
+      {/* Logo */}
+      <Logo />
     </SafeAreaView>
   );
 };

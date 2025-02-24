@@ -12,6 +12,7 @@ import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
+import {Logo} from './Logo';
 
 export const LearnOrTrainTopic = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
@@ -27,6 +28,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
         defaultStyles.container,
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
+      {/* Buttons */}
       <View
         style={[
           defaultStyles.btnContainer,
@@ -50,6 +52,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
             {learn}
           </Text>
         </Pressable>
+
         <Pressable
           style={[
             defaultStyles.button,
@@ -68,16 +71,8 @@ export const LearnOrTrainTopic = (): JSX.Element => {
         </Pressable>
       </View>
 
-      <View style={styles.logoContainer}>
-        <Image
-          source={
-            isDarkTheme
-              ? require('../images/logo-dark.jpg')
-              : require('../images/logo.jpg')
-          }
-          style={styles.logo}
-        />
-      </View>
+      {/* Logo */}
+      <Logo />
     </SafeAreaView>
   );
 };

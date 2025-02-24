@@ -34,6 +34,7 @@ import {Train} from './Train';
 import {LessonsBySubscription} from './LessonsBySubscription';
 import {TrainingLevel} from './TrainingLevel';
 import {useLocalization} from '../locale/LocalizationContext';
+import {useTranslationHelper} from '../locale/useTranslation';
 // import {Registration} from '.';
 
 const MainStack = createNativeStackNavigator();
@@ -45,6 +46,8 @@ export const AppNavigator = (): JSX.Element => {
   const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
 
   const {locale, setLocale} = useLocalization();
+
+  const {studyAndTrain, vocab, phonetic, verbs} = useTranslationHelper();
 
   const changeLanguageHandler = () => {
     const newLang = locale === 'en' ? 'uk' : 'en';
@@ -160,6 +163,7 @@ export const AppNavigator = (): JSX.Element => {
         name="Home"
         component={Home}
         options={({navigation}) => ({
+          headerShown: false,
           headerTitle: () => null, // Приховуємо текст заголовка
           title: undefined,
           headerStyle: {
@@ -167,29 +171,18 @@ export const AppNavigator = (): JSX.Element => {
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          // headerLeft: () => (
-          //   <TouchableOpacity>
-          //     <MaterialIcons
-          //       name="language"
+          headerLeft: () => null,
+          headerRight: () => null,
+          // headerRight: () => (
+          //   <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          //     <AntDesign
+          //       name="setting"
           //       size={30}
           //       color={isDarkTheme ? 'white' : '#67104c'}
-          //       style={{marginLeft: 5}}
+          //       style={{marginRight: 5}}
           //     />
           //   </TouchableOpacity>
           // ),
-
-          headerLeft: () => null,
-
-          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-              <AntDesign
-                name="setting"
-                size={30}
-                color={isDarkTheme ? 'white' : '#67104c'}
-                style={{marginRight: 5}}
-              />
-            </TouchableOpacity>
-          ),
           headerBackVisible: false,
         })}
       />
@@ -242,7 +235,7 @@ export const AppNavigator = (): JSX.Element => {
         name="StudyAndTrain"
         component={StudyAndTrain}
         options={({navigation}) => ({
-          // title: ` ${t('LAT.lat')}`,
+          title: studyAndTrain,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -265,7 +258,7 @@ export const AppNavigator = (): JSX.Element => {
         name="Vocab"
         component={Vocab}
         options={({navigation}) => ({
-          // title: ` ${t('LAT.vocab')}`,
+          title: vocab,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -299,7 +292,7 @@ export const AppNavigator = (): JSX.Element => {
         name="Verbs"
         component={Verbs}
         options={({navigation}) => ({
-          // title: ` ${t('LAT.verbs')}`,
+          title: verbs,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -322,7 +315,7 @@ export const AppNavigator = (): JSX.Element => {
         name="Phonetic"
         component={Phonetic}
         options={({navigation}) => ({
-          // title: ` ${t('LAT.phonetic')}`,
+          title: phonetic,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',

@@ -10,6 +10,7 @@ import {
 import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
+import {Logo} from './Logo';
 
 export const Train = () => {
   const navigation = useNavigation<NavigationProps<'Learn'>>();
@@ -153,6 +154,7 @@ export const Train = () => {
           </TouchableOpacity>
         ))}
       </View>
+      <Logo />
     </SafeAreaView>
   );
 };

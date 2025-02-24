@@ -39,7 +39,6 @@ export const useTranslationHelper = () => {
     dontHaveAcc: getTranslation('rg', 'dontHaveAcc'),
     haveAccButForgotPass: getTranslation('rg', 'haveAccButForgotPass'),
     resetPassHere: getTranslation('rg', 'resetPassHere'),
-
     send: getTranslation('rg', 'send'),
     newPassword: getTranslation('rg', 'newPassword'),
     back: getTranslation('rg', 'back'),
@@ -68,6 +67,8 @@ export const useTranslationHelper = () => {
     close: getTranslation('alert', 'close'),
     registerError: getTranslation('alert', 'registerError'),
     loginError: getTranslation('alert', 'loginError'),
+    codeOnMail: getTranslation('alert', 'codeOnMail'),
+    passwordChanged: getTranslation('alert', 'passwordChanged'),
     name: getTranslation('validation', 'name'),
     birthDate: getTranslation('validation', 'birthDate'),
     email: getTranslation('validation', 'email'),

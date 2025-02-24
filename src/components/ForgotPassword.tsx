@@ -1,10 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
-// import {useTranslation} from 'react-i18next';
 import {
   Alert,
   Keyboard,
@@ -18,7 +16,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import '../../i18n';
 import {handleChange} from '../helpers/handleChangeInput';
 import {forgotPass, restorePassword} from '../services/authService';
 import * as Validate from '../helpers/validationInput';
@@ -27,6 +24,7 @@ import {NavigationProps} from '../helpers/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {translations} from '../locale/translations';
+import {Logo} from './Logo';
 
 export const ForgotPassword = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'ForgotPassword'>>();
@@ -58,6 +56,11 @@ export const ForgotPassword = (): JSX.Element => {
     newPassword,
     send,
     code,
+    close,
+    codeOnMail,
+    passwordChanged,
+    email,
+    password,
   } = useTranslationHelper();
 
   const handleSendOtpCode = async () => {
@@ -70,7 +73,7 @@ export const ForgotPassword = (): JSX.Element => {
         password: '',
       });
       setIsOtpCode(true);
-      // Alert.alert('', t('alert.codeOnMail'), [{text: t('alert.close')}]);
+      Alert.alert('', codeOnMail, [{text: close}]);
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +86,7 @@ export const ForgotPassword = (): JSX.Element => {
     };
     try {
       await restorePassword(formData.otp, newPassword);
-      // Alert.alert('', t('alert.passwordChanged'), [{text: t('alert.close')}]);
+      Alert.alert('', passwordChanged, [{text: close}]);
       navigation.navigate('Login');
     } catch (error) {
       console.log(error);
@@ -106,8 +109,7 @@ export const ForgotPassword = (): JSX.Element => {
     Validate.validateOtp,
     setFormErrors,
     'otpError',
-    // t('validation.code'),
-    'LOCALIZE',
+    code,
   );
 
   const handleEmailChange = handleChange(
@@ -116,7 +118,7 @@ export const ForgotPassword = (): JSX.Element => {
     Validate.validateEmail,
     setFormErrors,
     'emailError',
-    'LOCALIZE',
+    email,
   );
 
   const handlePasswordChange = handleChange(
@@ -125,7 +127,7 @@ export const ForgotPassword = (): JSX.Element => {
     Validate.validatePassword,
     setFormErrors,
     'passwordError',
-    'LOCALIZE',
+    password,
   );
 
   const renderError = (error: any, errorMessage: any) => {
@@ -159,8 +161,9 @@ export const ForgotPassword = (): JSX.Element => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{flex: 1}}>
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
           <View style={defaultStyles.container}>
+            {/* Icons */}
             <View style={defaultStyles.headerBox}>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <AntDesign name="arrowleft" size={24} color="#67104c" />
@@ -169,8 +172,10 @@ export const ForgotPassword = (): JSX.Element => {
                 <MaterialIcons name="language" size={26} color="#67104c" />
               </TouchableOpacity>
             </View>
+
             {isOtpCode ? (
               <>
+                {/* Enter code */}
                 <View style={defaultStyles.boxForm}>
                   <Text style={defaultStyles.labelText}>{code}</Text>
                   <View
@@ -191,6 +196,7 @@ export const ForgotPassword = (): JSX.Element => {
                   </View>
                 </View>
 
+                {/* New Password */}
                 <View style={defaultStyles.boxForm}>
                   <Text style={defaultStyles.labelText}>{newPassword}</Text>
                   <View
@@ -225,6 +231,8 @@ export const ForgotPassword = (): JSX.Element => {
                     </TouchableOpacity>
                   </View>
                 </View>
+
+                {/* Buttons Back and Save Changes */}
                 <Pressable
                   style={[defaultStyles.button, {backgroundColor: '#67104c'}]}
                   onPress={handleBackToEmail}>
@@ -232,6 +240,7 @@ export const ForgotPassword = (): JSX.Element => {
                     {back}
                   </Text>
                 </Pressable>
+
                 <Pressable
                   style={[
                     defaultStyles.button,
@@ -259,6 +268,7 @@ export const ForgotPassword = (): JSX.Element => {
                   </Text>
                 </View>
 
+                {/* Email */}
                 <View style={[defaultStyles.boxForm, {padding: 0}]}>
                   <Text style={defaultStyles.labelText}>{emailText}</Text>
                   <View
@@ -278,18 +288,17 @@ export const ForgotPassword = (): JSX.Element => {
                     />
                   </View>
                 </View>
+
+                {/* Send button */}
                 <Pressable
-                  style={[
-                    defaultStyles.button,
-                    {backgroundColor: '#67104c'},
-                    !passwordValid && styles.buttonDisabled,
-                  ]}
-                  onPress={handleSendOtpCode}
-                  disabled={!emailValid}>
+                  style={[defaultStyles.button, {backgroundColor: '#67104c'}]}
+                  onPress={handleSendOtpCode}>
                   <Text style={[defaultStyles.btnText, {color: 'white'}]}>
                     {send}
                   </Text>
                 </Pressable>
+
+                {/* Links */}
                 <View style={[defaultStyles.linkBox, {marginTop: 22}]}>
                   <Text
                     style={{
@@ -307,6 +316,9 @@ export const ForgotPassword = (): JSX.Element => {
               </>
             )}
           </View>
+
+          {/* Logo */}
+          <Logo />
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableOpacity>

@@ -1,36 +1,39 @@
+import {useNavigation} from '@react-navigation/native';
 import {
   SafeAreaView,
   Text,
   View,
   StyleSheet,
   Pressable,
-  Image,
+  TouchableOpacity,
 } from 'react-native';
-import React from 'react';
-import {useNavigation} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
 import {defaultStyles} from '../components/defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
-import {useLocalization} from '../locale/LocalizationContext';
-import {translations} from '../locale/translations';
 import {useTranslationHelper} from '../locale/useTranslation';
+import {Logo} from '../components/Logo';
 
 export const Home = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
   const isDarkTheme = useSelector(selectTheme);
-
-  const {locale, setLocale} = useLocalization();
-
   const {welcome, studyAndTrain, lessonsBySubscr} = useTranslationHelper();
 
   return (
     <SafeAreaView
-      style={[
-        styles.safeArea,
-        {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
-      ]}>
+      style={{flex: 1, backgroundColor: isDarkTheme ? '#67104c' : 'white'}}>
       <View style={defaultStyles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <AntDesign
+              name="setting"
+              size={30}
+              color={isDarkTheme ? 'white' : '#67104c'}
+            />
+          </TouchableOpacity>
+        </View>
+
         <Text
           style={[
             styles.welcomeText,
@@ -39,6 +42,7 @@ export const Home = (): JSX.Element => {
           {welcome}
         </Text>
 
+        {/* Buttons */}
         <View style={styles.buttonContainer}>
           <Pressable
             style={[
@@ -72,45 +76,27 @@ export const Home = (): JSX.Element => {
         </View>
       </View>
 
-      <View style={styles.logoContainer}>
-        <Image
-          source={
-            isDarkTheme
-              ? require('../images/logo-dark.jpg')
-              : require('../images/logo.jpg')
-          }
-          style={styles.logo}
-        />
-      </View>
+      {/* Logo */}
+      <Logo />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   welcomeText: {
-    marginTop: 20,
-    fontSize: 25,
+    fontSize: 24,
     textAlign: 'center',
+    paddingHorizontal: 20,
+    lineHeight: 34, // Робимо текст більш просторовим
   },
   buttonContainer: {
     flex: 1,
-    justifyContent: 'center', // Центруємо по вертикалі
-    alignItems: 'center', // Центруємо по горизонталі
     marginTop: 20,
-  },
-  logoContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: '50%',
-    transform: [{translateX: -70}],
-    alignItems: 'center',
-  },
-  logo: {
-    width: 140,
-    height: 60,
-    resizeMode: 'contain',
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
 });

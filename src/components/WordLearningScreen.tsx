@@ -40,8 +40,6 @@ export const WordLearningScreen = () => {
   const isDarkTheme = useSelector(selectTheme);
   const id = useSelector(selectThemeWordId);
   const navigation = useNavigation<NavigationProps<'WordLearningScreen'>>();
-
-  // const {t, i18n} = useTranslation();
   const {locale, setLocale} = useLocalization();
   const {
     word,
@@ -70,13 +68,8 @@ export const WordLearningScreen = () => {
     isSingleWordMode ? [wordItem] : [],
   );
 
-  // const currentLanguage = i18n.language;
-
   const filteredWords = vocabData.filter(word => word.themeId === id);
 
-  // Функція для завантаження прогресу
-
-  // Функція для збереження прогресу
   const saveProgress = async (word: any) => {
     const updatedProgress = word.map((w: any) => ({
       ...w,
@@ -232,7 +225,7 @@ export const WordLearningScreen = () => {
             style={{
               fontSize: 30,
               fontWeight: 'bold',
-              color: isDarkTheme ? 'white' : '#67104c',
+              // color: isDarkTheme ? 'white' : '#67104c',
             }}>
             {selectedWords[currentIndex]?.world}
           </Text>
@@ -240,7 +233,7 @@ export const WordLearningScreen = () => {
             style={{
               fontSize: 20,
               marginTop: 20,
-              color: isDarkTheme ? 'white' : '#67104c',
+              // color: isDarkTheme ? 'white' : '#67104c',
             }}>
             {locale === 'uk'
               ? selectedWords[currentIndex]?.translationUK
@@ -301,6 +294,7 @@ export const WordLearningScreen = () => {
           </View>
         </>
       ) : (
+        // Session Completed
         <View style={{alignItems: 'center'}}>
           <Text
             style={{

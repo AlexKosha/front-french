@@ -1,9 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-// import Feather from 'react-native-vector-icons/Feather';
-import Feather from 'react-native-vector-icons/Feather';
-
 import {
   Pressable,
   SafeAreaView,
@@ -12,8 +9,8 @@ import {
   TouchableOpacity,
   View,
   Alert,
-  Image,
 } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
 import {loginThunk} from '../store/auth/authThunks';
 import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';

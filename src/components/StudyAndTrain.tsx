@@ -15,6 +15,7 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {useTranslationHelper} from '../locale/useTranslation';
+import {Logo} from './Logo';
 
 export const StudyAndTrain = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
@@ -22,7 +23,7 @@ export const StudyAndTrain = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'StudyAndTrain'>>();
   const dispatch = useDispatch<AppDispatch>();
 
-  const {phonetic, vocab, verbs} = useTranslationHelper();
+  const {phonetic, vocab, verbs, studyAndTrain} = useTranslationHelper();
 
   const handleGetTheme = async () => {
     try {
@@ -105,16 +106,7 @@ export const StudyAndTrain = (): JSX.Element => {
           </Text>
         </Pressable>
       </View>
-      <View style={styles.logoContainer}>
-        <Image
-          source={
-            isDarkTheme
-              ? require('../images/logo-dark.jpg')
-              : require('../images/logo.jpg')
-          }
-          style={styles.logo}
-        />
-      </View>
+      <Logo />
     </SafeAreaView>
   );
 };
