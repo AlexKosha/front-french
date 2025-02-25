@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-// import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/AntDesign';
 import {LevelComponent} from './LevelComponent';
 import {LevelProps} from './FirstLevel';
 import {WordItem} from './WordLearningScreen';
@@ -20,12 +20,11 @@ export const ThirdLevel: React.FC<LevelProps> = ({
     return (
       <View style={{marginTop: 50, alignItems: 'center'}}>
         <TouchableOpacity onPress={() => playText()} disabled={isPlaying}>
-          <Text>Play</Text>
-          {/* <Icon
+          <Icon
             name="sound"
             size={40}
             color={isPlaying ? 'gray' : isDarkTheme ? 'white' : '#67104c'}
-          /> */}
+          />
         </TouchableOpacity>
       </View>
     );

@@ -10,7 +10,7 @@ import {FifthLevel} from './FifthLevel';
 import {SixthLevel} from './SixthLevel';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
-// import {SeventhLevel} from './SeventhLevel';
+import {SeventhLevel} from './SeventhLevel';
 
 export const TrainingLevel = () => {
   const route = useRoute<RouteProps<'TrainingLevel'>>();
@@ -51,14 +51,14 @@ export const TrainingLevel = () => {
         return (
           <SixthLevel level={level} progress={progress} topicName={topicName} />
         );
-      // case 7:
-      //   return (
-      //     <SeventhLevel
-      //       level={level}
-      //       progress={progress}
-      //       topicName={topicName}
-      //     />
-      //   );
+      case 7:
+        return (
+          <SeventhLevel
+            level={level}
+            progress={progress}
+            topicName={topicName}
+          />
+        );
       default:
         return <Text>Невідомий рівень</Text>;
     }
