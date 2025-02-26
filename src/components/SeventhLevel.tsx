@@ -10,8 +10,13 @@ import {
 import {PermissionsAndroid, Platform} from 'react-native';
 import Voice from '@react-native-voice/voice';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {LevelProps} from './FirstLevel';
 
-export const SeventhLevel: React.FC = () => {
+export const SeventhLevel: React.FC<LevelProps> = ({
+  level,
+  progress,
+  topicName,
+}) => {
   const [isRecording, setIsRecording] = useState(false); // Чи активний запис
   const [recognizedText, setRecognizedText] = useState(''); // Текст після розпізнавання
 

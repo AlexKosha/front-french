@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import * as Components from '../components';
+// import * as Components from '../components';
 import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
@@ -31,6 +31,7 @@ import {LessonsBySubscription} from './LessonsBySubscription';
 import {TrainingLevel} from './TrainingLevel';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
+import {Login} from '.';
 
 const MainStack = createNativeStackNavigator();
 
@@ -140,7 +141,7 @@ export const AppNavigator = (): JSX.Element => {
 
       <MainStack.Screen
         name="Login"
-        component={Components.Login}
+        component={Login}
         options={{headerShown: false}}
       />
 
