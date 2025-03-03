@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import Tts from 'react-native-tts';
 import {
   SafeAreaView,
@@ -12,6 +12,7 @@ import {
 // import {Audio} from 'expo-av';
 // import Icon from 'react-native-vector-icons/AntDesign';
 import {useRoute, useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 import {selectThemeWordId, selectVocab} from '../store/vocab/selectors';
@@ -153,7 +154,7 @@ export const WordLearningScreen = () => {
   useEffect(() => {
     Tts.getInitStatus()
       .then(() => {
-        Tts.setDefaultRate(0.6, true);
+        // Tts.setDefaultRate(0.6, true);
         Tts.setDefaultPitch(1.5);
         Tts.setDefaultLanguage('fr-FR').catch(err =>
           console.log('Language not supported', err),
@@ -163,21 +164,36 @@ export const WordLearningScreen = () => {
   }, []);
 
   // Функція для озвучки слова через TTS
+  // const playSound = useCallback(() => {
+  //   if (selectedWords[currentIndex]?.world) {
+  //     Tts.stop() // Зупиняємо будь-який попередній голос
+  //       .then(() => {
+  //         Tts.speak(selectedWords[currentIndex]?.world, {
+  //           iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
+  //           rate: 0.9,
+  //           androidParams: {
+  //             KEY_PARAM_PAN: 0,
+  //             KEY_PARAM_VOLUME: 1,
+  //             KEY_PARAM_STREAM: 'STREAM_ALARM',
+  //           },
+  //         });
+  //       })
+  //       .catch(error => console.error('TTS language error:', error));
+  //   }
+  // }, [currentIndex, selectedWords]);
+
   const playSound = useCallback(() => {
     if (selectedWords[currentIndex]?.world) {
-      Tts.stop() // Зупиняємо будь-який попередній голос
-        .then(() => {
-          Tts.speak(selectedWords[currentIndex]?.world, {
-            iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
-            rate: 0.9,
-            androidParams: {
-              KEY_PARAM_PAN: 0,
-              KEY_PARAM_VOLUME: 1,
-              KEY_PARAM_STREAM: 'STREAM_ALARM',
-            },
-          });
-        })
-        .catch(error => console.error('TTS language error:', error));
+      // Прямо викликаємо Tts.speak(), без попереднього виклику Tts.stop()
+      Tts.speak(selectedWords[currentIndex]?.world, {
+        iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
+        rate: 0.5,
+        androidParams: {
+          KEY_PARAM_PAN: 0,
+          KEY_PARAM_VOLUME: 1,
+          KEY_PARAM_STREAM: 'STREAM_ALARM',
+        },
+      });
     }
   }, [currentIndex, selectedWords]);
 
@@ -217,7 +233,11 @@ export const WordLearningScreen = () => {
             style={defaultStyles.image}
           />
           <TouchableOpacity onPress={playSound}>
-            <Text>Play</Text>
+            <Icon
+              name="sound"
+              size={40}
+              color={isDarkTheme ? 'white' : '#67104c'}
+            />
           </TouchableOpacity>
           <Text
             style={{

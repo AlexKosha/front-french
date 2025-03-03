@@ -57,22 +57,36 @@ export const LevelComponent: React.FC<LevelProps> = ({
   }, []);
 
   // Функція для озвучки слова через TTS
+  // const playText = useCallback(() => {
+  //   if (currentItem?.world) {
+  //     Tts.stop() // Зупиняємо будь-який попередній голос
+  //       .then(() => {
+  //         console.log(currentItem.world);
+  //         Tts.speak(currentItem.world, {
+  //           iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
+  //           rate: 0.9,
+  //           androidParams: {
+  //             KEY_PARAM_PAN: 0,
+  //             KEY_PARAM_VOLUME: 1,
+  //             KEY_PARAM_STREAM: 'STREAM_ALARM',
+  //           },
+  //         });
+  //       })
+  //       .catch(error => console.error('TTS language error:', error));
+  //   }
+  // }, [currentItem]);
   const playText = useCallback(() => {
     if (currentItem?.world) {
-      Tts.stop() // Зупиняємо будь-який попередній голос
-        .then(() => {
-          console.log(currentItem.world);
-          Tts.speak(currentItem.world, {
-            iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
-            rate: 0.9,
-            androidParams: {
-              KEY_PARAM_PAN: 0,
-              KEY_PARAM_VOLUME: 1,
-              KEY_PARAM_STREAM: 'STREAM_ALARM',
-            },
-          });
-        })
-        .catch(error => console.error('TTS language error:', error));
+      // Прямо викликаємо Tts.speak(), без попереднього виклику Tts.stop()
+      Tts.speak(currentItem.world, {
+        iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
+        rate: 0.5,
+        androidParams: {
+          KEY_PARAM_PAN: 0,
+          KEY_PARAM_VOLUME: 1,
+          KEY_PARAM_STREAM: 'STREAM_ALARM',
+        },
+      });
     }
   }, [currentItem]);
 

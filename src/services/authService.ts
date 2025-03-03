@@ -44,7 +44,8 @@ interface RestorePasswordBody {
 // Створення axios-інстансу
 export const instance = axios.create({
   // baseURL: 'http://172.20.10.3:2023',
-  baseURL: 'http://192.168.1.193:2023',
+  // baseURL: 'http://192.168.1.193:2023',
+  baseURL: 'http://192.168.1.16:2023',
 });
 
 // Функції для роботи з токеном
