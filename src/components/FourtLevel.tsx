@@ -10,6 +10,7 @@ import {
   Alert,
   UIManager,
   findNodeHandle,
+  Pressable,
 } from 'react-native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
@@ -19,6 +20,7 @@ import {LevelProps} from './FirstLevel';
 // import {WordItem} from './WordLearningScreen';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
+import {defaultStyles} from './defaultStyles';
 
 export const FourthLevel: React.FC<LevelProps> = ({
   progress,
@@ -36,8 +38,9 @@ export const FourthLevel: React.FC<LevelProps> = ({
   // const wordRefs = useRef<
   //   Record<string, React.RefObject<typeof Animated.View>>
   // >({});
+
   const wordRefs = useRef<
-    Record<string, React.RefObject<typeof Animated.View | View>>
+    Record<string, React.RefObject<typeof Animated.View | any>>
   >({});
 
   const wordPositions = useRef<{
@@ -176,6 +179,7 @@ export const FourthLevel: React.FC<LevelProps> = ({
   useEffect(() => {
     words.forEach(word => {
       const ref = wordRefs.current[word.id]?.current;
+
       if (ref) {
         const handle = findNodeHandle(ref);
         if (handle) {
@@ -287,18 +291,6 @@ export const FourthLevel: React.FC<LevelProps> = ({
           {words.map(word => {
             const pan = panRefs.current[word.id];
             return (
-              // <Animated.View
-              //   key={word.id}
-              //   style={[
-              //     styles.wordBox,
-              //     {transform: pan.getTranslateTransform()},
-              //   ]}
-              //   {...createPanResponder(word.id, pan).panHandlers}
-              //   ref={ref => {
-              //     if (ref) wordRefs.current[word.id] = ref;
-              //   }}>
-              //   <Text style={styles.word}>{word.text}</Text>
-              // </Animated.View>
               <Animated.View
                 key={word.id}
                 style={[
@@ -306,24 +298,33 @@ export const FourthLevel: React.FC<LevelProps> = ({
                   {transform: pan.getTranslateTransform()},
                 ]}
                 {...createPanResponder(word.id, pan).panHandlers}
-                ref={ref => {
-                  if (!wordRefs.current[word.id]) {
-                    wordRefs.current[word.id] =
-                      React.createRef<typeof Animated.View>();
-                  }
-                  wordRefs.current[word.id]!.current = ref;
-                }}>
+                ref={
+                  wordRefs.current[word.id] ||
+                  (wordRefs.current[word.id] = React.createRef())
+                } // створює новий реф, якщо його ще немає
+              >
                 <Text style={styles.word}>{word.text}</Text>
               </Animated.View>
             );
           })}
         </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <Text style={styles.checkButton} onPress={checkMatches}>
+      <Pressable
+        style={[
+          defaultStyles.button,
+          {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
+        ]}
+        onPress={checkMatches}>
+        <Text
+          style={[
+            defaultStyles.btnText,
+            {
+              color: isDarkTheme ? '#67104c' : 'white',
+            },
+          ]}>
           Перевірити
         </Text>
-      </View>
+      </Pressable>
     </SafeAreaView>
   );
 };
@@ -332,7 +333,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#f4f4f4',
   },
   title: {
     fontSize: 20,
@@ -379,17 +379,5 @@ const styles = StyleSheet.create({
   word: {
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  checkButton: {
-    padding: 10,
-    backgroundColor: '#67104c',
-    color: 'white',
-    fontSize: 18,
-    borderRadius: 5,
-    textAlign: 'center',
   },
 });
