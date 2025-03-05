@@ -5,7 +5,7 @@ import {RouteProps} from '../helpers/navigationTypes';
 import {FirstLevel} from './FirstLevel';
 import {SecondLevel} from './SecondLevel';
 import {ThirdLevel} from './ThirdLevel';
-// import {FourthLevel} from './FourtLevel';
+import {FourthLevel} from './FourtLevel';
 import {FifthLevel} from './FifthLevel';
 import {SixthLevel} from './SixthLevel';
 import {useSelector} from 'react-redux';
@@ -35,14 +35,14 @@ export const TrainingLevel = () => {
         return (
           <ThirdLevel level={level} progress={progress} topicName={topicName} />
         );
-      // case 4:
-      //   return (
-      //     <FourthLevel
-      //       level={level}
-      //       progress={progress}
-      //       topicName={topicName}
-      //     />
-      //   );
+      case 4:
+        return (
+          <FourthLevel
+            level={level}
+            progress={progress}
+            topicName={topicName}
+          />
+        );
       case 5:
         return (
           <FifthLevel level={level} progress={progress} topicName={topicName} />
