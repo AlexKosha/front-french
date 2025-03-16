@@ -8,9 +8,11 @@ import {
   TextInput,
 } from 'react-native';
 import {PermissionsAndroid, Platform} from 'react-native';
-import Voice from '@react-native-voice/voice';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LevelProps} from './FirstLevel';
+
+import AudioRecorderPlayer from 'react-native-audio-recorder-player'; // Для запису аудіо
+import axios from 'axios'; // Для HTTP-запитів
 
 export const SeventhLevel: React.FC<LevelProps> = ({
   level,
@@ -19,7 +21,11 @@ export const SeventhLevel: React.FC<LevelProps> = ({
 }) => {
   const [isRecording, setIsRecording] = useState(false); // Чи активний запис
   const [recognizedText, setRecognizedText] = useState(''); // Текст після розпізнавання
+  const [audioUri, setAudioUri] = useState(''); // URI для аудіофайлу
 
+  const audioRecorderPlayer = new AudioRecorderPlayer(); // Ініціалізація рекордера
+
+  // Запит на доступ до мікрофона
   const requestMicrophonePermission = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -46,55 +52,76 @@ export const SeventhLevel: React.FC<LevelProps> = ({
     }
   };
 
-  useEffect(() => {
-    // Додаємо слухачів для подій Voice
-    Voice.onSpeechStart = onSpeechStart;
-    Voice.onSpeechEnd = stopRecording;
-    Voice.onSpeechResults = onSpeechResults;
-    Voice.onSpeechError = onSpeechError;
-
-    // Перевірка дозволів
-    requestMicrophonePermission();
-
-    return () => {
-      Voice.removeAllListeners(); // Видалення слухачів при демонтажі компонента
-    };
-  }, []);
-
-  const onSpeechStart = (event: any) => {
-    console.log('Запис почався', event);
-  };
-
-  const onSpeechResults = (event: any) => {
-    if (event.value && event.value.length > 0) {
-      const text = event.value[0];
-      setRecognizedText(text); // Встановлюємо перший результат
-    }
-  };
-
-  const onSpeechError = (event: any) => {
-    console.error('Помилка розпізнавання мови', event);
-  };
-
+  // Початок запису аудіо
   const startRecording = async () => {
-    setIsRecording(true);
-
     try {
-      await Voice.start('en-US'); // Стартуємо розпізнавання
+      if (audioRecorderPlayer) {
+        console.log('====================================');
+        console.log(audioRecorderPlayer);
+        console.log('====================================');
+        setIsRecording(true);
+        const result: any = await audioRecorderPlayer.startRecorder();
+        console.log('Запис розпочато: ', result);
+        setAudioUri(result); // Зберігаємо URI файлу аудіо
+      } else {
+        console.error('audioRecorderPlayer не ініціалізовано');
+      }
     } catch (error) {
-      console.error('Помилка під час запуску запису:', error);
+      console.error('Помилка при початку запису: ', error);
     }
   };
 
+  // Завершення запису аудіо
   const stopRecording = async () => {
-    setIsRecording(false);
     try {
-      await Voice.stop();
-      Voice.removeAllListeners();
+      if (audioRecorderPlayer) {
+        setIsRecording(false);
+        const result = await audioRecorderPlayer.startRecorder(undefined, {
+          format: 'wav', // Примусове збереження у форматі WAV
+          sampleRate: 16000,
+          encoder: 'pcm_s16le',
+        });
+
+        console.log('Запис завершено: ', result);
+        sendAudioForRecognition(result); // Зберігаємо URI файлу аудіо
+      } else {
+        console.error('audioRecorderPlayer не ініціалізовано');
+      }
     } catch (error) {
-      console.error('Помилка при зупинці запису', error);
+      console.error('Помилка при зупинці запису: ', error);
     }
   };
+
+  // Надсилання аудіо на сервер для розпізнавання
+  const sendAudioForRecognition = async (audioUri: string) => {
+    try {
+      const formData = new FormData();
+      formData.append('audio', {
+        uri: audioUri,
+        type: 'audio/', // Переконайтесь, що формат відповідає вимогам
+        name: 'audio.wav',
+      });
+
+      const response = await axios.post(
+        'http://<ваш-сервер>/speech-to-text',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      const {transcript} = response.data;
+      setRecognizedText(transcript); // Встановлюємо текст з розпізнавання
+    } catch (error) {
+      console.error('Помилка при надсиланні аудіо на сервер: ', error);
+    }
+  };
+
+  useEffect(() => {
+    requestMicrophonePermission(); // Запит на доступ до мікрофона
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -107,7 +134,13 @@ export const SeventhLevel: React.FC<LevelProps> = ({
           onChangeText={(text: string) => setRecognizedText(text)}
         />
         <TouchableOpacity
-          onPress={() => (isRecording ? stopRecording() : startRecording())}
+          onPress={() => {
+            if (isRecording) {
+              stopRecording(); // Зупиняємо запис
+            } else {
+              startRecording(); // Починаємо запис
+            }
+          }}
           style={styles.voiceButton}>
           {isRecording ? (
             <Text style={styles.voiceButtonText}>•••</Text>
