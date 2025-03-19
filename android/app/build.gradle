@@ -121,7 +121,7 @@ dependencies {
     // Додай це, якщо використовуєш підтримку AndroidX
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation "androidx.core:core-ktx:1.13.1"
-
+    implementation project(':react-native-audio-recorder-player')
 
     // Додаємо бібліотеку gesture-handler
    

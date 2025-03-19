@@ -41,10 +41,15 @@ interface RestorePasswordBody {
   password: string;
 }
 
+interface SpeechToTextResponse {
+  transcript: string; // Наприклад, якщо відповідь включає тільки розпізнаний текст
+  // Додаткові поля можна додати, якщо вони є в API
+}
+
 // Створення axios-інстансу
 export const instance = axios.create({
-  // baseURL: 'http://172.20.10.3:2023',
-  baseURL: 'http://192.168.1.193:2023',
+  baseURL: 'http://172.20.10.3:2023',
+  // baseURL: 'http://192.168.1.193:2023',
 });
 
 // Функції для роботи з токеном
@@ -149,4 +154,17 @@ export const updateProgressUser = async (): Promise<number> => {
     '/users/updateProgressUser',
   );
   return data.croissants;
+};
+
+export const sendAudio = async (
+  formData: FormData,
+): Promise<SpeechToTextResponse> => {
+  console.log(formData, 'FormData');
+  const {data} = await instance.post('/speech-to-text', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  console.log(data);
+  return data;
 };

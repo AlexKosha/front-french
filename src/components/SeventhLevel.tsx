@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -6,26 +6,21 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
-import {PermissionsAndroid, Platform} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {LevelProps} from './FirstLevel';
-
 import AudioRecorderPlayer from 'react-native-audio-recorder-player'; // Для запису аудіо
-import axios from 'axios'; // Для HTTP-запитів
+import {sendAudio} from '../services/authService';
 
-export const SeventhLevel: React.FC<LevelProps> = ({
-  level,
-  progress,
-  topicName,
-}) => {
-  const [isRecording, setIsRecording] = useState(false); // Чи активний запис
-  const [recognizedText, setRecognizedText] = useState(''); // Текст після розпізнавання
-  const [audioUri, setAudioUri] = useState(''); // URI для аудіофайлу
+export const SeventhLevel: React.FC = () => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognizedText, setRecognizedText] = useState('');
 
-  const audioRecorderPlayer = new AudioRecorderPlayer(); // Ініціалізація рекордера
+  // Використовуємо useRef для збереження інстансу AudioRecorderPlayer
+  const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
 
-  // Запит на доступ до мікрофона
+  // Запит дозволу на мікрофон
   const requestMicrophonePermission = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -52,75 +47,71 @@ export const SeventhLevel: React.FC<LevelProps> = ({
     }
   };
 
-  // Початок запису аудіо
+  // Почати запис аудіо
   const startRecording = async () => {
     try {
+      // Перевіряємо, чи інстанс аудіо рекордера існує
       if (audioRecorderPlayer) {
-        console.log('====================================');
-        console.log(audioRecorderPlayer);
-        console.log('====================================');
         setIsRecording(true);
         const result: any = await audioRecorderPlayer.startRecorder();
-        console.log('Запис розпочато: ', result);
-        setAudioUri(result); // Зберігаємо URI файлу аудіо
+
+        console.log('Запис почався:', result);
       } else {
-        console.error('audioRecorderPlayer не ініціалізовано');
+        console.error('Аудіо рекордер не ініціалізовано');
       }
     } catch (error) {
-      console.error('Помилка при початку запису: ', error);
+      console.error('Помилка при запису аудіо:', error);
     }
   };
 
-  // Завершення запису аудіо
+  // Завершити запис аудіо
   const stopRecording = async () => {
     try {
       if (audioRecorderPlayer) {
-        setIsRecording(false);
-        const result = await audioRecorderPlayer.startRecorder(undefined, {
-          format: 'wav', // Примусове збереження у форматі WAV
-          sampleRate: 16000,
-          encoder: 'pcm_s16le',
-        });
+        // Перевірка, чи запис дійсно почався
+        if (isRecording) {
+          const result = await audioRecorderPlayer.stopRecorder();
+          setIsRecording(false);
+          console.log('Запис завершено:', result); // Якщо все вірно, result повинен бути шляхом до файлу
 
-        console.log('Запис завершено: ', result);
-        sendAudioForRecognition(result); // Зберігаємо URI файлу аудіо
-      } else {
-        console.error('audioRecorderPlayer не ініціалізовано');
+          if (result && result !== 'Already stopped') {
+            // Надсилаємо аудіофайл на сервер
+            sendAudioForRecognition(result); // Надсилаємо шлях до файлу на сервер
+          }
+        }
       }
     } catch (error) {
-      console.error('Помилка при зупинці запису: ', error);
+      console.error('Помилка при завершенні запису:', error);
     }
   };
 
-  // Надсилання аудіо на сервер для розпізнавання
+  // Надсилання аудіо на сервер
+  const sendFormData = (audioUri: string): FormData => {
+    const formData = new FormData();
+    formData.append('audio', {
+      uri: audioUri,
+      type: 'video/mp4', // Перевірте, чи маєте правильний тип
+      name: 'audio.mp4', // Назва файлу
+    });
+    return formData;
+  };
+
+  const handleServerResponse = (data: any) => {
+    const {transcript} = data;
+    setRecognizedText(transcript); // Встановлюємо розпізнаний текст
+  };
+
   const sendAudioForRecognition = async (audioUri: string) => {
     try {
-      const formData = new FormData();
-      formData.append('audio', {
-        uri: audioUri,
-        type: 'audio/', // Переконайтесь, що формат відповідає вимогам
-        name: 'audio.wav',
-      });
-
-      const response = await axios.post(
-        'http://<ваш-сервер>/speech-to-text',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
-
-      const {transcript} = response.data;
-      setRecognizedText(transcript); // Встановлюємо текст з розпізнавання
+      const formData = sendFormData(audioUri);
+      const data = await sendAudio(formData);
+      handleServerResponse(data);
     } catch (error) {
-      console.error('Помилка при надсиланні аудіо на сервер: ', error);
+      console.error('Помилка при надсиланні аудіо:', error);
     }
   };
-
   useEffect(() => {
-    requestMicrophonePermission(); // Запит на доступ до мікрофона
+    requestMicrophonePermission();
   }, []);
 
   return (
@@ -131,16 +122,10 @@ export const SeventhLevel: React.FC<LevelProps> = ({
           style={styles.input}
           placeholder="Type your message..."
           value={recognizedText}
-          onChangeText={(text: string) => setRecognizedText(text)}
+          onChangeText={setRecognizedText}
         />
         <TouchableOpacity
-          onPress={() => {
-            if (isRecording) {
-              stopRecording(); // Зупиняємо запис
-            } else {
-              startRecording(); // Починаємо запис
-            }
-          }}
+          onPress={isRecording ? stopRecording : startRecording}
           style={styles.voiceButton}>
           {isRecording ? (
             <Text style={styles.voiceButtonText}>•••</Text>
