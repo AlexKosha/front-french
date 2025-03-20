@@ -47,7 +47,7 @@ export const LevelComponent: React.FC<LevelProps> = ({
   useEffect(() => {
     Tts.getInitStatus()
       .then(() => {
-        Tts.setDefaultRate(0.6, true);
+        Tts.setDefaultRate(0.6, false);
         Tts.setDefaultPitch(1.5);
         Tts.setDefaultLanguage('fr-FR').catch(err =>
           console.log('Language not supported', err),

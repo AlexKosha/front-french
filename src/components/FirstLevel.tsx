@@ -44,7 +44,7 @@ export const FirstLevel: React.FC<LevelProps> = ({
             fontSize: 30,
             textAlign: 'center',
             fontWeight: 'bold',
-            color: isDarkTheme ? 'white' : '#67104c',
+            color: isDarkTheme ? '#67104c' : 'white',
           }}>
           {currentItem?.world}
         </Text>
