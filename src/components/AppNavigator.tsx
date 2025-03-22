@@ -1,12 +1,9 @@
-// import {NavigationContainer} from '@react-navigation/native';
-// import {createStackNavigator} from '@react-navigation/stack';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-// import * as Components from '../components';
 import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useEffect} from 'react';
@@ -49,20 +46,6 @@ export const AppNavigator = (): JSX.Element => {
     const newLang = locale === 'en' ? 'uk' : 'en';
     setLocale(newLang);
   };
-
-  // const handleLogout = async () => {
-  //   try {
-  //     const resultAction = await dispatch(logoutThunk());
-  //     if (logoutThunk.fulfilled.match(resultAction)) {
-  //       navigat.navigate('Login');
-  //     } else {
-  //       Alert.alert('Error', resultAction.error.message);
-  //     }
-  //   } catch (error: any) {
-  //     console.log('Registration failed:', error);
-  //     Alert.alert('Error', error.message);
-  //   }
-  // };
 
   useEffect(() => {
     // toggleTheme();
@@ -108,10 +91,6 @@ export const AppNavigator = (): JSX.Element => {
     }
   };
 
-  // const changeLanguage = (lang: string) => {
-  //   i18n.changeLanguage(lang);
-  // };
-
   const handleGoHome = () => {
     Alert.alert(
       'Попередження',
@@ -119,12 +98,29 @@ export const AppNavigator = (): JSX.Element => {
       [
         {
           text: 'Залишитись',
-          onPress: () => console.log('Залишаємося на ст'),
           style: 'cancel',
         },
         {
           text: 'Вийти',
           onPress: () => navigat.navigate('Home'),
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
+  const handleGoBack = (topicName: string) => {
+    Alert.alert(
+      'Попередження',
+      'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
+      [
+        {
+          text: 'Залишитись',
+          style: 'cancel',
+        },
+        {
+          text: 'Вийти',
+          onPress: () => navigat.navigate('Train', {topicName}),
           style: 'destructive',
         },
       ],
@@ -456,7 +452,7 @@ export const AppNavigator = (): JSX.Element => {
       <MainStack.Screen
         name="TrainingLevel"
         component={TrainingLevel}
-        options={({route}) => {
+        options={({route, navigation}) => {
           const params = route.params as RouteProps<'Train'>['params'];
           const topicName = params?.topicName ?? '';
           return {
@@ -468,7 +464,16 @@ export const AppNavigator = (): JSX.Element => {
             headerShadowVisible: false,
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
             headerBackVisible: false,
-            headerLeft: () => null,
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => handleGoBack(topicName)}>
+                <AntDesign
+                  name="arrowleft"
+                  size={30}
+                  color={isDarkTheme ? 'white' : '#67104c'}
+                  style={{marginLeft: 5}}
+                />
+              </TouchableOpacity>
+            ),
             headerRight: () => (
               <TouchableOpacity onPress={handleGoHome}>
                 <AntDesign

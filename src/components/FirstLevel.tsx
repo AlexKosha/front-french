@@ -30,7 +30,7 @@ export const FirstLevel: React.FC<LevelProps> = ({
     playText: any,
     isDarkTheme?: boolean,
   ) => {
-    console.log(currentItem);
+    // console.log(currentItem);
     return (
       <View
         style={{

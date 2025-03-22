@@ -18,6 +18,7 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {WordStat} from './LevelComponent';
+import {RenderProgress} from './RenderProgress';
 
 export const FifthLevel: React.FC<LevelProps> = ({
   progress,
@@ -166,8 +167,8 @@ export const FifthLevel: React.FC<LevelProps> = ({
       .filter((_, index) => wordWithBlanks[index] === '_') // Беремо лише пропуски
       .filter(char => char !== ' '); // Ігноруємо пробіли
 
-    console.log('Filtered User Input:', filteredUserInput);
-    console.log('Correct Letters:', correctLetters);
+    // console.log('Filtered User Input:', filteredUserInput);
+    // console.log('Correct Letters:', correctLetters);
 
     if (filteredUserInput.length !== correctLetters.length) {
       Alert.alert(
@@ -209,35 +210,13 @@ export const FifthLevel: React.FC<LevelProps> = ({
     setIteration(prev => prev + 1);
   };
 
-  const renderProgress = () => (
-    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-      {[...Array(15)].map((_, i) => (
-        <View
-          key={i}
-          style={{
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            backgroundColor:
-              i < totalCorrectAnswers
-                ? isDarkTheme
-                  ? 'white'
-                  : '#67104c'
-                : '#A9A9A9',
-            margin: 3,
-          }}
-        />
-      ))}
-    </View>
-  );
-
   return (
     <SafeAreaView
       style={[
         defaultStyles.container,
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
-      {renderProgress()}
+      <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
 
       <View style={{alignItems: 'center', marginVertical: 20}}>
         {imageUrl && (
@@ -298,7 +277,7 @@ export const FifthLevel: React.FC<LevelProps> = ({
                 marginHorizontal: 5,
                 marginVertical: 10,
                 padding: 5,
-                backgroundColor: 'red',
+                backgroundColor: 'lightgray',
                 width: 40,
                 height: 40,
                 borderRadius: 5,

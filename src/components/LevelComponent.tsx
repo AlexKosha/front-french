@@ -10,6 +10,7 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {WordItem} from './WordLearningScreen';
+import {RenderProgress} from './RenderProgress';
 
 interface LevelProps {
   level: number;
@@ -47,7 +48,7 @@ export const LevelComponent: React.FC<LevelProps> = ({
   useEffect(() => {
     Tts.getInitStatus()
       .then(() => {
-        Tts.setDefaultRate(0.6, false);
+        // Tts.setDefaultRate(0.6, false);
         Tts.setDefaultPitch(1.5);
         Tts.setDefaultLanguage('fr-FR').catch(err =>
           console.log('Language not supported', err),
@@ -56,25 +57,6 @@ export const LevelComponent: React.FC<LevelProps> = ({
       .catch(err => console.error('TTS Init Error:', err));
   }, []);
 
-  // Функція для озвучки слова через TTS
-  // const playText = useCallback(() => {
-  //   if (currentItem?.world) {
-  //     Tts.stop() // Зупиняємо будь-який попередній голос
-  //       .then(() => {
-  //         console.log(currentItem.world);
-  //         Tts.speak(currentItem.world, {
-  //           iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
-  //           rate: 0.9,
-  //           androidParams: {
-  //             KEY_PARAM_PAN: 0,
-  //             KEY_PARAM_VOLUME: 1,
-  //             KEY_PARAM_STREAM: 'STREAM_ALARM',
-  //           },
-  //         });
-  //       })
-  //       .catch(error => console.error('TTS language error:', error));
-  //   }
-  // }, [currentItem]);
   const playText = useCallback(() => {
     if (currentItem?.world) {
       // Прямо викликаємо Tts.speak(), без попереднього виклику Tts.stop()
@@ -89,6 +71,20 @@ export const LevelComponent: React.FC<LevelProps> = ({
       });
     }
   }, [currentItem]);
+
+  useEffect(() => {
+    // Реєструємо порожні слухачі, щоб усунути варнінги
+    Tts.addEventListener('tts-start', () => {});
+    Tts.addEventListener('tts-finish', () => {});
+    Tts.addEventListener('tts-progress', () => {});
+
+    // Очищення слухачів при демонтажі компоненту
+    return () => {
+      Tts.removeEventListener('tts-start', () => {});
+      Tts.removeEventListener('tts-finish', () => {});
+      Tts.removeEventListener('tts-progress', () => {});
+    };
+  }, []);
 
   const generateChoices = useCallback(
     (correctItem: WordItem) => {
@@ -195,35 +191,13 @@ export const LevelComponent: React.FC<LevelProps> = ({
     initializeWordStats();
   }, [level, progress, setRandomItem]);
 
-  const renderProgress = () => (
-    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-      {[...Array(15)].map((_, i) => (
-        <View
-          key={i}
-          style={{
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            backgroundColor:
-              i < totalCorrectAnswers
-                ? isDarkTheme
-                  ? 'white'
-                  : '#67104c'
-                : '#A9A9A9',
-            margin: 3,
-          }}
-        />
-      ))}
-    </View>
-  );
-
   return (
     <SafeAreaView
       style={[
         defaultStyles.container,
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
-      {renderProgress()}
+      <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
       {currentItem ? renderContent(currentItem, playText) : null}
       {renderChoices(choices, handleChoice, isDarkTheme)}
     </SafeAreaView>

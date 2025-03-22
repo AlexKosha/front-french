@@ -9,8 +9,6 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-// import {Audio} from 'expo-av';
-// import Icon from 'react-native-vector-icons/AntDesign';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -162,25 +160,6 @@ export const WordLearningScreen = () => {
       })
       .catch(err => console.error('TTS Init Error:', err));
   }, []);
-
-  // Функція для озвучки слова через TTS
-  // const playSound = useCallback(() => {
-  //   if (selectedWords[currentIndex]?.world) {
-  //     Tts.stop() // Зупиняємо будь-який попередній голос
-  //       .then(() => {
-  //         Tts.speak(selectedWords[currentIndex]?.world, {
-  //           iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
-  //           rate: 0.9,
-  //           androidParams: {
-  //             KEY_PARAM_PAN: 0,
-  //             KEY_PARAM_VOLUME: 1,
-  //             KEY_PARAM_STREAM: 'STREAM_ALARM',
-  //           },
-  //         });
-  //       })
-  //       .catch(error => console.error('TTS language error:', error));
-  //   }
-  // }, [currentIndex, selectedWords]);
 
   const playSound = useCallback(() => {
     if (selectedWords[currentIndex]?.world) {

@@ -64,10 +64,5 @@ export const TrainingLevel = () => {
     }
   };
 
-  return (
-    <SafeAreaView
-      style={{flex: 1, backgroundColor: isDarkTheme ? '#67104c' : 'white'}}>
-      {renderLevelComponent()}
-    </SafeAreaView>
-  );
+  return <>{renderLevelComponent()}</>;
 };

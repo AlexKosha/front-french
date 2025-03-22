@@ -23,10 +23,6 @@ import {
 import * as Validate from '../helpers/validationInput';
 import {handleChange} from '../helpers/handleChangeInput';
 import {registerThunk} from '../store/auth/authThunks';
-// import dayjs from 'dayjs';
-// import localizedFormat from 'dayjs/plugin/localizedFormat';
-// import 'dayjs/locale/uk';
-// import 'dayjs/locale/en';
 import {defaultStyles} from './defaultStyles';
 import {AppDispatch} from '../store/store';
 import {NavigationProps} from '../helpers/navigationTypes';

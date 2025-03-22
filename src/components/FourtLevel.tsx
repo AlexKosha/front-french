@@ -21,6 +21,7 @@ import {LevelProps} from './FirstLevel';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {defaultStyles} from './defaultStyles';
+import {RenderProgress} from './RenderProgress';
 
 export const FourthLevel: React.FC<LevelProps> = ({
   progress,
@@ -137,7 +138,7 @@ export const FourthLevel: React.FC<LevelProps> = ({
 
   const detectDropArea = (x: number, y: number) => {
     for (const word of words) {
-      console.log(x, '- x', y, '- y');
+      // console.log(x, '- x', y, '- y');
       const bounds = wordPositions.current[word.id]; // Отримуємо координати з wordPositions
       if (!bounds) continue; // Пропускаємо, якщо координати ще не встановлені
       if (
@@ -226,58 +227,13 @@ export const FourthLevel: React.FC<LevelProps> = ({
     }
   };
 
-  const renderProgress = () => (
-    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-      {[...Array(15)].map((_, i) => (
-        <View
-          key={i}
-          style={{
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            backgroundColor:
-              i < totalCorrectAnswers
-                ? isDarkTheme
-                  ? 'white'
-                  : '#67104c'
-                : '#A9A9A9',
-            margin: 3,
-          }}
-        />
-      ))}
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
-      {renderProgress()}
-      <Text style={styles.title}>Відповідність слів до картинок</Text>
+      <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
       <View style={styles.gameContainer}>
-        {/* Картинки */}
         <View style={styles.imagesContainer}>
           {images.map(image => (
-            <View
-              key={image.id}
-              style={styles.imageBox}
-              // ref={ref => {
-              //   if (ref) imageRefs.current[image.id] = ref;
-              // }}
-              // onLayout={() => {
-              //   setTimeout(() => {
-              //     const view = imageRefs.current[image.id];
-              //     if (view && view.measureInWindow) {
-              //       view.measureInWindow((x, y, width, height) => {
-              //         imageRefs.current[image.id] = {
-              //           left: x,
-              //           top: y,
-              //           right: x + width,
-              //           bottom: y + height,
-              //         };
-              //       });
-              //     }
-              //   }, 100);
-              // }}>
-            >
+            <View key={image.id} style={styles.imageBox}>
               <Image source={{uri: image.uri}} style={styles.image} />
               {matches[image.id] && (
                 <Text style={styles.wordUnderImage}>{matches[image.id]}</Text>

@@ -159,12 +159,12 @@ export const updateProgressUser = async (): Promise<number> => {
 export const sendAudio = async (
   formData: FormData,
 ): Promise<SpeechToTextResponse> => {
-  console.log(formData, 'FormData');
+  // console.log(formData, 'FormData');
   const {data} = await instance.post('/speech-to-text', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-  console.log(data);
+  // console.log(data);
   return data;
 };

@@ -16,7 +16,7 @@ export const ThirdLevel: React.FC<LevelProps> = ({
     isDarkTheme?: boolean,
     isPlaying?: any,
   ) => {
-    console.log(playText);
+    // console.log(playText);
     return (
       <View style={{marginTop: 50, alignItems: 'center'}}>
         <TouchableOpacity onPress={() => playText()} disabled={isPlaying}>

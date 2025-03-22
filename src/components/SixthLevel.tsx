@@ -18,6 +18,7 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {WordStat} from './LevelComponent';
+import {RenderProgress} from './RenderProgress';
 
 export const SixthLevel: React.FC<LevelProps> = ({
   progress,
@@ -58,7 +59,7 @@ export const SixthLevel: React.FC<LevelProps> = ({
   useEffect(() => {
     if (wordStats.length > 0 && iteration < wordStats.length) {
       const currentWord = wordStats[iteration];
-      console.log('Правильне слово:', currentWord.word.world);
+      // console.log('Правильне слово:', currentWord.word.world);
       setWord(currentWord.word.world);
       setImageUrl(currentWord.word.image);
     }
@@ -81,7 +82,7 @@ export const SixthLevel: React.FC<LevelProps> = ({
     const normalizedCorrectWord = word.trim().toLowerCase();
 
     if (normalizedUserInput === normalizedCorrectWord) {
-      console.log('Вірно! Слово співпало.');
+      // console.log('Вірно! Слово співпало.');
       const updatedTotalCorrectAnswers = totalCorrectAnswers + 1;
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
@@ -100,19 +101,41 @@ export const SixthLevel: React.FC<LevelProps> = ({
   };
 
   // Оновлення прогресу для поточного слова
+  // const markCurrentWordsAsCompleted = async () => {
+  //   try {
+  //     const updatedProgress = progress.map(wordItem => {
+  //       // Змінив if (wordItem.word === word) на ...
+  //       if (wordItem.world === word) {
+  //         return {
+  //           ...wordItem,
+  //           completed: wordItem.completed.includes(level)
+  //             ? wordItem.completed
+  //             : [...wordItem.completed, level],
+  //         };
+  //       }
+  //       return wordItem;
+  //     });
+
+  //     await AsyncStorage.setItem(
+  //       `progress_${topicName}`,
+  //       JSON.stringify(updatedProgress),
+  //     );
+  //   } catch (error) {
+  //     console.error('Помилка оновлення прогресу:', error);
+  //   }
+  // };
   const markCurrentWordsAsCompleted = async () => {
     try {
-      const updatedProgress = progress.map(wordItem => {
-        // Змінив if (wordItem.word === word) на ...
-        if (wordItem.world === word) {
+      const updatedProgress = progress.map(word => {
+        if (wordStats.some((stat: any) => stat.word._id === word._id)) {
           return {
-            ...wordItem,
-            completed: wordItem.completed.includes(level)
-              ? wordItem.completed
-              : [...wordItem.completed, level],
+            ...word,
+            completed: word.completed.includes(level)
+              ? word.completed
+              : [...word.completed, level],
           };
         }
-        return wordItem;
+        return word;
       });
 
       await AsyncStorage.setItem(
@@ -130,36 +153,13 @@ export const SixthLevel: React.FC<LevelProps> = ({
     setUserInput(''); // Очистити введення
   };
 
-  // Виведення прогресу
-  const renderProgress = () => (
-    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-      {[...Array(15)].map((_, i) => (
-        <View
-          key={i}
-          style={{
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            backgroundColor:
-              i < totalCorrectAnswers
-                ? isDarkTheme
-                  ? 'white'
-                  : '#67104c'
-                : '#A9A9A9',
-            margin: 3,
-          }}
-        />
-      ))}
-    </View>
-  );
-
   return (
     <SafeAreaView
       style={[
         defaultStyles.container,
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
-      {renderProgress()}
+      <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
 
       <View style={{alignItems: 'center', marginVertical: 20}}>
         {imageUrl && (
@@ -169,15 +169,6 @@ export const SixthLevel: React.FC<LevelProps> = ({
           />
         )}
       </View>
-
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: 'bold',
-          color: isDarkTheme ? 'white' : '#67104c',
-        }}>
-        Напишіть правильне слово:
-      </Text>
 
       <TextInput
         style={{

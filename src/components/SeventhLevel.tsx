@@ -10,8 +10,8 @@ import {
   Platform,
   Pressable,
   Alert,
+  SafeAreaView,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player'; // Для запису аудіо
 import {sendAudio} from '../services/authService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,6 +24,8 @@ import {defaultStyles} from './defaultStyles';
 import {LevelProps} from './FirstLevel';
 import {WordStat} from './LevelComponent';
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
+import {RenderProgress} from './RenderProgress';
+import Tts from 'react-native-tts';
 
 export const SeventhLevel: React.FC<LevelProps> = ({
   progress,
@@ -49,7 +51,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
   useEffect(() => {
     if (wordStats.length > 0 && iteration < wordStats.length) {
       const currentWord = wordStats[iteration];
-      console.log('Правильне слово:', currentWord.word.world);
+      // console.log('Правильне слово:', currentWord.word.world);
       setWord(currentWord.word.world);
       setImageUrl(currentWord.word.image);
     }
@@ -108,7 +110,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
         setIsRecording(true);
         const result: any = await audioRecorderPlayer.startRecorder();
 
-        console.log('Запис почався:', result);
+        // console.log('Запис почався:', result);
       } else {
         console.error('Аудіо рекордер не ініціалізовано');
       }
@@ -125,7 +127,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
         if (isRecording) {
           const result = await audioRecorderPlayer.stopRecorder();
           setIsRecording(false);
-          console.log('Запис завершено:', result); // Якщо все вірно, result повинен бути шляхом до файлу
+          // console.log('Запис завершено:', result); // Якщо все вірно, result повинен бути шляхом до файлу
 
           if (result && result !== 'Already stopped') {
             // Надсилаємо аудіофайл на сервер
@@ -137,6 +139,17 @@ export const SeventhLevel: React.FC<LevelProps> = ({
       console.error('Помилка при завершенні запису:', error);
     }
   };
+
+  useEffect(() => {
+    audioRecorderPlayer.addRecordBackListener(() => {});
+
+    // Запит дозволу на мікрофон
+    requestMicrophonePermission();
+
+    return () => {
+      audioRecorderPlayer.removeRecordBackListener();
+    };
+  }, []);
 
   // Надсилання аудіо на сервер
   const sendFormData = (audioUri: string): FormData => {
@@ -156,6 +169,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
 
   const handleServerResponse = (data: any) => {
     const {transcript} = data;
+
     handleUserInputChange(transcript); // Встановлюємо розпізнаний текст
   };
 
@@ -168,58 +182,8 @@ export const SeventhLevel: React.FC<LevelProps> = ({
       console.error('Помилка при надсиланні аудіо:', error);
     }
   };
-  useEffect(() => {
-    requestMicrophonePermission();
-  }, []);
 
   // Виведення прогресу
-  const renderProgress = () => (
-    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-      {[...Array(15)].map((_, i) => (
-        <View
-          key={i}
-          style={{
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            backgroundColor:
-              i < totalCorrectAnswers
-                ? isDarkTheme
-                  ? 'white'
-                  : '#67104c'
-                : '#A9A9A9',
-            margin: 3,
-          }}
-        />
-      ))}
-    </View>
-  );
-
-  // Оновлення прогресу для поточного слова
-  // const markCurrentWordsAsCompleted = async () => {
-  //   try {
-  //     const updatedProgress = progress.map(wordItem => {
-  //       // Змінив if (wordItem.word === word) на ...
-  //       if (wordItem.world === word) {
-  //         return {
-  //           ...wordItem,
-  //           completed: wordItem.completed.includes(level)
-  //             ? wordItem.completed
-  //             : [...wordItem.completed, level],
-  //         };
-  //       }
-  //       return wordItem;
-  //     });
-
-  //     await AsyncStorage.setItem(
-  //       `progress_${topicName}`,
-  //       JSON.stringify(updatedProgress),
-  //     );
-  //   } catch (error) {
-  //     console.error('Помилка оновлення прогресу:', error);
-  //   }
-  // };
-
   const markCurrentWordsAsCompleted = async () => {
     try {
       const updatedProgress = progress.map(word => {
@@ -261,7 +225,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
     const normalizedCorrectWord = word.trim().toLowerCase();
 
     if (normalizedUserInput === normalizedCorrectWord) {
-      console.log('Вірно! Слово співпало.');
+      // console.log('Вірно! Слово співпало.');
       const updatedTotalCorrectAnswers = totalCorrectAnswers + 1;
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
@@ -285,7 +249,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
         defaultStyles.container,
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
-      {renderProgress()}
+      <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
 
       <View style={{alignItems: 'center', marginVertical: 20}}>
         {imageUrl && (
@@ -311,16 +275,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
         )}
       </TouchableOpacity>
 
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: 'bold',
-          color: isDarkTheme ? 'white' : '#67104c',
-        }}>
-        Напишіть правильне слово:
-      </Text>
-
-      {/* <TextInput
+      <TextInput
         style={{
           fontSize: 24,
           textAlign: 'center',
@@ -338,13 +293,6 @@ export const SeventhLevel: React.FC<LevelProps> = ({
         onChangeText={handleUserInputChange}
         autoCapitalize="none"
         keyboardType="default"
-      /> */}
-
-      <TextInput
-        style={styles.input}
-        placeholder="Type your message..."
-        value={userInput}
-        onChangeText={handleUserInputChange}
       />
 
       <Pressable
@@ -362,40 +310,10 @@ export const SeventhLevel: React.FC<LevelProps> = ({
         </Text>
       </Pressable>
     </SafeAreaView>
-
-    // <View style={styles.container}>
-    //   <SafeAreaView />
-    //   <View style={styles.inputContainer}>
-    //     <TextInput
-    //       style={styles.input}
-    //       placeholder="Type your message..."
-    //       value={recognizedText}
-    //       onChangeText={setRecognizedText}
-    //     />
-    //     <TouchableOpacity
-    //       onPress={isRecording ? stopRecording : startRecording}
-    //       style={styles.voiceButton}>
-    //       {isRecording ? (
-    //         <Text style={styles.voiceButtonText}>•••</Text>
-    //       ) : (
-    //         <Image
-    //           source={{
-    //             uri: 'https://cdn-icons-png.flaticon.com/512/4980/4980251.png',
-    //           }}
-    //           style={{width: 45, height: 45}}
-    //         />
-    //       )}
-    //     </TouchableOpacity>
-    //   </View>
-    // </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF5E0',
-  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
