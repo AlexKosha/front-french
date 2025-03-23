@@ -75,5 +75,6 @@ export const useTranslationHelper = () => {
     email: getTranslation('validation', 'email'),
     password: getTranslation('validation', 'password'),
     code: getTranslation('validation', 'code'),
+    verify: getTranslation('btn', 'verify'),
   };
 };

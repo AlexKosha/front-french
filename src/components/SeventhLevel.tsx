@@ -1,4 +1,8 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useRef} from 'react';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player'; // Для запису аудіо
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   View,
   Text,
@@ -12,20 +16,16 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player'; // Для запису аудіо
-import {sendAudio} from '../services/authService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+
 import {selectTheme} from '../store/auth/selector';
 import {AppDispatch} from '../store/store';
 import {NavigationProps} from '../helpers/navigationTypes';
-import {defaultStyles} from './defaultStyles';
 import {LevelProps} from './FirstLevel';
 import {WordStat} from './LevelComponent';
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
 import {RenderProgress} from './RenderProgress';
-import Tts from 'react-native-tts';
+import {sendAudio} from '../services/authService';
+import {defaultStyles} from './defaultStyles';
 
 export const SeventhLevel: React.FC<LevelProps> = ({
   progress,

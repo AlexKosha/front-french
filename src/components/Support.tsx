@@ -1,11 +1,11 @@
-import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {TouchableOpacity, View, SafeAreaView, Text} from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import {NavigationProps} from '../helpers/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
-import {defaultStyles} from './defaultStyles';
 import {Logo} from './Logo';
+import {defaultStyles} from './defaultStyles';
 
 export const Support = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Support'>>();
@@ -24,9 +24,6 @@ export const Support = (): JSX.Element => {
             onPress={() => navigation.navigate('ForgotPassword')}>
             <AntDesign name="arrowleft" size={24} color="#67104c" />
           </TouchableOpacity>
-          {/* <TouchableOpacity onPress={changeLanguageHandler}>
-            <MaterialIcons name="language" size={26} color="#67104c" />
-          </TouchableOpacity> */}
         </View>
         <View style={{marginVertical: 22}}>
           <Text

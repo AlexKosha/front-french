@@ -1,16 +1,17 @@
-import React, {useCallback, useState, useEffect} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
-import {useSelector} from 'react-redux';
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {defaultStyles} from './defaultStyles';
+import React, {useCallback, useState, useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {useSelector} from 'react-redux';
+
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
 import {Logo} from './Logo';
+import {defaultStyles} from './defaultStyles';
 
 export const Train = () => {
   const navigation = useNavigation<NavigationProps<'Learn'>>();
@@ -21,7 +22,6 @@ export const Train = () => {
   const [completedLevels, setCompletedLevels] = useState<number[]>([]); // Масив завершених рівнів
 
   // Оновлення прогресу
-
   // Викликаємо `updateProgress` при фокусуванні на екрані Train
   useFocusEffect(
     useCallback(() => {

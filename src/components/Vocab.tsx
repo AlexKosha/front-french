@@ -1,16 +1,16 @@
 import {useNavigation} from '@react-navigation/native';
 import {Pressable, SafeAreaView, Text, View, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+
 import {selectTopic} from '../store/topic/selectors';
 import {getVocab} from '../store/vocab/vocabThunks';
 import {selectVocab} from '../store/vocab/selectors';
 import {setThemeId} from '../store/vocab/vocabSlice';
-import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {useLocalization} from '../locale/LocalizationContext';
-import React from 'react';
+import {defaultStyles} from './defaultStyles';
 
 export const Vocab = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);

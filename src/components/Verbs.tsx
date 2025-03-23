@@ -1,10 +1,11 @@
 import {useNavigation} from '@react-navigation/native';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import {defaultStyles} from './defaultStyles';
+
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
+import {defaultStyles} from './defaultStyles';
 
 export const Verbs = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);

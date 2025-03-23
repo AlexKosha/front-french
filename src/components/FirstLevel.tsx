@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+
 import {LevelComponent} from './LevelComponent';
 import {WordItem} from './WordLearningScreen';
 
@@ -16,7 +17,7 @@ export interface WordProgress {
 
 export interface LevelProps {
   level: number;
-  progress: WordProgress[]; // Або конкретний тип даних, якщо знаєте його структуру
+  progress: WordProgress[];
   topicName: string;
 }
 

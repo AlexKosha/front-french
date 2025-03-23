@@ -1,21 +1,15 @@
 import {useNavigation} from '@react-navigation/native';
-import {
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-} from 'react-native';
+import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+
 import {getTopic} from '../store/topic/topicThunk';
 import {selectTopic} from '../store/topic/selectors';
-import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from './Logo';
+import {defaultStyles} from './defaultStyles';
 
 export const StudyAndTrain = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
+
 import {LevelComponent} from './LevelComponent';
 import {LevelProps} from './FirstLevel';
 import {WordItem} from './WordLearningScreen';

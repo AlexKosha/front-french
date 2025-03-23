@@ -12,8 +12,8 @@ export const Logo = ({isThemePage = false}) => {
           isThemePage
             ? require('../images/logo.jpg') // Завжди світле лого на сторінці реєстрації
             : isDarkTheme
-            ? require('../images/logo-dark.jpg') // Темне лого для темної теми
-            : require('../images/logo.jpg') // Світле лого для світлої теми
+            ? require('../images/logo-dark.jpg') 
+            : require('../images/logo.jpg') 
         }
         style={styles.logo}
       />

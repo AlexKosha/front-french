@@ -1,7 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import Feather from 'react-native-vector-icons/Feather';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   Keyboard,
@@ -15,15 +13,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import {handleChange} from '../helpers/handleChangeInput';
 import {forgotPass, restorePassword} from '../services/authService';
 import * as Validate from '../helpers/validationInput';
-import {defaultStyles} from './defaultStyles';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {translations} from '../locale/translations';
 import {Logo} from './Logo';
+import {defaultStyles} from './defaultStyles';
 
 export const ForgotPassword = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'ForgotPassword'>>();
@@ -44,7 +45,6 @@ export const ForgotPassword = (): JSX.Element => {
   const [passwordValid, setPasswordValid] = useState(false);
 
   const {locale} = useLocalization();
-
   const {
     emailText,
     clickHere,

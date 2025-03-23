@@ -1,12 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView, Text, View, StyleSheet, Pressable} from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector} from 'react-redux';
-import {defaultStyles} from '../components/defaultStyles';
+
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from '../components/Logo';
+import {defaultStyles} from '../components/defaultStyles';
 
 export const Home = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Home'>>();

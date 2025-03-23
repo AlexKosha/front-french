@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
+
 import {LevelComponent} from './LevelComponent';
 import {LevelProps} from './FirstLevel';
 import {WordItem} from './WordLearningScreen';

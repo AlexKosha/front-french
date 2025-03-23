@@ -1,6 +1,5 @@
-import React from 'react';
 import {useRoute} from '@react-navigation/native';
-import {SafeAreaView, Text} from 'react-native';
+import {Text} from 'react-native';
 import {RouteProps} from '../helpers/navigationTypes';
 import {FirstLevel} from './FirstLevel';
 import {SecondLevel} from './SecondLevel';

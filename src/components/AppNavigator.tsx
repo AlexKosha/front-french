@@ -1,12 +1,13 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useEffect} from 'react';
+import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
-import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
-import React, {useEffect} from 'react';
+
 import {getProfileThunk, logoutThunk} from '../store/auth/authThunks';
 import {AppDispatch} from '../store/store';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
@@ -33,12 +34,10 @@ import {Login} from '.';
 const MainStack = createNativeStackNavigator();
 
 export const AppNavigator = (): JSX.Element => {
-  const isDarkTheme = useSelector(selectTheme);
-  const dispatch = useDispatch<AppDispatch>(); // Типізуємо dispatch
+  const dispatch = useDispatch<AppDispatch>();
   const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
-
+  const isDarkTheme = useSelector(selectTheme);
   const {locale, setLocale} = useLocalization();
-
   const {studyAndTrain, vocab, phonetic, verbs, lessonsBySubscr} =
     useTranslationHelper();
 

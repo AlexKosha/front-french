@@ -88,6 +88,7 @@ export interface Translations {
     chooseCount: TranslationContent;
     goBack: TranslationContent;
     next: TranslationContent;
+    verify: TranslationContent;
   };
 }
 
@@ -220,6 +221,7 @@ export const translations: Translations = {
     chooseCount: {en: 'Choose Count', uk: 'Виберіть кількість'},
     goBack: {en: 'Go Back', uk: 'Повернутися'},
     next: {en: 'Next', uk: 'Далі'},
+    verify: {en: 'Verify', uk: 'Перевірити'},
   },
 };
 

@@ -1,6 +1,7 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {useState, useCallback} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSelector} from 'react-redux';
 import {
   SafeAreaView,
   Text,
@@ -9,25 +10,28 @@ import {
   FlatList,
   TextInput,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {selectVocab} from '../store/vocab/selectors';
-import {useFocusEffect} from '@react-navigation/native';
-import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {translations} from '../locale/translations';
 import {Logo} from './Logo';
+import {defaultStyles} from './defaultStyles';
 
 export const Learn = () => {
+  const [progress, setProgress] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const route = useRoute<RouteProps<'Learn'>>();
   const navigation = useNavigation<NavigationProps<'Learn'>>();
   const {topicName} = route.params;
+
   const isDarkTheme = useSelector(selectTheme);
   const vocabData = useSelector(selectVocab);
-  const [progress, setProgress] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
+
   const {locale, setLocale} = useLocalization();
   const {completedWords, words} = useTranslationHelper();
 

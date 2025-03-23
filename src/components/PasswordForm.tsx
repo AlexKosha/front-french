@@ -1,6 +1,5 @@
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import Feather from 'react-native-vector-icons/Feather';
 import {
   Pressable,
   SafeAreaView,
@@ -10,26 +9,27 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
+
 import {updaterPasswordThunk} from '../store/auth/authThunks';
-import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {AppDispatch} from '../store/store';
 import {translations} from '../locale/translations';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
+import {defaultStyles} from './defaultStyles';
 
 const PasswordForm = (): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const theme = useSelector(selectTheme);
+  const {locale} = useLocalization();
+  const {passwordText, saveChanges, newPassword} = useTranslationHelper();
 
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [userPass, setUserPass] = useState({
     password: '',
     newPassword: '',
   });
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {locale} = useLocalization();
-
-  const {passwordText, saveChanges, newPassword} = useTranslationHelper();
 
   const updateUserPass = async () => {
     try {

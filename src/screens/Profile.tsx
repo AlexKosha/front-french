@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-// import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -14,6 +13,7 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+
 import PasswordForm from '../components/PasswordForm';
 import {updaterUserDataThunk} from '../store/auth/authThunks';
 import {selectTheme, selectUser} from '../store/auth/selector';
@@ -23,7 +23,6 @@ import ProgressBar from '../components/ProgressBar';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {translations} from '../locale/translations';
 import {useLocalization} from '../locale/LocalizationContext';
-import {Logo} from '../components/Logo';
 
 type User = {
   name: string;
@@ -33,6 +32,7 @@ type User = {
 export const Profile = (): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const userData = useSelector(selectUser);
+  const isDarkTheme = useSelector(selectTheme);
 
   const [user, setUser] = useState({name: '', email: ''});
   const [userInfo, setUserInfo] = useState({
@@ -42,8 +42,6 @@ export const Profile = (): JSX.Element => {
   const {locale, setLocale} = useLocalization();
   const {hello, nameText, emailText, saveChanges, dataChanged, close} =
     useTranslationHelper();
-
-  const isDarkTheme = useSelector(selectTheme);
 
   const handleSave = async () => {
     const updatedUser = {
@@ -208,7 +206,6 @@ export const Profile = (): JSX.Element => {
             </Pressable>
             <PasswordForm />
           </View>
-          {/* <Logo /> */}
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableOpacity>

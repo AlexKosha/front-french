@@ -6,7 +6,6 @@ type RenderProgressProps = {
   totalCorrectAnswers: number;
 };
 
-// Виведення прогресу
 export const RenderProgress: React.FC<RenderProgressProps> = ({
   totalCorrectAnswers,
 }) => {

@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useRef} from 'react';
 import {
   SafeAreaView,
@@ -12,48 +13,37 @@ import {
   findNodeHandle,
   Pressable,
 } from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+
 import {LevelProps} from './FirstLevel';
-// import {WordStat} from './LevelComponent';
-// import {WordItem} from './WordLearningScreen';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
-import {defaultStyles} from './defaultStyles';
 import {RenderProgress} from './RenderProgress';
+import {defaultStyles} from './defaultStyles';
 
 export const FourthLevel: React.FC<LevelProps> = ({
   progress,
   level,
   topicName,
 }) => {
+  const navigation = useNavigation<NavigationProps<'Home'>>();
+  const isDarkTheme = useSelector(selectTheme);
+
   const [images, setImages] = useState<{id: string; uri: string}[]>([]);
   const [words, setWords] = useState<{id: string; text: string}[]>([]);
   const [matches, setMatches] = useState<any>({});
-  // const [wordStats, setWordStats] = useState<WordStat[]>([]);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
-  const isDarkTheme = useSelector(selectTheme);
+  const [lastWords, setLastWords] = useState<string[]>([]); // Для збереження використаних слів
+  const [iteration, setIteration] = useState(0); // Лічильник ітерацій
+
   const panRefs = useRef<{[key: string]: Animated.ValueXY}>({});
-
-  // const wordRefs = useRef<
-  //   Record<string, React.RefObject<typeof Animated.View>>
-  // >({});
-
   const wordRefs = useRef<
     Record<string, React.RefObject<typeof Animated.View | any>>
   >({});
-
   const wordPositions = useRef<{
     [key: string]: {left: number; top: number; right: number; bottom: number};
   }>({});
-
   const imageRefs = useRef<Record<string, any>>({});
-
-  const navigation = useNavigation<NavigationProps<'Home'>>();
-
-  const [lastWords, setLastWords] = useState<string[]>([]); // Для збереження використаних слів
-  const [iteration, setIteration] = useState(0); // Лічильник ітерацій
 
   useEffect(() => {
     if (!progress || progress.length === 0) return;
@@ -228,7 +218,11 @@ export const FourthLevel: React.FC<LevelProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[
+        defaultStyles.container,
+        {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
+      ]}>
       <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
       <View style={styles.gameContainer}>
         <View style={styles.imagesContainer}>

@@ -11,8 +11,8 @@ import {
   Alert,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+
 import {loginThunk} from '../store/auth/authThunks';
-import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
@@ -20,6 +20,7 @@ import {useLocalization} from '../locale/LocalizationContext';
 import {translations} from '../locale/translations';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from './Logo';
+import {defaultStyles} from './defaultStyles';
 
 export const Login = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Login'>>();
@@ -28,10 +29,10 @@ export const Login = (): JSX.Element => {
 
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const {locale, setLocale} = useLocalization();
+  const [isFormValid, setIsFormValid] = useState(false);
 
+  const {locale, setLocale} = useLocalization();
   const {
     emailText,
     passwordText,
@@ -44,8 +45,6 @@ export const Login = (): JSX.Element => {
     loginError,
     close,
   } = useTranslationHelper();
-
-  const [isFormValid, setIsFormValid] = useState(false);
 
   const validateForm = () => {
     setIsFormValid(email.trim().length > 0 && password.trim().length > 0);

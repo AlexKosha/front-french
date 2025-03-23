@@ -1,3 +1,4 @@
+import {useRoute, useNavigation} from '@react-navigation/native';
 import {useState, useEffect, useCallback} from 'react';
 import Tts from 'react-native-tts';
 import {
@@ -9,16 +10,16 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import {useRoute, useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
+
 import {selectThemeWordId, selectVocab} from '../store/vocab/selectors';
-import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {useLocalization} from '../locale/LocalizationContext';
+import {defaultStyles} from './defaultStyles';
 
 export interface WordItem {
   world: string;
@@ -33,9 +34,7 @@ export const WordLearningScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [allWordsCompleted, setAllWordsCompleted] = useState(false);
   const [totalShown, setTotalShown] = useState(0);
-  // const [sound, setSound] = useState();
   const [sessionComplete, setSessionComplete] = useState(false);
-  // const [isPlaying, setIsPlaying] = useState(false);
   const isDarkTheme = useSelector(selectTheme);
   const id = useSelector(selectThemeWordId);
   const navigation = useNavigation<NavigationProps<'WordLearningScreen'>>();

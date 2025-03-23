@@ -1,16 +1,17 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, SafeAreaView, Alert} from 'react-native';
+import {SafeAreaView, Alert} from 'react-native';
 import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
+
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
-import {defaultStyles} from './defaultStyles';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {WordItem} from './WordLearningScreen';
 import {RenderProgress} from './RenderProgress';
+import {defaultStyles} from './defaultStyles';
 
 interface LevelProps {
   level: number;
@@ -168,11 +169,6 @@ export const LevelComponent: React.FC<LevelProps> = ({
     },
     [generateChoices, navigation, topicName],
   );
-
-  // useEffect(() => {
-  //   Tts.setDefaultLanguage('fr-FR');
-  //   Tts.setDefaultRate(0.5);
-  // }, []);
 
   useEffect(() => {
     const initializeWordStats = () => {

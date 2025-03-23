@@ -1,11 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
-import Feather from 'react-native-vector-icons/Feather';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {CheckBox} from 'react-native-btr';
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker';
 import {useDispatch} from 'react-redux';
 import {
   StyleSheet,
@@ -20,18 +14,25 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
+import {CheckBox} from 'react-native-btr';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from '@react-native-community/datetimepicker';
+
 import * as Validate from '../helpers/validationInput';
 import {handleChange} from '../helpers/handleChangeInput';
 import {registerThunk} from '../store/auth/authThunks';
-import {defaultStyles} from './defaultStyles';
 import {AppDispatch} from '../store/store';
 import {NavigationProps} from '../helpers/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {translations} from '../locale/translations';
 import {useTranslationHelper} from '../locale/useTranslation';
-import {Logo} from './Logo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setTheme} from '../store/auth/authSlice';
+import {Logo} from './Logo';
+import {defaultStyles} from './defaultStyles';
 
 export const Registration = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Registration'>>();

@@ -9,9 +9,9 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {defaultStyles} from './defaultStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
 import {LevelProps} from './FirstLevel';
 import {selectTheme} from '../store/auth/selector';
@@ -19,24 +19,25 @@ import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {WordStat} from './LevelComponent';
 import {RenderProgress} from './RenderProgress';
+import {defaultStyles} from './defaultStyles';
 
 export const FifthLevel: React.FC<LevelProps> = ({
   progress,
   level,
   topicName,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigation = useNavigation<NavigationProps<'Learn'>>();
+  const isDarkTheme = useSelector(selectTheme);
+
   const [_word, setWord] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [wordWithBlanks, setWordWithBlanks] = useState<string[]>([]); // Assuming it's an array of strings
-  const [userInput, setUserInput] = useState<string[]>([]); // <-- Change here
-  const [correctLetters, setCorrectLetters] = useState<string[]>([]);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
   const [iteration, setIteration] = useState(0); // Лічильник ітерацій
+  const [correctLetters, setCorrectLetters] = useState<string[]>([]);
+  const [userInput, setUserInput] = useState<string[]>([]);
+  const [wordWithBlanks, setWordWithBlanks] = useState<string[]>([]);
   const [wordStats, setWordStats] = useState<WordStat[]>([]);
-
-  const navigation = useNavigation<NavigationProps<'Learn'>>();
-  const dispatch = useDispatch<AppDispatch>();
-  const isDarkTheme = useSelector(selectTheme);
 
   useEffect(() => {
     const initializeWordStats = () => {
@@ -227,39 +228,6 @@ export const FifthLevel: React.FC<LevelProps> = ({
         )}
       </View>
 
-      {/* Виводимо слово з пропусками */}
-      {/* {word && (
-        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-          {wordWithBlanks.join(" ")}
-        </Text>
-      )} */}
-
-      {/* Виводимо поля для введення літер */}
-      {/* {wordWithBlanks.map((char, index) =>
-        char === "_" ? (
-          <TextInput
-            key={`${index}-input`} // Унікальний ключ для кожного пропуску
-            style={{
-              fontSize: 24,
-              textAlign: "center",
-              margin: 5,
-              backgroundColor: "red",
-            }}
-            maxLength={1} // Тільки один символ
-            value={userInput[index] || ""} // Значення для кожного пропуску
-            onChangeText={(value) => handleInputChange(index, value)} // Обробка введеного символу
-            keyboardType="default" // Дозволяємо тільки букви
-          />
-        ) : (
-          <Text
-            key={`${index}-text`}
-            style={{ fontSize: 24, textAlign: "center", margin: 5 }}
-          >
-            {char}
-          </Text>
-        )
-      )} */}
-
       <View
         style={{
           flexDirection: 'row', // Розташування елементів у рядок
@@ -308,12 +276,6 @@ export const FifthLevel: React.FC<LevelProps> = ({
         )}
       </View>
 
-      {/* <Text
-        onPress={checkAnswer}
-        style={{ fontSize: 18, color: "blue", marginTop: 20 }}
-      >
-        Перевірити
-      </Text> */}
       <Pressable
         style={[
           defaultStyles.button,

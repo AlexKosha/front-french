@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
-import {defaultStyles} from './defaultStyles';
+
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
 import {LevelProps} from './FirstLevel';
 import {selectTheme} from '../store/auth/selector';
@@ -19,6 +19,7 @@ import {NavigationProps} from '../helpers/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {WordStat} from './LevelComponent';
 import {RenderProgress} from './RenderProgress';
+import {defaultStyles} from './defaultStyles';
 
 export const SixthLevel: React.FC<LevelProps> = ({
   progress,
@@ -37,7 +38,6 @@ export const SixthLevel: React.FC<LevelProps> = ({
   const isDarkTheme = useSelector(selectTheme);
 
   // Ініціалізація слів з прогресу
-
   useEffect(() => {
     const initializeWordStats = () => {
       const unfinishedWords = progress.filter(
@@ -101,29 +101,6 @@ export const SixthLevel: React.FC<LevelProps> = ({
   };
 
   // Оновлення прогресу для поточного слова
-  // const markCurrentWordsAsCompleted = async () => {
-  //   try {
-  //     const updatedProgress = progress.map(wordItem => {
-  //       // Змінив if (wordItem.word === word) на ...
-  //       if (wordItem.world === word) {
-  //         return {
-  //           ...wordItem,
-  //           completed: wordItem.completed.includes(level)
-  //             ? wordItem.completed
-  //             : [...wordItem.completed, level],
-  //         };
-  //       }
-  //       return wordItem;
-  //     });
-
-  //     await AsyncStorage.setItem(
-  //       `progress_${topicName}`,
-  //       JSON.stringify(updatedProgress),
-  //     );
-  //   } catch (error) {
-  //     console.error('Помилка оновлення прогресу:', error);
-  //   }
-  // };
   const markCurrentWordsAsCompleted = async () => {
     try {
       const updatedProgress = progress.map(word => {
@@ -150,7 +127,7 @@ export const SixthLevel: React.FC<LevelProps> = ({
   // Перехід до наступного слова
   const handleNextIteration = () => {
     setIteration(prev => prev + 1);
-    setUserInput(''); // Очистити введення
+    setUserInput('');
   };
 
   return (
