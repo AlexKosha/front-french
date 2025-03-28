@@ -1,5 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -339,7 +339,7 @@ export const AppNavigator = (): JSX.Element => {
             headerShadowVisible: false,
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
             headerLeft: () => (
-              <TouchableOpacity onPress={() => navigation.goBack()}>
+              <TouchableOpacity onPress={() => navigation.navigate('Vocab')}>
                 <AntDesign
                   name="arrowleft"
                   size={30}
@@ -451,7 +451,7 @@ export const AppNavigator = (): JSX.Element => {
       <MainStack.Screen
         name="TrainingLevel"
         component={TrainingLevel}
-        options={({route, navigation}) => {
+        options={({route}) => {
           const params = route.params as RouteProps<'Train'>['params'];
           const topicName = params?.topicName ?? '';
           return {

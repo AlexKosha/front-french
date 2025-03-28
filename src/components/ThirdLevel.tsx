@@ -24,7 +24,7 @@ export const ThirdLevel: React.FC<LevelProps> = ({
           <Icon
             name="sound"
             size={40}
-            color={isPlaying ? 'gray' : isDarkTheme ? '#67104c' : 'white'}
+            color={isPlaying ? 'gray' : isDarkTheme ? 'white' : '#67104c'}
           />
         </TouchableOpacity>
       </View>

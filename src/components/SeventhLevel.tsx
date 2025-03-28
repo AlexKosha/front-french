@@ -33,7 +33,6 @@ export const SeventhLevel: React.FC<LevelProps> = ({
   topicName,
 }) => {
   const [isRecording, setIsRecording] = useState(false);
-  const [recognizedText, setRecognizedText] = useState('');
 
   const navigation = useNavigation<NavigationProps<'Learn'>>();
   const dispatch = useDispatch<AppDispatch>();
@@ -46,16 +45,82 @@ export const SeventhLevel: React.FC<LevelProps> = ({
   const [iteration, setIteration] = useState(0); // Лічильник ітерацій
 
   // Використовуємо useRef для збереження інстансу AudioRecorderPlayer
-  const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
+  const audioRecorderPlayer = useRef(new AudioRecorderPlayer());
+
+  // useEffect(() => {
+  //   if (wordStats.length > 0 && iteration < wordStats.length) {
+  //     const currentWord = wordStats[iteration];
+
+  //     if (currentWord.word.world !== word) {
+  //       setWord(currentWord.word.world);
+  //       setImageUrl(currentWord.word.image);
+  //     }
+  //   }
+  // }, [iteration, wordStats]);
+
+  // useEffect(() => {
+  //   const initializeWordStats = () => {
+  //     const unfinishedWords = progress.filter(
+  //       word => !word.completed.includes(level),
+  //     );
+  //     if (unfinishedWords.length === 0) return;
+
+  //     const selectedWords = unfinishedWords.slice(0, 5);
+  //     const repeatedWords = [];
+  //     for (let i = 0; i < 3; i++) {
+  //       repeatedWords.push(...selectedWords);
+  //     }
+  //     setWordStats(repeatedWords.map(word => ({word, correctCount: 0})));
+  //   };
+
+  //   initializeWordStats();
+  // }, [level, progress]);
+
+  // Почати запис аудіо
+  // useEffect(() => {
+  //   audioRecorderPlayer.addRecordBackListener(() => {});
+
+  //   // Запит дозволу на мікрофон
+  //   requestMicrophonePermission();
+
+  //   return () => {
+  //     audioRecorderPlayer.removeRecordBackListener();
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    if (wordStats.length === 0) {
+      const unfinishedWords = progress.filter(
+        word => !word.completed.includes(level),
+      );
+      if (unfinishedWords.length > 0) {
+        const selectedWords = unfinishedWords.slice(0, 5);
+        const repeatedWords = Array(3).fill(selectedWords).flat();
+        setWordStats(repeatedWords.map(word => ({word, correctCount: 0})));
+      }
+    }
+  }, [level, progress, wordStats.length]);
 
   useEffect(() => {
     if (wordStats.length > 0 && iteration < wordStats.length) {
       const currentWord = wordStats[iteration];
-      // console.log('Правильне слово:', currentWord.word.world);
-      setWord(currentWord.word.world);
-      setImageUrl(currentWord.word.image);
+      if (currentWord.word.world !== word) {
+        setWord(currentWord.word.world);
+        setImageUrl(currentWord.word.image);
+      }
     }
-  }, [iteration, wordStats]);
+  }, [iteration, word, wordStats]);
+
+  useEffect(() => {
+    const recorder = audioRecorderPlayer.current;
+    if (!recorder) return;
+    requestMicrophonePermission();
+    recorder.addRecordBackListener(() => {});
+
+    return () => {
+      recorder.removeRecordBackListener();
+    };
+  }, []);
 
   // Запит дозволу на мікрофон
   const requestMicrophonePermission = async () => {
@@ -84,31 +149,12 @@ export const SeventhLevel: React.FC<LevelProps> = ({
     }
   };
 
-  useEffect(() => {
-    const initializeWordStats = () => {
-      const unfinishedWords = progress.filter(
-        word => !word.completed.includes(level),
-      );
-      if (unfinishedWords.length === 0) return;
-
-      const selectedWords = unfinishedWords.slice(0, 5);
-      const repeatedWords = [];
-      for (let i = 0; i < 3; i++) {
-        repeatedWords.push(...selectedWords);
-      }
-      setWordStats(repeatedWords.map(word => ({word, correctCount: 0})));
-    };
-
-    initializeWordStats();
-  }, [level, progress]);
-
-  // Почати запис аудіо
   const startRecording = async () => {
     try {
       // Перевіряємо, чи інстанс аудіо рекордера існує
-      if (audioRecorderPlayer) {
+      if (audioRecorderPlayer.current) {
         setIsRecording(true);
-        const result: any = await audioRecorderPlayer.startRecorder();
+        await audioRecorderPlayer.current.startRecorder();
 
         // console.log('Запис почався:', result);
       } else {
@@ -125,7 +171,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
       if (audioRecorderPlayer) {
         // Перевірка, чи запис дійсно почався
         if (isRecording) {
-          const result = await audioRecorderPlayer.stopRecorder();
+          const result = await audioRecorderPlayer.current.stopRecorder();
           setIsRecording(false);
           // console.log('Запис завершено:', result); // Якщо все вірно, result повинен бути шляхом до файлу
 
@@ -139,17 +185,6 @@ export const SeventhLevel: React.FC<LevelProps> = ({
       console.error('Помилка при завершенні запису:', error);
     }
   };
-
-  useEffect(() => {
-    audioRecorderPlayer.addRecordBackListener(() => {});
-
-    // Запит дозволу на мікрофон
-    requestMicrophonePermission();
-
-    return () => {
-      audioRecorderPlayer.removeRecordBackListener();
-    };
-  }, []);
 
   // Надсилання аудіо на сервер
   const sendFormData = (audioUri: string): FormData => {

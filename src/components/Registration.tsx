@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {
   StyleSheet,
@@ -37,6 +37,8 @@ import {defaultStyles} from './defaultStyles';
 export const Registration = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Registration'>>();
   const dispatch = useDispatch<AppDispatch>();
+
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -168,6 +170,25 @@ export const Registration = (): JSX.Element => {
       }
     };
     loadTheme();
+
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true);
+      },
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   });
 
   const renderError = (error: any, errorMessage: any) => {
@@ -220,6 +241,13 @@ export const Registration = (): JSX.Element => {
     return `${formattedDay}-${formattedMonth}-${year}`;
   };
 
+  const today = new Date();
+  const tenYearsAgo = new Date(
+    today.getFullYear() - 10,
+    today.getMonth(),
+    today.getDate(),
+  );
+
   return (
     <TouchableOpacity
       style={{flex: 1}}
@@ -228,22 +256,24 @@ export const Registration = (): JSX.Element => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{flex: 1, justifyContent: 'flex-end'}}
-        // keyboardVerticalOffset={
-        //   Platform.OS === "android" ? 35 : Platform.OS === "ios" ? 50 : 0
-        // }
-      >
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}>
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
           <View style={defaultStyles.container}>
             {/* Language and Header */}
-            <Pressable
-              onPress={changeLanguageHandler}
-              style={{marginBottom: 50}}>
-              <MaterialIcons name="language" size={26} color="#67104c" />
-            </Pressable>
+            {!isKeyboardVisible && (
+              <>
+                <Pressable
+                  onPress={changeLanguageHandler}
+                  style={{marginBottom: 50}}>
+                  <MaterialIcons name="language" size={26} color="#67104c" />
+                </Pressable>
 
-            <Text style={[defaultStyles.headerText, {color: 'black'}]}>
-              {letsAcq}
-            </Text>
+                <Text style={[defaultStyles.headerText, {color: 'black'}]}>
+                  {letsAcq}
+                </Text>
+                <Logo isThemePage={true} />
+              </>
+            )}
 
             {/* Name */}
             <View style={{marginBottom: 12}}>
@@ -271,8 +301,8 @@ export const Registration = (): JSX.Element => {
                   onChange={onChange}
                   locale={locale}
                   style={styles.datePicker}
-                  maximumDate={new Date()}
-                  minimumDate={new Date('1950-1-1')}
+                  maximumDate={tenYearsAgo} // ⬅ встановлюємо обмеження
+                  minimumDate={new Date('1950-01-01')} // мінімальна дата для обмеження
                 />
               )}
               {showPicker && Platform.OS === 'ios' && (
@@ -408,7 +438,7 @@ export const Registration = (): JSX.Element => {
 export const styles = StyleSheet.create({
   textInut: {
     textAlign: 'left',
-    width: '100 %',
+    width: '100%',
     height: 48,
     borderColor: '#67104c',
     borderWidth: 1,
