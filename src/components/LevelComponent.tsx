@@ -18,11 +18,7 @@ interface LevelProps {
   progress: any[];
   topicName: string;
   renderContent: (param: WordItem, playText: () => void) => JSX.Element;
-  renderChoices: (
-    choices: any,
-    handleChoice: any,
-    isDarkTheme: boolean,
-  ) => JSX.Element;
+  renderChoices: (choices: any, handleChoice: any) => JSX.Element;
 }
 
 export interface WordStat {
@@ -195,7 +191,7 @@ export const LevelComponent: React.FC<LevelProps> = ({
       ]}>
       <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
       {currentItem ? renderContent(currentItem, playText) : null}
-      {renderChoices(choices, handleChoice, isDarkTheme)}
+      {renderChoices(choices, handleChoice)}
     </SafeAreaView>
   );
 };

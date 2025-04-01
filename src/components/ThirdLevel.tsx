@@ -5,18 +5,16 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {LevelComponent} from './LevelComponent';
 import {LevelProps} from './FirstLevel';
 import {WordItem} from './WordLearningScreen';
+import {useSelector} from 'react-redux';
+import {selectTheme} from '../store/auth/selector';
 
 export const ThirdLevel: React.FC<LevelProps> = ({
   level,
   progress,
   topicName,
 }) => {
-  const renderContent = (
-    world: WordItem,
-    playText: any,
-    isDarkTheme?: boolean,
-    isPlaying?: any,
-  ) => {
+  const isDarkTheme = useSelector(selectTheme);
+  const renderContent = (world: WordItem, playText: any, isPlaying?: any) => {
     // console.log(playText);
     return (
       <View style={{marginTop: 50, alignItems: 'center'}}>
@@ -31,11 +29,7 @@ export const ThirdLevel: React.FC<LevelProps> = ({
     );
   };
 
-  const renderChoices = (
-    choices: any,
-    handleChoice: any,
-    isDarkTheme: boolean,
-  ) => (
+  const renderChoices = (choices: any, handleChoice: any) => (
     <View
       style={{
         flexDirection: 'row',

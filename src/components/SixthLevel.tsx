@@ -46,6 +46,16 @@ export const SixthLevel: React.FC<LevelProps> = ({
       if (unfinishedWords.length === 0) return;
 
       const selectedWords = unfinishedWords.slice(0, 5);
+
+      // Перемішуємо 5 слів випадковим чином
+      const shuffle = (array: any) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]]; // Обмін місцями
+        }
+      };
+      shuffle(selectedWords);
+
       const repeatedWords = [];
       for (let i = 0; i < 3; i++) {
         repeatedWords.push(...selectedWords);

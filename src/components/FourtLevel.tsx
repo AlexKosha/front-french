@@ -45,6 +45,8 @@ export const FourthLevel: React.FC<LevelProps> = ({
   }>({});
   const imageRefs = useRef<Record<string, any>>({});
 
+  const [draggingWordId, setDraggingWordId] = useState<string | null>(null);
+
   useEffect(() => {
     if (!progress || progress.length === 0) return;
 
@@ -101,9 +103,14 @@ export const FourthLevel: React.FC<LevelProps> = ({
     if (!pan) {
       pan = new Animated.ValueXY(); // Якщо `pan` ще не ініціалізований
     }
+
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        // Коли починається перетягування, відстежуємо це слово
+        setDraggingWordId(wordId);
+      },
       onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}], {
         useNativeDriver: false,
       }),
@@ -121,10 +128,42 @@ export const FourthLevel: React.FC<LevelProps> = ({
         Animated.spring(pan, {
           toValue: {x: 0, y: 0},
           useNativeDriver: true,
-        }).start();
+        }).start(() => {
+          // Після завершення анімації скидаємо draggingWordId
+          setDraggingWordId(null);
+        });
       },
     });
   };
+
+  // const createPanResponder = (wordId: any, pan: any) => {
+  //   if (!pan) {
+  //     pan = new Animated.ValueXY(); // Якщо `pan` ще не ініціалізований
+  //   }
+  //   return PanResponder.create({
+  //     onStartShouldSetPanResponder: () => true,
+  //     onMoveShouldSetPanResponder: () => true,
+  //     onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}], {
+  //       useNativeDriver: false,
+  //     }),
+  //     onPanResponderRelease: (_, gestureState) => {
+  //       const droppedWordId = detectDropArea(
+  //         gestureState.moveX,
+  //         gestureState.moveY,
+  //       );
+
+  //       if (droppedWordId && droppedWordId !== wordId) {
+  //         swapWords(wordId, droppedWordId); // Змінюємо місцями слова
+  //       }
+
+  //       // Повертає слово у вихідну позицію
+  //       Animated.spring(pan, {
+  //         toValue: {x: 0, y: 0},
+  //         useNativeDriver: true,
+  //       }).start();
+  //     },
+  //   });
+  // };
 
   const detectDropArea = (x: number, y: number) => {
     for (const word of words) {
@@ -144,27 +183,51 @@ export const FourthLevel: React.FC<LevelProps> = ({
   };
 
   const swapWords = (wordId1: string, wordId2: string) => {
-    setWords(prevWords => {
-      const newWords = [...prevWords];
-      const index1 = newWords.findIndex(word => word.id === wordId1);
-      const index2 = newWords.findIndex(word => word.id === wordId2);
+    const pos1 = wordPositions.current[wordId1];
+    const pos2 = wordPositions.current[wordId2];
 
-      if (index1 !== -1 && index2 !== -1) {
-        // Зміна місцями
-        const temp = newWords[index1];
-        newWords[index1] = newWords[index2];
-        newWords[index2] = temp;
+    if (!pos1 || !pos2) return;
+
+    Animated.parallel([
+      Animated.timing(panRefs.current[wordId1], {
+        toValue: {x: pos2.left - pos1.left, y: pos2.top - pos1.top},
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(panRefs.current[wordId2], {
+        toValue: {x: pos1.left - pos2.left, y: pos1.top - pos2.top},
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // Після анімації скидаємо позиції
+      panRefs.current[wordId1].setValue({x: 0, y: 0});
+      panRefs.current[wordId2].setValue({x: 0, y: 0});
+
+      // Міняємо місцями слова в стані
+      setWords(prevWords => {
+        const newWords = [...prevWords];
+        const index1 = newWords.findIndex(word => word.id === wordId1);
+        const index2 = newWords.findIndex(word => word.id === wordId2);
+
+        if (index1 !== -1 && index2 !== -1) {
+          [newWords[index1], newWords[index2]] = [
+            newWords[index2],
+            newWords[index1],
+          ];
+        }
+
+        return newWords;
+      });
+
+      // Перевіряємо правильність після переміщення
+      const isCorrect = words.every(
+        (word, index) => word.id === images[index].id,
+      );
+      if (isCorrect) {
+        checkMatches();
       }
-
-      return newWords; // Повертаємо оновлений масив
     });
-
-    const isCorrect = words.every(
-      (word, index) => word.id === images[index].id,
-    );
-    if (isCorrect) {
-      checkMatches();
-    }
   };
 
   useEffect(() => {
@@ -241,18 +304,32 @@ export const FourthLevel: React.FC<LevelProps> = ({
           {words.map(word => {
             const pan = panRefs.current[word.id];
             return (
+              // <Animated.View
+              //   key={word.id}
+              //   style={[
+              //     styles.wordBox,
+              //     {transform: pan.getTranslateTransform()},
+              //   ]}
+              //   {...createPanResponder(word.id, pan).panHandlers}
+              //   ref={
+              //     wordRefs.current[word.id] ||
+              //     (wordRefs.current[word.id] = React.createRef())
+              //   } // створює новий реф, якщо його ще немає
+              // >
+              //   <Text style={styles.word}>{word.text}</Text>
+              // </Animated.View>
               <Animated.View
                 key={word.id}
                 style={[
                   styles.wordBox,
                   {transform: pan.getTranslateTransform()},
+                  {zIndex: draggingWordId === word.id ? 100 : 1}, // Встановлюємо високий zIndex для тягненої букви
                 ]}
                 {...createPanResponder(word.id, pan).panHandlers}
                 ref={
                   wordRefs.current[word.id] ||
                   (wordRefs.current[word.id] = React.createRef())
-                } // створює новий реф, якщо його ще немає
-              >
+                }>
                 <Text style={styles.word}>{word.text}</Text>
               </Animated.View>
             );
@@ -331,3 +408,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+// const swapWords = (wordId1: string, wordId2: string) => {
+//   setWords(prevWords => {
+//     const newWords = [...prevWords];
+//     const index1 = newWords.findIndex(word => word.id === wordId1);
+//     const index2 = newWords.findIndex(word => word.id === wordId2);
+
+//     if (index1 !== -1 && index2 !== -1) {
+//       // Зміна місцями
+//       const temp = newWords[index1];
+//       newWords[index1] = newWords[index2];
+//       newWords[index2] = temp;
+//     }
+
+//     return newWords; // Повертаємо оновлений масив
+//   });
+
+//   const isCorrect = words.every(
+//     (word, index) => word.id === images[index].id,
+//   );
+//   if (isCorrect) {
+//     checkMatches();
+//   }
+// };

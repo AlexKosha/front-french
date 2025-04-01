@@ -4,12 +4,15 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import {LevelComponent} from './LevelComponent';
 import {LevelProps} from './FirstLevel';
 import {WordItem} from './WordLearningScreen';
+import {useSelector} from 'react-redux';
+import {selectTheme} from '../store/auth/selector';
 
 export const SecondLevel: React.FC<LevelProps> = ({
   level,
   progress,
   topicName,
 }) => {
+  const isDarkTheme = useSelector(selectTheme);
   const renderContent = (currentImage: WordItem) => (
     <View style={{alignItems: 'center', marginVertical: 20}}>
       {currentImage && (
@@ -21,11 +24,7 @@ export const SecondLevel: React.FC<LevelProps> = ({
     </View>
   );
 
-  const renderChoices = (
-    choices: WordItem[],
-    handleChoice: any,
-    isDarkTheme: boolean,
-  ) => (
+  const renderChoices = (choices: WordItem[], handleChoice: any) => (
     <View
       style={{
         flexDirection: 'row',

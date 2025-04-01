@@ -428,7 +428,7 @@ export const Registration = (): JSX.Element => {
           </View>
 
           {/* Logo */}
-          <Logo isThemePage={true} />
+          {/* <Logo isThemePage={true} /> */}
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableOpacity>

@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 import {LevelComponent} from './LevelComponent';
 import {WordItem} from './WordLearningScreen';
+import {useSelector} from 'react-redux';
+import {selectTheme} from '../store/auth/selector';
 
 export interface WordProgress {
   world: string;
@@ -26,11 +28,8 @@ export const FirstLevel: React.FC<LevelProps> = ({
   progress,
   topicName,
 }) => {
-  const renderContent = (
-    currentItem: WordItem,
-    playText: any,
-    isDarkTheme?: boolean,
-  ) => {
+  const isDarkTheme = useSelector(selectTheme);
+  const renderContent = (currentItem: WordItem, playText: any) => {
     // console.log(currentItem);
     return (
       <View
@@ -50,17 +49,17 @@ export const FirstLevel: React.FC<LevelProps> = ({
           {currentItem?.world}
         </Text>
         <TouchableOpacity onPress={playText}>
-          <Icon name="sound" size={30} color="#000" />
+          <Icon
+            name="sound"
+            size={30}
+            color={isDarkTheme ? 'white' : '#67104c'}
+          />
         </TouchableOpacity>
       </View>
     );
   };
 
-  const renderChoices = (
-    choices: WordItem[],
-    handleChoice: any,
-    isDarkTheme: boolean,
-  ) => (
+  const renderChoices = (choices: WordItem[], handleChoice: any) => (
     <View
       style={{
         flexDirection: 'row',

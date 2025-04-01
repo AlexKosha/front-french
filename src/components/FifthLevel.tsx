@@ -49,7 +49,16 @@ export const FifthLevel: React.FC<LevelProps> = ({
       // Беремо перші 5 слів
       const selectedWords = unfinishedWords.slice(0, 5);
 
-      // Повторюємо набір із 5 слів тричі
+      // Перемішуємо 5 слів випадковим чином
+      const shuffle = (array: any) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]]; // Обмін місцями
+        }
+      };
+      shuffle(selectedWords);
+
+      // Повторюємо набір із 5 слів тричі після перемішування
       const repeatedWords = [];
       for (let i = 0; i < 3; i++) {
         repeatedWords.push(...selectedWords);
