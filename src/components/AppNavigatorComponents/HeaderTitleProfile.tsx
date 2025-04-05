@@ -53,7 +53,7 @@ export const HeaderTitleProfile = () => {
   };
 
   return (
-    <View style={[styles.headerContainer, {paddingRight: 20}]}>
+    <View style={[styles.headerContainer]}>
       <TouchableOpacity onPress={() => navigation.navigate('Home')}>
         <AntDesign
           name="arrowleft"
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '95%',
+    width: '100%',
+    paddingHorizontal: 5, // відстань до країв
   },
 });
