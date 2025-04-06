@@ -2,7 +2,7 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Alert, TouchableOpacity, View} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {NavigationProps} from '../../helpers/navigationTypes';
+import {NavigationProps} from '../../types/navigationTypes';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
 

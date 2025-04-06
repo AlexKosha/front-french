@@ -3,25 +3,10 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 import {LevelComponent} from './LevelComponent';
-import {WordItem} from './WordLearningScreen';
+
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
-
-export interface WordProgress {
-  world: string;
-  _id: string;
-  translationEN: string;
-  translationUK: string;
-  image: string;
-  audio: string;
-  completed: number[];
-}
-
-export interface LevelProps {
-  level: number;
-  progress: WordProgress[];
-  topicName: string;
-}
+import {LevelProps, WordItem} from '../types';
 
 export const FirstLevel: React.FC<LevelProps> = ({
   level,
@@ -30,7 +15,6 @@ export const FirstLevel: React.FC<LevelProps> = ({
 }) => {
   const isDarkTheme = useSelector(selectTheme);
   const renderContent = (currentItem: WordItem, playText: any) => {
-    // console.log(currentItem);
     return (
       <View
         style={{

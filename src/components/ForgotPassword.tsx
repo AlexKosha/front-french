@@ -19,7 +19,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {handleChange} from '../helpers/handleChangeInput';
 import {forgotPass, restorePassword} from '../services/authService';
 import * as Validate from '../helpers/validationInput';
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {translations} from '../locale/translations';

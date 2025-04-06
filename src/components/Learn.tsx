@@ -1,6 +1,6 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useFocusEffect} from '@react-navigation/native';
-import {useState, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {useSelector} from 'react-redux';
 import {
   SafeAreaView,
@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {selectVocab} from '../store/vocab/selectors';
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
+import {NavigationProps, RouteProps} from '../types/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {translations} from '../locale/translations';
@@ -32,7 +32,7 @@ export const Learn = () => {
   const isDarkTheme = useSelector(selectTheme);
   const vocabData = useSelector(selectVocab);
 
-  const {locale, setLocale} = useLocalization();
+  const {locale} = useLocalization();
   const {completedWords, words} = useTranslationHelper();
 
   // Використовуємо useFocusEffect для оновлення при кожному поверненні на цей екран

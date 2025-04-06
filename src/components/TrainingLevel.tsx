@@ -1,6 +1,6 @@
 import {useRoute} from '@react-navigation/native';
 import {Text} from 'react-native';
-import {RouteProps} from '../helpers/navigationTypes';
+import {RouteProps} from '../types/navigationTypes';
 import {FirstLevel} from './FirstLevel';
 import {SecondLevel} from './SecondLevel';
 import {ThirdLevel} from './ThirdLevel';

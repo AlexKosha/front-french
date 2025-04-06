@@ -1,5 +1,5 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
-import {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import Tts from 'react-native-tts';
 import {
   SafeAreaView,
@@ -16,19 +16,11 @@ import {useSelector} from 'react-redux';
 
 import {selectThemeWordId, selectVocab} from '../store/vocab/selectors';
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
+import {NavigationProps, RouteProps} from '../types/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {useLocalization} from '../locale/LocalizationContext';
 import {defaultStyles} from './defaultStyles';
-
-export interface WordItem {
-  world: string;
-  _id: string;
-  translationEN: string;
-  translationUK: string;
-  image: string;
-  audio: string;
-}
+import {WordItem} from '../types';
 
 export const WordLearningScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

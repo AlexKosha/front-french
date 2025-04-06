@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity, View, SafeAreaView, Text} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from './Logo';
 import {defaultStyles} from './defaultStyles';

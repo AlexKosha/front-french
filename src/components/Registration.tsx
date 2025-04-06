@@ -21,11 +21,8 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 
-import * as Validate from '../helpers/validationInput';
-import {handleChange} from '../helpers/handleChangeInput';
 import {registerThunk} from '../store/auth/authThunks';
 import {AppDispatch} from '../store/store';
-import {NavigationProps} from '../helpers/navigationTypes';
 import {useLocalization} from '../locale/LocalizationContext';
 import {translations} from '../locale/translations';
 import {useTranslationHelper} from '../locale/useTranslation';
@@ -33,6 +30,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setTheme} from '../store/auth/authSlice';
 import {Logo} from './Logo';
 import {defaultStyles} from './defaultStyles';
+import {handleChange, Validate} from '../helpers';
+import {NavigationProps} from '../types';
 
 export const Registration = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Registration'>>();

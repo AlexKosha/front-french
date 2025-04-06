@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {WritableDraft} from 'immer';
-import {AuthState, User} from './authSlice';
+import {AuthState, User} from '../../types';
 
 export const handlePending = (state: AuthState) => {
   state.isRefreshing = true;

@@ -8,7 +8,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {selectTheme} from '../../store/auth/selector';
-import {NavigationProps} from '../../helpers/navigationTypes';
+import {NavigationProps} from '../../types/navigationTypes';
 import {useLocalization} from '../../locale/LocalizationContext';
 import {AppDispatch} from '../../store/store';
 import {setTheme} from '../../store/auth/authSlice';

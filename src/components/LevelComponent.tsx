@@ -2,31 +2,18 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView, Alert} from 'react-native';
 import Tts from 'react-native-tts';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {AppDispatch} from '../store/store';
-import {WordItem} from './WordLearningScreen';
 import {RenderProgress} from './RenderProgress';
 import {defaultStyles} from './defaultStyles';
+import {markCurrentWordsAsCompleted} from '../helpers/progressHelpers';
+import {LevelComponentsProps, WordItem, WordStat} from '../types';
 
-interface LevelProps {
-  level: number;
-  progress: any[];
-  topicName: string;
-  renderContent: (param: WordItem, playText: () => void) => JSX.Element;
-  renderChoices: (choices: any, handleChoice: any) => JSX.Element;
-}
-
-export interface WordStat {
-  word: WordItem;
-  correctCount: number;
-}
-
-export const LevelComponent: React.FC<LevelProps> = ({
+export const LevelComponent: React.FC<LevelComponentsProps> = ({
   level,
   progress,
   topicName,
@@ -115,7 +102,12 @@ export const LevelComponent: React.FC<LevelProps> = ({
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
       if (updatedTotalCorrectAnswers === 15) {
-        await markCurrentWordsAsCompleted();
+        await markCurrentWordsAsCompleted(
+          progress,
+          wordStats,
+          level,
+          topicName,
+        );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');
         navigation.navigate('Train', {topicName});
@@ -124,29 +116,6 @@ export const LevelComponent: React.FC<LevelProps> = ({
       }
     } else {
       Alert.alert('Спробуйте ще раз!');
-    }
-  };
-
-  const markCurrentWordsAsCompleted = async () => {
-    try {
-      const updatedProgress = progress.map(word => {
-        if (wordStats.some((stat: any) => stat.word._id === word._id)) {
-          return {
-            ...word,
-            completed: word.completed.includes(level)
-              ? word.completed
-              : [...word.completed, level],
-          };
-        }
-        return word;
-      });
-
-      await AsyncStorage.setItem(
-        `progress_${topicName}`,
-        JSON.stringify(updatedProgress),
-      );
-    } catch (error) {
-      console.error('Помилка оновлення прогресу:', error);
     }
   };
 

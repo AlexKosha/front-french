@@ -9,7 +9,7 @@ import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
+import {NavigationProps, RouteProps} from '../types/navigationTypes';
 import {Logo} from './Logo';
 import {defaultStyles} from './defaultStyles';
 

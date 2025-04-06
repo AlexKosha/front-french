@@ -9,17 +9,17 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
-import {LevelProps} from './FirstLevel';
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {AppDispatch} from '../store/store';
-import {WordStat} from './LevelComponent';
 import {RenderProgress} from './RenderProgress';
 import {defaultStyles} from './defaultStyles';
+
+import {LevelProps, WordStat} from '../types';
+import {initializeWordStats, markCurrentWordsAsCompleted} from '../helpers';
 
 export const SixthLevel: React.FC<LevelProps> = ({
   progress,
@@ -39,31 +39,7 @@ export const SixthLevel: React.FC<LevelProps> = ({
 
   // Ініціалізація слів з прогресу
   useEffect(() => {
-    const initializeWordStats = () => {
-      const unfinishedWords = progress.filter(
-        word => !word.completed.includes(level),
-      );
-      if (unfinishedWords.length === 0) return;
-
-      const selectedWords = unfinishedWords.slice(0, 5);
-
-      // Перемішуємо 5 слів випадковим чином
-      const shuffle = (array: any) => {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]]; // Обмін місцями
-        }
-      };
-      shuffle(selectedWords);
-
-      const repeatedWords = [];
-      for (let i = 0; i < 3; i++) {
-        repeatedWords.push(...selectedWords);
-      }
-      setWordStats(repeatedWords.map(word => ({word, correctCount: 0})));
-    };
-
-    initializeWordStats();
+    initializeWordStats(progress, level, setWordStats);
   }, [level, progress]);
 
   useEffect(() => {
@@ -97,7 +73,12 @@ export const SixthLevel: React.FC<LevelProps> = ({
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
       if (updatedTotalCorrectAnswers === 15) {
-        await markCurrentWordsAsCompleted();
+        await markCurrentWordsAsCompleted(
+          progress,
+          wordStats,
+          level,
+          topicName,
+        );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання.');
         navigation.navigate('Train', {topicName});
@@ -107,30 +88,6 @@ export const SixthLevel: React.FC<LevelProps> = ({
       handleNextIteration();
     } else {
       Alert.alert('Неправильно', 'Спробуйте ще раз.');
-    }
-  };
-
-  // Оновлення прогресу для поточного слова
-  const markCurrentWordsAsCompleted = async () => {
-    try {
-      const updatedProgress = progress.map(word => {
-        if (wordStats.some((stat: any) => stat.word._id === word._id)) {
-          return {
-            ...word,
-            completed: word.completed.includes(level)
-              ? word.completed
-              : [...word.completed, level],
-          };
-        }
-        return word;
-      });
-
-      await AsyncStorage.setItem(
-        `progress_${topicName}`,
-        JSON.stringify(updatedProgress),
-      );
-    } catch (error) {
-      console.error('Помилка оновлення прогресу:', error);
     }
   };
 

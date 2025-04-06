@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getTopic} from '../store/topic/topicThunk';
 import {selectTopic} from '../store/topic/selectors';
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from './Logo';

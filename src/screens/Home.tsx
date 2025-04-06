@@ -4,7 +4,7 @@ import {SafeAreaView, Text, View, StyleSheet, Pressable} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from '../components/Logo';
 import {defaultStyles} from '../components/defaultStyles';

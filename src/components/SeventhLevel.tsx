@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState, useRef} from 'react';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player'; // Для запису аудіо
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   View,
@@ -19,13 +18,13 @@ import {
 
 import {selectTheme} from '../store/auth/selector';
 import {AppDispatch} from '../store/store';
-import {NavigationProps} from '../helpers/navigationTypes';
-import {LevelProps} from './FirstLevel';
-import {WordStat} from './LevelComponent';
+import {NavigationProps} from '../types/navigationTypes';
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
 import {RenderProgress} from './RenderProgress';
 import {sendAudio} from '../services/authService';
 import {defaultStyles} from './defaultStyles';
+import {LevelProps, WordStat} from '../types';
+import {initializeWordStats, markCurrentWordsAsCompleted} from '../helpers';
 
 export const SeventhLevel: React.FC<LevelProps> = ({
   progress,
@@ -89,17 +88,8 @@ export const SeventhLevel: React.FC<LevelProps> = ({
   // }, []);
 
   useEffect(() => {
-    if (wordStats.length === 0) {
-      const unfinishedWords = progress.filter(
-        word => !word.completed.includes(level),
-      );
-      if (unfinishedWords.length > 0) {
-        const selectedWords = unfinishedWords.slice(0, 5);
-        const repeatedWords = Array(3).fill(selectedWords).flat();
-        setWordStats(repeatedWords.map(word => ({word, correctCount: 0})));
-      }
-    }
-  }, [level, progress, wordStats.length]);
+    initializeWordStats(progress, level, setWordStats);
+  }, [level, progress]);
 
   useEffect(() => {
     if (wordStats.length > 0 && iteration < wordStats.length) {
@@ -219,28 +209,6 @@ export const SeventhLevel: React.FC<LevelProps> = ({
   };
 
   // Виведення прогресу
-  const markCurrentWordsAsCompleted = async () => {
-    try {
-      const updatedProgress = progress.map(word => {
-        if (wordStats.some((stat: any) => stat.word._id === word._id)) {
-          return {
-            ...word,
-            completed: word.completed.includes(level)
-              ? word.completed
-              : [...word.completed, level],
-          };
-        }
-        return word;
-      });
-
-      await AsyncStorage.setItem(
-        `progress_${topicName}`,
-        JSON.stringify(updatedProgress),
-      );
-    } catch (error) {
-      console.error('Помилка оновлення прогресу:', error);
-    }
-  };
 
   // Перехід до наступного слова
   const handleNextIteration = () => {
@@ -265,7 +233,12 @@ export const SeventhLevel: React.FC<LevelProps> = ({
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
       if (updatedTotalCorrectAnswers === 15) {
-        await markCurrentWordsAsCompleted();
+        await markCurrentWordsAsCompleted(
+          progress,
+          wordStats,
+          level,
+          topicName,
+        );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання.');
         navigation.navigate('Train', {topicName});

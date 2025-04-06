@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {getProfileThunk} from '../store/auth/authThunks';
 import {AppDispatch} from '../store/store';
-import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
+import {NavigationProps, RouteProps} from '../types/navigationTypes';
 import {selectTheme} from '../store/auth/selector';
 import {useTranslationHelper} from '../locale/useTranslation';
 import * as Components from './index';

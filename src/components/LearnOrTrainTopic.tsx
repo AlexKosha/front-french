@@ -1,9 +1,10 @@
+import React from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../helpers/navigationTypes';
+import {NavigationProps, RouteProps} from '../types/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from './Logo';
 import {defaultStyles} from './defaultStyles';
@@ -70,18 +71,3 @@ export const LearnOrTrainTopic = (): JSX.Element => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  logoContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: '50%',
-    transform: [{translateX: -70}],
-    alignItems: 'center',
-  },
-  logo: {
-    width: 140,
-    height: 60,
-    resizeMode: 'contain',
-  },
-});

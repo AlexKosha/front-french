@@ -10,16 +10,17 @@ import {
   Pressable,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
-import {LevelProps} from './FirstLevel';
+
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {AppDispatch} from '../store/store';
-import {WordStat} from './LevelComponent';
 import {RenderProgress} from './RenderProgress';
 import {defaultStyles} from './defaultStyles';
+import {initializeWordStats} from '../helpers/wordHelpers';
+import {markCurrentWordsAsCompleted} from '../helpers/progressHelpers';
+import {LevelProps, WordStat} from '../types';
 
 export const FifthLevel: React.FC<LevelProps> = ({
   progress,
@@ -40,35 +41,7 @@ export const FifthLevel: React.FC<LevelProps> = ({
   const [wordStats, setWordStats] = useState<WordStat[]>([]);
 
   useEffect(() => {
-    const initializeWordStats = () => {
-      const unfinishedWords = progress.filter(
-        word => !word.completed.includes(level),
-      );
-      if (unfinishedWords.length === 0) return;
-
-      // Беремо перші 5 слів
-      const selectedWords = unfinishedWords.slice(0, 5);
-
-      // Перемішуємо 5 слів випадковим чином
-      const shuffle = (array: any) => {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]]; // Обмін місцями
-        }
-      };
-      shuffle(selectedWords);
-
-      // Повторюємо набір із 5 слів тричі після перемішування
-      const repeatedWords = [];
-      for (let i = 0; i < 3; i++) {
-        repeatedWords.push(...selectedWords);
-      }
-
-      // Створюємо масив зі станом для кожного слова
-      setWordStats(repeatedWords.map(word => ({word, correctCount: 0})));
-    };
-
-    initializeWordStats();
+    initializeWordStats(progress, level, setWordStats);
   }, [level, progress]);
 
   useEffect(() => {
@@ -149,29 +122,6 @@ export const FifthLevel: React.FC<LevelProps> = ({
     }
   };
 
-  const markCurrentWordsAsCompleted = async () => {
-    try {
-      const updatedProgress = progress.map(word => {
-        if (wordStats.some(stat => stat.word._id === word._id)) {
-          return {
-            ...word,
-            completed: word.completed.includes(level)
-              ? word.completed
-              : [...word.completed, level],
-          };
-        }
-        return word;
-      });
-
-      await AsyncStorage.setItem(
-        `progress_${topicName}`,
-        JSON.stringify(updatedProgress),
-      );
-    } catch (error) {
-      console.error('Помилка оновлення прогресу:', error);
-    }
-  };
-
   const checkAnswer = async () => {
     const filteredUserInput = userInput
       .filter((_, index) => wordWithBlanks[index] === '_') // Беремо лише пропуски
@@ -204,7 +154,12 @@ export const FifthLevel: React.FC<LevelProps> = ({
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
       if (updatedTotalCorrectAnswers === 15) {
-        await markCurrentWordsAsCompleted();
+        await markCurrentWordsAsCompleted(
+          progress,
+          wordStats,
+          level,
+          topicName,
+        );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');
         navigation.navigate('Train', {topicName});

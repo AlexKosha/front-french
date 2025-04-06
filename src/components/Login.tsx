@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   Pressable,
@@ -11,10 +11,9 @@ import {
   Alert,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-
 import {loginThunk} from '../store/auth/authThunks';
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../helpers/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {useLocalization} from '../locale/LocalizationContext';
 import {translations} from '../locale/translations';
@@ -32,7 +31,7 @@ export const Login = (): JSX.Element => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const {locale, setLocale} = useLocalization();
+  const {locale} = useLocalization();
   const {
     emailText,
     passwordText,
