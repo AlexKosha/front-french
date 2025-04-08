@@ -1,50 +1,15 @@
 import axios from 'axios';
-
-// Інтерфейси для типізації вхідних та вихідних даних
-export interface User {
-  name: string | null;
-  email: string | null;
-  birthDate: string | null;
-  croissants: number;
-}
-
-export interface AuthResponse {
-  token: string;
-  user: User;
-}
-
-export interface UpdateUserBody {
-  name?: string;
-  email?: string;
-  birthDate?: string;
-}
-
-export interface UpdatePasswordBody {
-  password: string;
-  newPassword: string;
-}
-
-export interface ThemeUpdateBody {
-  theme: boolean;
-}
-
-export interface LanguageUpdateBody {
-  lng: string;
-}
-
-interface ForgotPasswordBody {
-  email: string;
-}
-
-interface RestorePasswordBody {
-  email: string;
-  password: string;
-}
-
-interface SpeechToTextResponse {
-  transcript: string; // Наприклад, якщо відповідь включає тільки розпізнаний текст
-  // Додаткові поля можна додати, якщо вони є в API
-}
+import {
+  AuthResponse,
+  ForgotPasswordBody,
+  LanguageUpdateBody,
+  RestorePasswordBody,
+  SpeechToTextResponse,
+  ThemeUpdateBody,
+  UpdatePasswordBody,
+  UpdateUserBody,
+  User,
+} from '../types';
 
 // Створення axios-інстансу
 export const instance = axios.create({
@@ -61,7 +26,6 @@ export const deleteToken = () => {
   delete instance.defaults.headers.common.Authorization;
 };
 
-// Функція реєстрації користувача
 export const signUp = async (
   formData: Record<string, any>,
 ): Promise<AuthResponse> => {
@@ -70,7 +34,6 @@ export const signUp = async (
   return data;
 };
 
-// Функція логіну користувача
 export const logIn = async (
   body: Record<string, any>,
 ): Promise<AuthResponse> => {
@@ -79,7 +42,6 @@ export const logIn = async (
   return data;
 };
 
-// Функція виходу користувача
 export const logout = async (): Promise<void> => {
   try {
     await instance.post('/users/logout');
@@ -89,7 +51,6 @@ export const logout = async (): Promise<void> => {
   }
 };
 
-// Отримання профілю користувача
 export const getProfile = async (): Promise<User> => {
   const {data} = await instance.get<User>('/users/current', {
     headers: {
@@ -101,25 +62,21 @@ export const getProfile = async (): Promise<User> => {
   return data;
 };
 
-// Оновлення інформації користувача
 export const updateUser = async (body: UpdateUserBody): Promise<User> => {
   const {data} = await instance.put<User>('/users/update', body);
   return data;
 };
 
-// Оновлення пароля
 export const updatePassword = async (
   body: UpdatePasswordBody,
 ): Promise<void> => {
   await instance.patch('/users/updatePassword', body);
 };
 
-// Верифікація користувача
 export const verify = async (): Promise<void> => {
   await instance.post('/users/verify');
 };
 
-// Оновлення теми
 export const updateTheme = async (
   body: ThemeUpdateBody,
 ): Promise<ThemeUpdateBody> => {
@@ -127,7 +84,6 @@ export const updateTheme = async (
   return data;
 };
 
-// Оновлення мови інтерфейсу
 export const updateLng = async (
   body: LanguageUpdateBody,
 ): Promise<LanguageUpdateBody> => {
@@ -148,7 +104,6 @@ export const restorePassword = async (
   await instance.post(`/users/restorePassword/${otp}`, body);
 };
 
-// Оновлення прогресу користувача
 export const updateProgressUser = async (): Promise<number> => {
   const {data} = await instance.patch<{croissants: number}>(
     '/users/updateProgressUser',
@@ -159,12 +114,10 @@ export const updateProgressUser = async (): Promise<number> => {
 export const sendAudio = async (
   formData: FormData,
 ): Promise<SpeechToTextResponse> => {
-  // console.log(formData, 'FormData');
   const {data} = await instance.post('/speech-to-text', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-  // console.log(data);
   return data;
 };

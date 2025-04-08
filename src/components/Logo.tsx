@@ -1,4 +1,3 @@
-import React from 'react';
 import {Image, View, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
@@ -10,10 +9,10 @@ export const Logo = ({isThemePage = false}) => {
       <Image
         source={
           isThemePage
-            ? require('../images/logo.jpg') // Завжди світле лого на сторінці реєстрації
+            ? require('../images/logoWhite.jpg') // Завжди світле лого на сторінці реєстрації
             : isDarkTheme
-            ? require('../images/logo-dark.jpg')
-            : require('../images/logo.jpg')
+            ? require('../images/logoDark.jpg')
+            : require('../images/logoWhite.jpg')
         }
         style={styles.logo}
       />

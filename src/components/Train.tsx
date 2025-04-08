@@ -3,7 +3,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, {useCallback, useState, useEffect} from 'react';
+import {useCallback, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -19,7 +19,7 @@ export const Train = () => {
   const route = useRoute<RouteProps<'Train'>>();
   const {topicName} = route.params;
   const [progress, setProgress] = useState([]);
-  const [completedLevels, setCompletedLevels] = useState<number[]>([]); // Масив завершених рівнів
+  const [completedLevels, setCompletedLevels] = useState<number[]>([]);
 
   // Оновлення прогресу
   // Викликаємо `updateProgress` при фокусуванні на екрані Train

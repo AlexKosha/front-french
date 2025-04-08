@@ -3,8 +3,6 @@ import * as authThunks from './authThunks';
 import * as HelpersReducer from './helpersAuthReducer';
 import {AuthState} from '../../types';
 
-// Типи для користувача та токену
-
 const initialState: AuthState = {
   user: {name: null, email: null, birthDate: null, croissants: 0},
   token: null,

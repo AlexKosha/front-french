@@ -23,7 +23,7 @@ import {LevelProps} from '../types';
 
 export const FourthLevel: React.FC<LevelProps> = ({
   progress,
-  level,
+  // level,
   topicName,
 }) => {
   const navigation = useNavigation<NavigationProps<'Home'>>();

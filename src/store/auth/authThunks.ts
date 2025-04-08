@@ -13,11 +13,17 @@ import {
   forgotPass,
   restorePassword,
   updateProgressUser,
-  UpdatePasswordBody,
-  ThemeUpdateBody,
-  LanguageUpdateBody,
-  UpdateUserBody,
+  // UpdatePasswordBody,
+  // ThemeUpdateBody,
+  // LanguageUpdateBody,
+  // UpdateUserBody,
 } from '../../services/authService';
+import {
+  LanguageUpdateBody,
+  ThemeUpdateBody,
+  UpdatePasswordBody,
+  UpdateUserBody,
+} from '../../types';
 
 // Типи для тіла запиту (наприклад, для входу, реєстрації тощо)
 interface LoginBody {

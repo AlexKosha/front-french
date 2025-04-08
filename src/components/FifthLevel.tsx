@@ -12,7 +12,6 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
-
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../types/navigationTypes';
 import {AppDispatch} from '../store/store';

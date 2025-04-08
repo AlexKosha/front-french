@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  StyleSheet,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import {loginThunk} from '../store/auth/authThunks';
@@ -180,8 +181,10 @@ export const Login = (): JSX.Element => {
             {
               backgroundColor: isDarkTheme ? 'white' : '#67104c',
             },
+            !isFormValid && styles.buttonDisabled,
           ]}
-          onPress={handleLogin}>
+          onPress={handleLogin}
+          disabled={!isFormValid}>
           <Text
             style={[
               defaultStyles.btnText,
@@ -243,3 +246,6 @@ export const Login = (): JSX.Element => {
     </SafeAreaView>
   );
 };
+export const styles = StyleSheet.create({
+  buttonDisabled: {backgroundColor: '#CCCCCC', pointerEvents: 'none'},
+});

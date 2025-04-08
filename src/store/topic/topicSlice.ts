@@ -1,7 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {Topic} from '../../services/themeService';
+// import {Topic} from '../../services/themeService';
 import * as topicThunk from './topicThunk';
 import * as HelpresReducer from './helpersTopicReducer';
+import {Topic} from '../../types';
 
 const initialState: TopicState = {
   topic: [],

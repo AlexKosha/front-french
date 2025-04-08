@@ -1,3 +1,5 @@
-export * from './wordProgress';
+export * from './wordProgressTypes';
 export * from './navigationTypes';
 export * from './authTypes';
+export * from './themeTypes';
+export * from './vocabTypes';

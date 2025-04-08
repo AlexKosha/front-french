@@ -1,4 +1,3 @@
-import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';

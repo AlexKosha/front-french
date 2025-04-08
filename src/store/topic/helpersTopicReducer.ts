@@ -1,6 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {TopicState} from './topicSlice';
-import {Topic} from '../../services/themeService';
+import {Topic} from '../../types';
+// import {Topic} from '../../services/themeService';
 
 export const handlePending = (state: TopicState) => {
   state.isLoading = true;

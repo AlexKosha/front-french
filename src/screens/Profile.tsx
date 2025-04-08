@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -159,14 +159,9 @@ export const Profile = (): JSX.Element => {
         <View style={styles.subscriptionSection}>
           <View style={styles.barContainer}>
             <View style={styles.barItem}>
-              <View
-                style={[
-                  styles.bar,
-                  {
-                    height: 30,
-                    backgroundColor: isDarkTheme ? 'white' : '#67104c',
-                  },
-                ]}
+              <LinearGradient
+                colors={['#ff7e5f', '#feb47b']}
+                style={[styles.bar, {height: 50, width: 50}]}
               />
               <Text
                 style={[
@@ -178,14 +173,9 @@ export const Profile = (): JSX.Element => {
             </View>
 
             <View style={styles.barItem}>
-              <View
-                style={[
-                  styles.bar,
-                  {
-                    height: 100,
-                    backgroundColor: isDarkTheme ? 'white' : '#67104c',
-                  },
-                ]}
+              <LinearGradient
+                colors={['#ff7e5f', '#feb47b']}
+                style={[styles.bar, {height: 100, width: 50}]}
               />
               <Text
                 style={[
@@ -197,14 +187,9 @@ export const Profile = (): JSX.Element => {
             </View>
 
             <View style={styles.barItem}>
-              <View
-                style={[
-                  styles.bar,
-                  {
-                    height: 150,
-                    backgroundColor: isDarkTheme ? 'white' : '#67104c',
-                  },
-                ]}
+              <LinearGradient
+                colors={['#ff7e5f', '#feb47b']}
+                style={[styles.bar, {height: 150, width: 50}]}
               />
               <Text
                 style={[

@@ -15,3 +15,41 @@ export interface AuthState {
   error: string;
   isLoggedIn: boolean;
 }
+
+export interface AuthResponse {
+  token: string;
+  user: User;
+}
+
+export interface UpdateUserBody {
+  name?: string;
+  email?: string;
+  birthDate?: string;
+}
+
+export interface UpdatePasswordBody {
+  password: string;
+  newPassword: string;
+}
+
+export interface ThemeUpdateBody {
+  theme: boolean;
+}
+
+export interface LanguageUpdateBody {
+  lng: string;
+}
+
+export interface ForgotPasswordBody {
+  email: string;
+}
+
+export interface RestorePasswordBody {
+  email: string;
+  password: string;
+}
+
+export interface SpeechToTextResponse {
+  transcript: string; // Наприклад, якщо відповідь включає тільки розпізнаний текст
+  // Додаткові поля можна додати, якщо вони є в API
+}

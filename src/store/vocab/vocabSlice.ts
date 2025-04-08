@@ -1,7 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
 import * as vocabThunk from './vocabThunks';
 import * as HelpresReducer from './helpersVocabReducer';
-import {Vocab} from '../../services/vocabService';
+import {Vocab} from '../../types';
+// import {Vocab} from '../../services/vocabService';
 
 const initialState: VocabState = {
   vocab: [],

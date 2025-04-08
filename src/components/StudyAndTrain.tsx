@@ -67,7 +67,7 @@ export const StudyAndTrain = (): JSX.Element => {
             {vocab}
           </Text>
         </Pressable>
-        <Pressable
+        {/* <Pressable
           style={[
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
@@ -82,7 +82,7 @@ export const StudyAndTrain = (): JSX.Element => {
             ]}>
             {phonetic}
           </Text>
-        </Pressable>
+        </Pressable> */}
         <Pressable
           style={[
             defaultStyles.button,
