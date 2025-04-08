@@ -1,3 +1,4 @@
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Alert, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';

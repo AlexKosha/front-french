@@ -1,30 +1,22 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   SafeAreaView,
   Text,
-  TextInput,
   Alert,
-  Pressable,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
   View,
   StyleSheet,
   ScrollView,
   Image,
 } from 'react-native';
 
-import PasswordForm from '../components/PasswordForm';
 import {updaterUserDataThunk} from '../store/auth/authThunks';
 import {selectTheme, selectUser} from '../store/auth/selector';
 import {defaultStyles} from '../components/defaultStyles';
 import {AppDispatch} from '../store/store';
-import ProgressBar from '../components/ProgressBar';
 import {useTranslationHelper} from '../locale/useTranslation';
-import {translations} from '../locale/translations';
 import {useLocalization} from '../locale/LocalizationContext';
 
 type User = {

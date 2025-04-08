@@ -2,19 +2,13 @@ import {createSlice} from '@reduxjs/toolkit';
 // import {Topic} from '../../services/themeService';
 import * as topicThunk from './topicThunk';
 import * as HelpresReducer from './helpersTopicReducer';
-import {Topic} from '../../types';
+import {TopicState} from '../../types';
 
 const initialState: TopicState = {
   topic: [],
   isLoading: false,
   error: null,
 };
-
-export interface TopicState {
-  topic: Topic[];
-  isLoading: boolean;
-  error: string | null;
-}
 
 const topicSlice = createSlice({
   name: 'topic',

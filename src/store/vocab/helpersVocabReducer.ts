@@ -1,6 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {VocabState} from './vocabSlice';
-import {Vocab} from '../../types';
+import {Vocab, VocabState} from '../../types';
 // import {Vocab} from '../../services/vocabService';
 
 export const handlePending = (state: VocabState) => {

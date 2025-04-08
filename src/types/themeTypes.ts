@@ -3,3 +3,9 @@ export interface Topic {
   translationEN: string;
   translationUK: string;
 }
+
+export interface TopicState {
+  topic: Topic[];
+  isLoading: boolean;
+  error: string | null;
+}

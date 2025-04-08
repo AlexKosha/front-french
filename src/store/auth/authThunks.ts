@@ -13,34 +13,21 @@ import {
   forgotPass,
   restorePassword,
   updateProgressUser,
-  // UpdatePasswordBody,
-  // ThemeUpdateBody,
-  // LanguageUpdateBody,
-  // UpdateUserBody,
 } from '../../services/authService';
 import {
   LanguageUpdateBody,
+  RegisterBody,
+  RestorePasswordBody,
   ThemeUpdateBody,
   UpdatePasswordBody,
   UpdateUserBody,
 } from '../../types';
 
 // Типи для тіла запиту (наприклад, для входу, реєстрації тощо)
-interface LoginBody {
-  email: string;
-  password: string;
-}
-
-interface RegisterBody {
-  email: string;
-  password: string;
-  birthDate: string;
-  name: string;
-}
 
 export const loginThunk = createAsyncThunk(
   '/users/login',
-  async (body: LoginBody, {rejectWithValue}) => {
+  async (body: RestorePasswordBody, {rejectWithValue}) => {
     try {
       return await logIn(body);
     } catch (error: any) {

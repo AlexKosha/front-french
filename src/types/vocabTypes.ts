@@ -6,3 +6,10 @@ export interface Vocab {
   themeId: string;
   audio: string;
 }
+
+export interface VocabState {
+  vocab: Vocab[];
+  themeId: string;
+  isLoading: boolean;
+  error: string | null;
+}

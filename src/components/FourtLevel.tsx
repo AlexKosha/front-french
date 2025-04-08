@@ -23,7 +23,6 @@ import {LevelProps} from '../types';
 
 export const FourthLevel: React.FC<LevelProps> = ({
   progress,
-  // level,
   topicName,
 }) => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
@@ -408,27 +407,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-// const swapWords = (wordId1: string, wordId2: string) => {
-//   setWords(prevWords => {
-//     const newWords = [...prevWords];
-//     const index1 = newWords.findIndex(word => word.id === wordId1);
-//     const index2 = newWords.findIndex(word => word.id === wordId2);
-
-//     if (index1 !== -1 && index2 !== -1) {
-//       // Зміна місцями
-//       const temp = newWords[index1];
-//       newWords[index1] = newWords[index2];
-//       newWords[index2] = temp;
-//     }
-
-//     return newWords; // Повертаємо оновлений масив
-//   });
-
-//   const isCorrect = words.every(
-//     (word, index) => word.id === images[index].id,
-//   );
-//   if (isCorrect) {
-//     checkMatches();
-//   }
-// };

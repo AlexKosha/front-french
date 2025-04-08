@@ -53,3 +53,10 @@ export interface SpeechToTextResponse {
   transcript: string; // Наприклад, якщо відповідь включає тільки розпізнаний текст
   // Додаткові поля можна додати, якщо вони є в API
 }
+
+export interface RegisterBody {
+  email: string;
+  password: string;
+  birthDate: string;
+  name: string;
+}
