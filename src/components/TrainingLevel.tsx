@@ -1,3 +1,4 @@
+import React from 'react';
 import {useRoute} from '@react-navigation/native';
 import {Text} from 'react-native';
 import {RouteProps} from '../types/navigationTypes';

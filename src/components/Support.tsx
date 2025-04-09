@@ -1,3 +1,4 @@
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity, View, SafeAreaView, Text} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';

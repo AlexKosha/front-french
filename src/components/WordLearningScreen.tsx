@@ -1,5 +1,5 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
-import {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import Tts from 'react-native-tts';
 import {
   SafeAreaView,

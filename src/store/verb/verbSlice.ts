@@ -1,23 +1,23 @@
 import {createSlice} from '@reduxjs/toolkit';
-import * as topicThunk from './topicThunk';
-import * as HelpresReducer from './helpersTopicReducer';
-import {TopicState} from '../../types';
+import * as verbThunk from './verbThunk';
+import * as HelpresReducer from './helpersVerbReducer';
+import {VerbState} from '../../types';
 
-const initialState: TopicState = {
-  topic: [],
+const initialState: VerbState = {
+  verb: [],
   isLoading: false,
   error: null,
 };
 
-const topicSlice = createSlice({
-  name: 'topic',
+const verbSlice = createSlice({
+  name: 'verb',
   initialState,
   reducers: {},
   extraReducers: builder => {
     builder
       .addCase(
-        topicThunk.getTopic.fulfilled,
-        HelpresReducer.handleFulfilledGetTopic,
+        verbThunk.getVerbs.fulfilled,
+        HelpresReducer.handleFulfilledGetVerb,
       )
       .addMatcher(
         action => action.type.endsWith('pending'),
@@ -30,4 +30,4 @@ const topicSlice = createSlice({
   },
 });
 
-export const topicReducer = topicSlice.reducer;
+export const verbReducer = verbSlice.reducer;

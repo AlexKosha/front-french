@@ -3,7 +3,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import {useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';

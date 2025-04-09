@@ -1,5 +1,6 @@
+import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {getTopic} from '../store/topic/topicThunk';
@@ -17,7 +18,7 @@ export const StudyAndTrain = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'StudyAndTrain'>>();
   const dispatch = useDispatch<AppDispatch>();
 
-  const {phonetic, vocab, verbs, studyAndTrain} = useTranslationHelper();
+  const {vocab, verbs} = useTranslationHelper();
 
   const handleGetTheme = async () => {
     try {
@@ -104,18 +105,3 @@ export const StudyAndTrain = (): JSX.Element => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  logoContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: '50%',
-    transform: [{translateX: -70}],
-    alignItems: 'center',
-  },
-  logo: {
-    width: 140,
-    height: 60,
-    resizeMode: 'contain',
-  },
-});

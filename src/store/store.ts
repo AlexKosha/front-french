@@ -15,6 +15,7 @@ import {combineReducers} from 'redux';
 import {authSlice} from './auth/authSlice';
 import {topicReducer} from './topic/topicSlice';
 import {vocabReducer} from './vocab/vocabSlice';
+import {verbReducer} from './verb/verbSlice';
 
 // Налаштування persist для авторизації (збереження токена)
 const persistConfig = {
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(persistConfig, authSlice.reducer),
   vocab: vocabReducer,
   topic: topicReducer,
+  verb: verbReducer,
 });
 
 // Створення store

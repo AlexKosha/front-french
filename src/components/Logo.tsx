@@ -1,6 +1,8 @@
+import React from 'react';
 import {Image, View, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
+
 export const Logo = ({isThemePage = false}) => {
   const isDarkTheme = useSelector(selectTheme);
 
