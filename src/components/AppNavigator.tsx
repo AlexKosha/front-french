@@ -267,6 +267,63 @@ export const AppNavigator = (): JSX.Element => {
           headerLeft: HeaderBackArrow,
         })}
       />
+      <MainStack.Screen
+        name="TrainVerbs"
+        component={Components.TrainVerbs}
+        options={() => ({
+          title: lessonsBySubscr,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: HeaderBackArrow,
+        })}
+      />
+      <MainStack.Screen
+        name="VerbLearningScreen"
+        component={Components.VerbLearningScreen}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name="LearnVerbs"
+        component={Components.LearnVerbs}
+        options={({navigation, route}) => {
+          const params = route.params as RouteProps<'LearnVerbs'>['params'];
+          const verbName = params?.verbName ?? '';
+          return {
+            title: verbName,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: isDarkTheme ? '#67104c' : 'white',
+            },
+            headerShadowVisible: false,
+            headerTintColor: isDarkTheme ? 'white' : '#67104c',
+            // headerLeft: HeaderBackToLearnOrTrainComponent(
+            //   verbName,
+            //   isDarkTheme,
+            //   navigation,
+            // ),
+            // headerRight: HeaderNavToHome,
+          };
+        }}
+      />
+      <MainStack.Screen
+        name="VerbsList"
+        component={Components.VerbsList}
+        options={() => ({
+          title: vocab,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: HeaderBackArrow,
+          headerRight: HeaderNavToHome,
+        })}
+      />
     </MainStack.Navigator>
   );
 };

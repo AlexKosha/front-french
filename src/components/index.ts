@@ -12,3 +12,7 @@ export {Learn} from './Learn';
 export {Train} from './Train';
 export {WordLearningScreen} from './WordLearningScreen';
 export {TrainingLevel} from './TrainingLevel';
+export {LearnVerbs} from './LearnVerbs';
+export {TrainVerbs} from './TrainVerbs';
+export {VerbLearningScreen} from './VerbLearningScreen';
+export {VerbsList} from './VerbsList';

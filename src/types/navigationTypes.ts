@@ -24,6 +24,14 @@ export type RootStackParamList = {
     wordItem: any;
   };
   TrainingLevel: {topicName: string; level: number; progress: any};
+  LearnVerbs: {verbName: string | undefined};
+  TrainVerbs: {verbName: string | undefined};
+  VerbLearningScreen: {
+    count: number;
+    verbName: string;
+    wordItem: any;
+  };
+  VerbsList: undefined;
 };
 
 // Тип для навігації

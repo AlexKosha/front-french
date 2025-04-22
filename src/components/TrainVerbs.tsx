@@ -1,18 +1,16 @@
 import React from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../types/navigationTypes';
+import {NavigationProps} from '../types/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {defaultStyles} from './defaultStyles';
 
-export const Verbs = (): JSX.Element => {
+export const TrainVerbs = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
-  const navigation = useNavigation<NavigationProps<'Verbs'>>();
-  // const route = useRoute<RouteProps<'LearnVerbs'>>();
-  // const {verbName} = route.params;
+  const navigation = useNavigation<NavigationProps<'TrainVerbs'>>();
 
   const {verbs} = useTranslationHelper();
 
@@ -28,7 +26,7 @@ export const Verbs = (): JSX.Element => {
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
           ]}
-          onPress={() => navigation.navigate('LearnVerbs', {verbName: 'Verb'})}>
+          onPress={() => navigation.navigate('Home')}>
           <Text
             style={[
               defaultStyles.btnText,
@@ -36,23 +34,7 @@ export const Verbs = (): JSX.Element => {
                 color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            Вчити дієслова
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[
-            defaultStyles.button,
-            {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
-          ]}
-          onPress={() => navigation.navigate('TrainVerbs')}>
-          <Text
-            style={[
-              defaultStyles.btnText,
-              {
-                color: isDarkTheme ? '#67104c' : 'white',
-              },
-            ]}>
-            Тренувати дієслова
+            Тренувати дієслова ТУТ
           </Text>
         </Pressable>
       </View>
