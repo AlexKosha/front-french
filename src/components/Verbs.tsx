@@ -7,10 +7,12 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../types/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {defaultStyles} from './defaultStyles';
+import {selectVerbs} from '../store/verb/selectors';
 
 export const Verbs = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
   const navigation = useNavigation<NavigationProps<'Verbs'>>();
+
   // const route = useRoute<RouteProps<'LearnVerbs'>>();
   // const {verbName} = route.params;
 
@@ -28,7 +30,7 @@ export const Verbs = (): JSX.Element => {
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
           ]}
-          onPress={() => navigation.navigate('LearnVerbs', {verbName: 'Verb'})}>
+          onPress={() => navigation.navigate('ChooseTense')}>
           <Text
             style={[
               defaultStyles.btnText,
@@ -44,7 +46,7 @@ export const Verbs = (): JSX.Element => {
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
           ]}
-          onPress={() => navigation.navigate('TrainVerbs')}>
+          onPress={() => navigation.navigate('TrainVerbs', {verbName: ''})}>
           <Text
             style={[
               defaultStyles.btnText,

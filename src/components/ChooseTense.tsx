@@ -1,15 +1,24 @@
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
-import {defaultStyles} from './defaultStyles';
+import {SafeAreaView, Text, View, TouchableOpacity} from 'react-native';
+import {NavigationProps, RouteProps} from '../types';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
-import {Conjugation, RouteProps} from '../types';
-import {useRoute} from '@react-navigation/native';
+import {defaultStyles} from './defaultStyles';
+import {selectVerbs} from '../store/verb/selectors';
 
-export const VerbLearningScreen = () => {
-  const route = useRoute<RouteProps<'VerbLearningScreen'>>();
-  const {tenseName, verbs} = route.params;
+export const ChooseTense = (): JSX.Element => {
+  const route = useRoute<RouteProps<'ChooseTense'>>();
+  const navigation = useNavigation<NavigationProps<'ChooseTense'>>();
   const isDarkTheme = useSelector(selectTheme);
+  const verbsData = useSelector(selectVerbs);
+
+  const tenses = verbsData[0].tenses;
+
+  const handlePress = (tenseName: string) => {
+    console.log(`Обрано: ${tenseName}`);
+    navigation.navigate('VerbsList', {tenseName});
+  };
 
   return (
     <SafeAreaView
@@ -35,13 +44,14 @@ export const VerbLearningScreen = () => {
           Обери який час хочеш вивчати
         </Text>
 
-        {verbs[0].conjugations.map((count: Conjugation) => (
-          <View
+        {tenses.map(count => (
+          <TouchableOpacity
             key={count._id}
             style={[
               defaultStyles.button,
               {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
-            ]}>
+            ]}
+            onPress={() => handlePress(count.name)}>
             <Text
               style={[
                 defaultStyles.btnText,
@@ -49,18 +59,9 @@ export const VerbLearningScreen = () => {
                   color: isDarkTheme ? '#67104c' : 'white',
                 },
               ]}>
-              {count.pronoun}
+              {count.name}
             </Text>
-            <Text
-              style={[
-                defaultStyles.btnText,
-                {
-                  color: isDarkTheme ? '#67104c' : 'white',
-                },
-              ]}>
-              {count.form}
-            </Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </SafeAreaView>

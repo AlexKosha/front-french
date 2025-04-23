@@ -271,7 +271,7 @@ export const AppNavigator = (): JSX.Element => {
         name="TrainVerbs"
         component={Components.TrainVerbs}
         options={() => ({
-          title: lessonsBySubscr,
+          // title: lessonsBySubscr,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -284,44 +284,56 @@ export const AppNavigator = (): JSX.Element => {
       <MainStack.Screen
         name="VerbLearningScreen"
         component={Components.VerbLearningScreen}
-        options={{headerShown: false}}
-      />
-      <MainStack.Screen
-        name="LearnVerbs"
-        component={Components.LearnVerbs}
         options={({navigation, route}) => {
-          const params = route.params as RouteProps<'LearnVerbs'>['params'];
-          const verbName = params?.verbName ?? '';
+          const params =
+            route.params as RouteProps<'VerbLearningScreen'>['params'];
+          const tenseName = params?.tenseName ?? '';
           return {
-            title: verbName,
+            title: tenseName,
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: isDarkTheme ? '#67104c' : 'white',
             },
             headerShadowVisible: false,
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
-            // headerLeft: HeaderBackToLearnOrTrainComponent(
-            //   verbName,
-            //   isDarkTheme,
-            //   navigation,
-            // ),
-            // headerRight: HeaderNavToHome,
+            headerLeft: HeaderBackArrow,
+            headerRight: HeaderNavToHome,
+          };
+        }}
+      />
+
+      <MainStack.Screen
+        name="VerbsList"
+        component={Components.VerbsList}
+        options={({navigation, route}) => {
+          const params = route.params as RouteProps<'VerbsList'>['params'];
+          const tenseName = params?.tenseName ?? '';
+          return {
+            title: tenseName,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: isDarkTheme ? '#67104c' : 'white',
+            },
+            headerShadowVisible: false,
+            headerTintColor: isDarkTheme ? 'white' : '#67104c',
+            headerLeft: HeaderBackArrow,
+            headerRight: HeaderNavToHome,
           };
         }}
       />
       <MainStack.Screen
-        name="VerbsList"
-        component={Components.VerbsList}
+        name="ChooseTense"
+        component={Components.ChooseTense}
         options={() => ({
-          title: vocab,
-          headerTitleAlign: 'center',
+          title: '',
+          // headerTitleAlign: 'center',
+          // headerShown: true,
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
           headerLeft: HeaderBackArrow,
-          headerRight: HeaderNavToHome,
         })}
       />
     </MainStack.Navigator>

@@ -1,9 +1,18 @@
+export interface VerbsInChoosenTense {
+  infinitive: string;
+  translationUA: string;
+  translationEN: string;
+  conjugations: Conjugation[];
+}
+
 export interface Conjugation {
+  _id: string;
   pronoun: string;
   form: string;
 }
 
 export interface Tense {
+  _id: string;
   name: string;
   translationUA: string;
   translationEN: string;

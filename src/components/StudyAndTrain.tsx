@@ -11,10 +11,13 @@ import {AppDispatch} from '../store/store';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from './Logo';
 import {defaultStyles} from './defaultStyles';
+import {selectVerbs} from '../store/verb/selectors';
+import {getVerbs} from '../store/verb/verbThunk';
 
 export const StudyAndTrain = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
   const topicsData = useSelector(selectTopic);
+  const verbsData = useSelector(selectVerbs);
   const navigation = useNavigation<NavigationProps<'StudyAndTrain'>>();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -30,6 +33,23 @@ export const StudyAndTrain = (): JSX.Element => {
       const resultAction = await dispatch(getTopic());
       if (getTopic.fulfilled.match(resultAction)) {
         navigation.navigate('Vocab');
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleGetVerbs = async () => {
+    try {
+      if (verbsData && verbsData.length > 0) {
+        navigation.navigate('Verbs');
+        return;
+      }
+
+      const resultAction = await dispatch(getVerbs());
+      if (getVerbs.fulfilled.match(resultAction)) {
+        navigation.navigate('Verbs');
       }
       return;
     } catch (error) {
@@ -68,28 +88,12 @@ export const StudyAndTrain = (): JSX.Element => {
             {vocab}
           </Text>
         </Pressable>
-        {/* <Pressable
-          style={[
-            defaultStyles.button,
-            {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
-          ]}
-          onPress={() => navigation.navigate('Phonetic')}>
-          <Text
-            style={[
-              defaultStyles.btnText,
-              {
-                color: isDarkTheme ? '#67104c' : 'white',
-              },
-            ]}>
-            {phonetic}
-          </Text>
-        </Pressable> */}
         <Pressable
           style={[
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
           ]}
-          onPress={() => navigation.navigate('Verbs')}>
+          onPress={() => handleGetVerbs()}>
           <Text
             style={[
               defaultStyles.btnText,

@@ -1,57 +1,60 @@
 import React from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {Pressable, SafeAreaView, Text, View, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {selectTopic} from '../store/topic/selectors';
-import {getVocab} from '../store/vocab/vocabThunks';
-import {selectVocab} from '../store/vocab/selectors';
-import {setThemeId} from '../store/vocab/vocabSlice';
 import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../types/navigationTypes';
+import {NavigationProps, RouteProps} from '../types/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {useLocalization} from '../locale/LocalizationContext';
 import {defaultStyles} from './defaultStyles';
+import {selectVerbs} from '../store/verb/selectors';
 
 export const VerbsList = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
+  const route = useRoute<RouteProps<'VerbsList'>>();
   const navigation = useNavigation<NavigationProps<'VerbsList'>>();
-  const vocabData = useSelector(selectVocab);
-  const topicsData = useSelector(selectTopic);
   const dispatch = useDispatch<AppDispatch>();
   const {locale} = useLocalization();
+  const verbsData = useSelector(selectVerbs);
 
-  const handleGetWorlds = async (id: string, name: string) => {
-    try {
-      const existingData = vocabData.find(item => item.themeId === id);
+  const {tenseName} = route.params;
 
-      dispatch(setThemeId(id));
-
-      if (existingData) {
-        navigation.navigate('LearnOrTrainTopic', {
-          topicName: name,
-        });
-        return;
-      }
-
-      const resultAction = await dispatch(getVocab(id));
-      if (getVocab.fulfilled.match(resultAction)) {
-        navigation.navigate('LearnOrTrainTopic', {topicName: name});
-      }
-      return;
-    } catch (error) {
-      console.log(error);
-    }
+  const getConjugationsByTense = () => {
+    return verbsData
+      .map((verb: any) => {
+        const matchedTense = verb.tenses.find(
+          (tense: any) => tense.name === tenseName,
+        );
+        return {
+          infinitive: verb.infinitive,
+          translationUA: verb.translationUA,
+          translationEN: verb.translationEN,
+          conjugations: matchedTense?.conjugations || [],
+        };
+      })
+      .filter(verb => verb.conjugations.length > 0);
   };
 
-  const renderTopicsItem = ({item}: any) => {
+  const handleGetVerbsInfinitive = () => {
+    const filteredVerbs = getConjugationsByTense();
+    console.log('====================================');
+    console.log(filteredVerbs);
+    console.log('====================================');
+    navigation.navigate('VerbLearningScreen', {
+      tenseName,
+      verbs: filteredVerbs,
+    });
+  };
+
+  const renderVerbsInfinitive = ({item}: any) => {
     return (
       <Pressable
         style={[
           defaultStyles.button,
           {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
         ]}
-        onPress={() => handleGetWorlds(item._id, item.name)}>
+        onPress={handleGetVerbsInfinitive}>
         <Text
           style={[
             defaultStyles.btnText,
@@ -59,8 +62,8 @@ export const VerbsList = (): JSX.Element => {
               color: isDarkTheme ? '#67104c' : 'white',
             },
           ]}>
-          {item.name} /{' '}
-          {locale === 'uk' ? item.translationUK : item.translationEN}
+          {item.infinitive} /{' '}
+          {locale === 'uk' ? item.translationUA : item.translationEN}
         </Text>
       </Pressable>
     );
@@ -75,9 +78,9 @@ export const VerbsList = (): JSX.Element => {
       <View>
         <FlatList
           style={{width: '100%'}}
-          data={topicsData}
+          data={verbsData}
           keyExtractor={(item: any) => item._id}
-          renderItem={renderTopicsItem}
+          renderItem={renderVerbsInfinitive}
           contentContainerStyle={{alignItems: 'center'}}
         />
       </View>

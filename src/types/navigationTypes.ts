@@ -1,5 +1,6 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {Verb, VerbsInChoosenTense} from '.';
 
 // Визначення всіх маршрутів додатку та їх параметрів
 export type RootStackParamList = {
@@ -27,11 +28,11 @@ export type RootStackParamList = {
   LearnVerbs: {verbName: string | undefined};
   TrainVerbs: {verbName: string | undefined};
   VerbLearningScreen: {
-    count: number;
-    verbName: string;
-    wordItem: any;
+    tenseName: string | undefined;
+    verbs: any | undefined;
   };
-  VerbsList: undefined;
+  VerbsList: {tenseName: string | undefined};
+  ChooseTense: undefined;
 };
 
 // Тип для навігації
