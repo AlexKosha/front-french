@@ -16,22 +16,22 @@ export type RootStackParamList = {
   Support: undefined;
   Phonetic: undefined;
   Verbs: undefined;
-  LearnOrTrainTopic: {topicName: string};
-  Learn: {topicName: string | undefined};
-  Train: {topicName: string | undefined};
+  LearnOrTrainTopic: {titleName: string};
+  Learn: {titleName: string | undefined};
+  Train: {titleName: string | undefined};
   WordLearningScreen: {
     count: number;
-    topicName: string;
+    titleName: string;
     wordItem: any;
   };
-  TrainingLevel: {topicName: string; level: number; progress: any};
+  TrainingLevel: {titleName: string; level: number; progress: any};
   LearnVerbs: {verbName: string | undefined};
   TrainVerbs: {verbName: string | undefined};
   VerbLearningScreen: {
-    tenseName: string | undefined;
+    titleName: string | undefined;
     verbs: any | undefined;
   };
-  VerbsList: {tenseName: string | undefined};
+  VerbsList: {titleName: string | undefined};
   ChooseTense: undefined;
 };
 

@@ -7,7 +7,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {NavigationProps} from '../../types/navigationTypes';
 import {selectTheme} from '../../store/auth/selector';
 
-export const HeaderHome = () => {
+export const HeaderHomeToProfile = () => {
   const navigation = useNavigation<NavigationProps<'AppNavigator'>>();
   const isDarkTheme = useSelector(selectTheme);
 
@@ -18,22 +18,6 @@ export const HeaderHome = () => {
         size={30}
         color={isDarkTheme ? 'white' : '#67104c'}
         style={{marginRight: 5}}
-      />
-    </TouchableOpacity>
-  );
-};
-
-export const HeaderToVocab = () => {
-  const navigation = useNavigation<NavigationProps<'AppNavigator'>>();
-  const isDarkTheme = useSelector(selectTheme);
-
-  return (
-    <TouchableOpacity onPress={() => navigation.navigate('Vocab')}>
-      <AntDesign
-        name="arrowleft"
-        size={30}
-        color={isDarkTheme ? 'white' : '#67104c'}
-        style={{marginLeft: 5}}
       />
     </TouchableOpacity>
   );
@@ -55,12 +39,16 @@ export const HeaderNavToHome = () => {
   );
 };
 
-export const HeaderBackArrow = () => {
-  const navigation = useNavigation<NavigationProps<'AppNavigator'>>();
-  const isDarkTheme = useSelector(selectTheme);
-
-  return (
-    <TouchableOpacity onPress={() => navigation.goBack()}>
+export const HeaderBackToLearnOrTrainComponent = (
+  titleName: string,
+  isDarkTheme: boolean,
+  navigation: any,
+  goToPreviousComponent: string,
+): ((props: any) => React.ReactNode) => {
+  return props => (
+    <TouchableOpacity
+      {...props}
+      onPress={() => navigation.navigate(goToPreviousComponent, {titleName})}>
       <AntDesign
         name="arrowleft"
         size={30}
@@ -71,15 +59,15 @@ export const HeaderBackArrow = () => {
   );
 };
 
-export const HeaderBackToLearnOrTrainComponent = (
-  topicName: string,
+export const HeaderBackToPreviousComponent = (
   isDarkTheme: boolean,
   navigation: any,
+  goToPreviousComponent: string,
 ): ((props: any) => React.ReactNode) => {
   return props => (
     <TouchableOpacity
       {...props}
-      onPress={() => navigation.navigate('LearnOrTrainTopic', {topicName})}>
+      onPress={() => navigation.navigate(goToPreviousComponent)}>
       <AntDesign
         name="arrowleft"
         size={30}
@@ -91,9 +79,10 @@ export const HeaderBackToLearnOrTrainComponent = (
 };
 
 export const createHeaderTrainingLevelComponent = (
-  topicName: string,
+  titleName: string,
   isDarkTheme: boolean,
   navigation: any,
+  goToPreviousComponent: string,
 ): ((props: any) => React.ReactNode) => {
   return props => (
     <View
@@ -114,7 +103,8 @@ export const createHeaderTrainingLevelComponent = (
               {text: 'Залишитись', style: 'cancel'},
               {
                 text: 'Вийти',
-                onPress: () => navigation.navigate('Train', {topicName}),
+                onPress: () =>
+                  navigation.navigate(goToPreviousComponent, {titleName}),
                 style: 'destructive',
               },
             ],

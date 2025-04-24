@@ -29,14 +29,14 @@ export const Vocab = (): JSX.Element => {
 
       if (existingData) {
         navigation.navigate('LearnOrTrainTopic', {
-          topicName: name,
+          titleName: name,
         });
         return;
       }
 
       const resultAction = await dispatch(getVocab(id));
       if (getVocab.fulfilled.match(resultAction)) {
-        navigation.navigate('LearnOrTrainTopic', {topicName: name});
+        navigation.navigate('LearnOrTrainTopic', {titleName: name});
       }
       return;
     } catch (error) {

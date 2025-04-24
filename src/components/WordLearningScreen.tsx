@@ -1,6 +1,5 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect, useCallback} from 'react';
-import Tts from 'react-native-tts';
 import {
   SafeAreaView,
   Text,
@@ -21,6 +20,7 @@ import {useTranslationHelper} from '../locale/useTranslation';
 import {useLocalization} from '../locale/LocalizationContext';
 import {defaultStyles} from './defaultStyles';
 import {WordItem} from '../types';
+import {useTTS} from '../helpers';
 
 export const WordLearningScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,7 +44,7 @@ export const WordLearningScreen = () => {
 
   const vocabData = useSelector(selectVocab);
   const route = useRoute<RouteProps<'WordLearningScreen'>>();
-  const {count, topicName, wordItem} = route.params;
+  const {count, titleName, wordItem} = route.params;
   const [savedProgress, setSavedProgress] = useState<
     {
       word: WordItem;
@@ -58,6 +58,13 @@ export const WordLearningScreen = () => {
     isSingleWordMode ? [wordItem] : [],
   );
 
+  const {speak} = useTTS();
+
+  const playSound = () => {
+    if (selectedWords[currentIndex]?.world)
+      speak(selectedWords[currentIndex].world);
+  };
+
   const filteredWords = vocabData.filter(word => word.themeId === id);
 
   const saveProgress = async (word: any) => {
@@ -67,7 +74,7 @@ export const WordLearningScreen = () => {
     }));
     const mergedProgress = [...savedProgress, ...updatedProgress];
     const progressForStorege = JSON.stringify(mergedProgress);
-    await AsyncStorage.setItem(`progress_${topicName}`, progressForStorege);
+    await AsyncStorage.setItem(`progress_${titleName}`, progressForStorege);
   };
 
   const checkCompletion = (totalShown: number) => {
@@ -79,7 +86,7 @@ export const WordLearningScreen = () => {
   useEffect(() => {
     const loadProgress = async () => {
       try {
-        const jsonValue = await AsyncStorage.getItem(`progress_${topicName}`);
+        const jsonValue = await AsyncStorage.getItem(`progress_${titleName}`);
         const progress = jsonValue != null ? JSON.parse(jsonValue) : [];
         if (Array.isArray(progress)) {
           const updatedProgress = progress.map(word => ({
@@ -104,7 +111,7 @@ export const WordLearningScreen = () => {
     totalShown,
     filteredWords.length,
     isSingleWordMode,
-    topicName,
+    titleName,
     filteredWords,
     count,
   ]);
@@ -140,40 +147,13 @@ export const WordLearningScreen = () => {
     }
   };
 
-  useEffect(() => {
-    Tts.getInitStatus()
-      .then(() => {
-        // Tts.setDefaultRate(0.6, true);
-        Tts.setDefaultPitch(1.5);
-        Tts.setDefaultLanguage('fr-FR').catch(err =>
-          console.log('Language not supported', err),
-        );
-      })
-      .catch(err => console.error('TTS Init Error:', err));
-  }, []);
-
-  const playSound = useCallback(() => {
-    if (selectedWords[currentIndex]?.world) {
-      // Прямо викликаємо Tts.speak(), без попереднього виклику Tts.stop()
-      Tts.speak(selectedWords[currentIndex]?.world, {
-        iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
-        rate: 0.5,
-        androidParams: {
-          KEY_PARAM_PAN: 0,
-          KEY_PARAM_VOLUME: 1,
-          KEY_PARAM_STREAM: 'STREAM_ALARM',
-        },
-      });
-    }
-  }, [currentIndex, selectedWords]);
-
   const handleTrainWords = () => {
-    navigation.navigate('Train', {topicName});
+    navigation.navigate('Train', {titleName});
   };
 
   const handleChooseDifferentCount = () => {
     setTotalShown(0);
-    navigation.navigate('Learn', {topicName});
+    navigation.navigate('Learn', {titleName});
   };
 
   return (

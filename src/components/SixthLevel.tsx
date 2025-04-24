@@ -24,7 +24,7 @@ import {initializeWordStats, markCurrentWordsAsCompleted} from '../helpers';
 export const SixthLevel: React.FC<LevelProps> = ({
   progress,
   level,
-  topicName,
+  titleName,
 }) => {
   const [word, setWord] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -77,11 +77,11 @@ export const SixthLevel: React.FC<LevelProps> = ({
           progress,
           wordStats,
           level,
-          topicName,
+          titleName,
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання.');
-        navigation.navigate('Train', {topicName});
+        navigation.navigate('Train', {titleName});
         return;
       }
 

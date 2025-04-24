@@ -1,7 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView, Alert} from 'react-native';
-import Tts from 'react-native-tts';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {updaterProgressUserThunk} from '../store/auth/authThunks';
@@ -12,11 +11,12 @@ import {RenderProgress} from './RenderProgress';
 import {defaultStyles} from './defaultStyles';
 import {markCurrentWordsAsCompleted} from '../helpers/progressHelpers';
 import {LevelComponentsProps, WordItem, WordStat} from '../types';
+import {useTTS} from '../helpers';
 
 export const LevelComponent: React.FC<LevelComponentsProps> = ({
   level,
   progress,
-  topicName,
+  titleName,
   renderContent,
   renderChoices,
 }) => {
@@ -28,47 +28,11 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
   const navigation = useNavigation<NavigationProps<'Train'>>();
   const dispatch = useDispatch<AppDispatch>();
   const isDarkTheme = useSelector(selectTheme);
+  const {speak} = useTTS();
 
-  useEffect(() => {
-    Tts.getInitStatus()
-      .then(() => {
-        // Tts.setDefaultRate(0.6, false);
-        Tts.setDefaultPitch(1.5);
-        Tts.setDefaultLanguage('fr-FR').catch(err =>
-          console.log('Language not supported', err),
-        );
-      })
-      .catch(err => console.error('TTS Init Error:', err));
-  }, []);
-
-  const playText = useCallback(() => {
-    if (currentItem?.world) {
-      // Прямо викликаємо Tts.speak(), без попереднього виклику Tts.stop()
-      Tts.speak(currentItem.world, {
-        iosVoiceId: 'com.apple.ttsbundle.Thomas-compact', // Обираємо голос для iOS
-        rate: 0.5,
-        androidParams: {
-          KEY_PARAM_PAN: 0,
-          KEY_PARAM_VOLUME: 1,
-          KEY_PARAM_STREAM: 'STREAM_ALARM',
-        },
-      });
-    }
-  }, [currentItem]);
-
-  useEffect(() => {
-    // Реєструємо порожні слухачі, щоб усунути варнінги
-    Tts.addEventListener('tts-start', () => {});
-    Tts.addEventListener('tts-finish', () => {});
-    Tts.addEventListener('tts-progress', () => {});
-
-    // Очищення слухачів при демонтажі компоненту
-    return () => {
-      Tts.removeEventListener('tts-start', () => {});
-      Tts.removeEventListener('tts-finish', () => {});
-      Tts.removeEventListener('tts-progress', () => {});
-    };
-  }, []);
+  const playText = () => {
+    if (currentItem?.world) speak(currentItem.world);
+  };
 
   const generateChoices = useCallback(
     (correctItem: WordItem) => {
@@ -106,11 +70,11 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
           progress,
           wordStats,
           level,
-          topicName,
+          titleName,
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');
-        navigation.navigate('Train', {topicName});
+        navigation.navigate('Train', {titleName});
       } else {
         setRandomItem(updatedStats);
       }
@@ -124,7 +88,7 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
       const remainingItems = stats.filter((stat: any) => stat.correctCount < 3);
       if (remainingItems.length === 0) {
         Alert.alert('Вітаю! Ви виконали всі завдання.');
-        navigation.navigate('Train', {topicName});
+        navigation.navigate('Train', {titleName});
         return;
       }
       const randomItem =
@@ -132,7 +96,7 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
       setCurrentItem(randomItem.word);
       generateChoices(randomItem.word);
     },
-    [generateChoices, navigation, topicName],
+    [generateChoices, navigation, titleName],
   );
 
   useEffect(() => {

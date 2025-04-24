@@ -10,7 +10,7 @@ import {LevelProps, WordItem} from '../types';
 export const FirstLevel: React.FC<LevelProps> = ({
   level,
   progress,
-  topicName,
+  titleName,
 }) => {
   const isDarkTheme = useSelector(selectTheme);
   const renderContent = (currentItem: WordItem, playText: any) => {
@@ -80,7 +80,7 @@ export const FirstLevel: React.FC<LevelProps> = ({
     <LevelComponent
       level={level}
       progress={progress}
-      topicName={topicName}
+      titleName={titleName}
       renderChoices={renderChoices}
       renderContent={renderContent}
     />

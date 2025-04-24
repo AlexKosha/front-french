@@ -5,7 +5,7 @@ export const markCurrentWordsAsCompleted = async (
   progress: WordProgress[],
   wordStats: WordStat[],
   level: number,
-  topicName: string,
+  titleName: string,
 ): Promise<void> => {
   try {
     const updatedProgress = progress.map(word => {
@@ -21,7 +21,7 @@ export const markCurrentWordsAsCompleted = async (
     });
 
     await AsyncStorage.setItem(
-      `progress_${topicName}`,
+      `progress_${titleName}`,
       JSON.stringify(updatedProgress),
     );
   } catch (error) {

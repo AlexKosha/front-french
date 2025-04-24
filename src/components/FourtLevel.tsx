@@ -21,10 +21,7 @@ import {RenderProgress} from './RenderProgress';
 import {defaultStyles} from './defaultStyles';
 import {LevelProps} from '../types';
 
-export const FourthLevel: React.FC<LevelProps> = ({
-  progress,
-  topicName,
-}) => {
+export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
   const isDarkTheme = useSelector(selectTheme);
 
@@ -267,7 +264,7 @@ export const FourthLevel: React.FC<LevelProps> = ({
           Alert.alert(
             'Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан',
           );
-          navigation.navigate('Train', {topicName});
+          navigation.navigate('Train', {titleName});
         }
 
         handleNextIteration();

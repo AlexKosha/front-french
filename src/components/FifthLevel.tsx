@@ -24,7 +24,7 @@ import {LevelProps, WordStat} from '../types';
 export const FifthLevel: React.FC<LevelProps> = ({
   progress,
   level,
-  topicName,
+  titleName,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation<NavigationProps<'Learn'>>();
@@ -157,11 +157,11 @@ export const FifthLevel: React.FC<LevelProps> = ({
           progress,
           wordStats,
           level,
-          topicName,
+          titleName,
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');
-        navigation.navigate('Train', {topicName});
+        navigation.navigate('Train', {titleName});
         return;
       }
       handleNextIteration();

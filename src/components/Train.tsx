@@ -17,7 +17,7 @@ export const Train = () => {
   const navigation = useNavigation<NavigationProps<'Learn'>>();
   const isDarkTheme = useSelector(selectTheme);
   const route = useRoute<RouteProps<'Train'>>();
-  const {topicName} = route.params;
+  const {titleName} = route.params;
   const [progress, setProgress] = useState([]);
   const [completedLevels, setCompletedLevels] = useState<number[]>([]);
 
@@ -27,7 +27,7 @@ export const Train = () => {
     useCallback(() => {
       const updateProgress = async () => {
         try {
-          const jsonValue = await AsyncStorage.getItem(`progress_${topicName}`);
+          const jsonValue = await AsyncStorage.getItem(`progress_${titleName}`);
           const storageProgress =
             jsonValue != null ? JSON.parse(jsonValue) : [];
           setProgress(storageProgress);
@@ -47,7 +47,7 @@ export const Train = () => {
       };
 
       updateProgress();
-    }, [topicName]),
+    }, [titleName]),
   );
 
   // Оновлення прогресу в AsyncStorage після змін
@@ -55,7 +55,7 @@ export const Train = () => {
     const saveProgressToStorage = async () => {
       try {
         await AsyncStorage.setItem(
-          `progress_${topicName}`,
+          `progress_${titleName}`,
           JSON.stringify(progress),
         );
       } catch (error) {
@@ -66,19 +66,19 @@ export const Train = () => {
     if (progress.length > 0) {
       saveProgressToStorage();
     }
-  }, [progress, topicName]);
+  }, [progress, titleName]);
 
   // Обробка переходу до рівнів
   const handlePress = (level: number) => {
-    if (!topicName) {
-      console.error('topicName is undefined');
+    if (!titleName) {
+      console.error('titleName is undefined');
       return;
     }
 
     if (progress.length > 0 && !completedLevels.includes(level)) {
       navigation.navigate('TrainingLevel', {
         level,
-        topicName,
+        titleName,
         progress: progress as any[],
       });
     }
@@ -86,12 +86,12 @@ export const Train = () => {
 
   // Обробка переходу до вивчення слів
   const goToLearn = () => {
-    if (!topicName) {
-      console.error('topicName is undefined');
+    if (!titleName) {
+      console.error('titleName is undefined');
       return;
     }
 
-    navigation.navigate('Learn', {topicName});
+    navigation.navigate('Learn', {titleName});
   };
 
   return (

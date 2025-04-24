@@ -13,7 +13,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
   const navigation = useNavigation<NavigationProps<'LearnOrTrainTopic'>>();
   const route = useRoute<RouteProps<'LearnOrTrainTopic'>>();
-  const {topicName} = route.params;
+  const {titleName} = route.params;
 
   const {learn, train} = useTranslationHelper();
 
@@ -36,7 +36,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
           ]}
-          onPress={() => navigation.navigate('Learn', {topicName})}>
+          onPress={() => navigation.navigate('Learn', {titleName})}>
           <Text
             style={[
               defaultStyles.btnText,
@@ -53,7 +53,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
           ]}
-          onPress={() => navigation.navigate('Train', {topicName})}>
+          onPress={() => navigation.navigate('Train', {titleName})}>
           <Text
             style={[
               defaultStyles.btnText,

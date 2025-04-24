@@ -12,48 +12,48 @@ import {SeventhLevel} from './SeventhLevel';
 
 export const TrainingLevel = () => {
   const route = useRoute<RouteProps<'TrainingLevel'>>();
-  const {level, topicName, progress} = route.params;
+  const {level, titleName, progress} = route.params;
 
   const renderLevelComponent = () => {
     switch (level) {
       case 1:
         return (
-          <FirstLevel level={level} progress={progress} topicName={topicName} />
+          <FirstLevel level={level} progress={progress} titleName={titleName} />
         );
       case 2:
         return (
           <SecondLevel
             level={level}
             progress={progress}
-            topicName={topicName}
+            titleName={titleName}
           />
         );
       case 3:
         return (
-          <ThirdLevel level={level} progress={progress} topicName={topicName} />
+          <ThirdLevel level={level} progress={progress} titleName={titleName} />
         );
       case 4:
         return (
           <FourthLevel
             level={level}
             progress={progress}
-            topicName={topicName}
+            titleName={titleName}
           />
         );
       case 5:
         return (
-          <FifthLevel level={level} progress={progress} topicName={topicName} />
+          <FifthLevel level={level} progress={progress} titleName={titleName} />
         );
       case 6:
         return (
-          <SixthLevel level={level} progress={progress} topicName={topicName} />
+          <SixthLevel level={level} progress={progress} titleName={titleName} />
         );
       case 7:
         return (
           <SeventhLevel
             level={level}
             progress={progress}
-            topicName={topicName}
+            titleName={titleName}
           />
         );
       default:

@@ -5,11 +5,22 @@ import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
 import {Conjugation, RouteProps} from '../types';
 import {useRoute} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/AntDesign';
+import {useTTS} from '../helpers';
 
 export const VerbLearningScreen = () => {
   const route = useRoute<RouteProps<'VerbLearningScreen'>>();
-  const {tenseName, verbs} = route.params;
+  const {titleName, verbs} = route.params;
   const isDarkTheme = useSelector(selectTheme);
+
+  const {speak} = useTTS();
+
+  const playSound = (pronoun: string, form: string) => {
+    if (pronoun && form) {
+      const combinedText = `${pronoun} ${form}`;
+      speak(combinedText);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -60,6 +71,14 @@ export const VerbLearningScreen = () => {
               ]}>
               {count.form}
             </Text>
+            <TouchableOpacity
+              onPress={() => playSound(count.pronoun, count.form)}>
+              <Icon
+                name="sound"
+                size={40}
+                color={isDarkTheme ? 'white' : '#67104c'}
+              />
+            </TouchableOpacity>
           </View>
         ))}
       </View>

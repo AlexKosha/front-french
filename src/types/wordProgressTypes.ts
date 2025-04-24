@@ -11,7 +11,7 @@ export interface WordProgress {
 export interface LevelProps {
   level: number;
   progress: WordProgress[];
-  topicName: string;
+  titleName: string;
 }
 
 export interface WordItem {
@@ -26,7 +26,7 @@ export interface WordItem {
 export interface LevelComponentsProps {
   level: number;
   progress: any[];
-  topicName: string;
+  titleName: string;
   renderContent: (param: WordItem, playText: () => void) => JSX.Element;
   renderChoices: (choices: any, handleChoice: any) => JSX.Element;
 }

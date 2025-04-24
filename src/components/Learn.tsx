@@ -27,7 +27,7 @@ export const Learn = () => {
 
   const route = useRoute<RouteProps<'Learn'>>();
   const navigation = useNavigation<NavigationProps<'Learn'>>();
-  const {topicName} = route.params;
+  const {titleName} = route.params;
 
   const isDarkTheme = useSelector(selectTheme);
   const vocabData = useSelector(selectVocab);
@@ -40,7 +40,7 @@ export const Learn = () => {
     useCallback(() => {
       const fetchProgress = async () => {
         try {
-          const jsonValue = await AsyncStorage.getItem(`progress_${topicName}`);
+          const jsonValue = await AsyncStorage.getItem(`progress_${titleName}`);
           const storegeProgress =
             jsonValue != null ? JSON.parse(jsonValue) : [];
           if (Array.isArray(storegeProgress)) {
@@ -52,23 +52,23 @@ export const Learn = () => {
       };
 
       fetchProgress();
-    }, [topicName]),
+    }, [titleName]),
   );
 
   // Обробка вибору кількості слів
   const handlePress = (count: number, wordItem = null) => {
     navigation.navigate('WordLearningScreen', {
       count,
-      topicName: topicName ?? '',
+      titleName: titleName ?? '',
       wordItem,
     });
   };
 
   const deleteStore = async () => {
     try {
-      await AsyncStorage.removeItem(`progress_${topicName}`);
+      await AsyncStorage.removeItem(`progress_${titleName}`);
       setProgress(0);
-      console.log(`Progress for topic ${topicName} has been deleted.`);
+      console.log(`Progress for topic ${titleName} has been deleted.`);
     } catch (error) {
       console.error('Error removing progress from storage:', error);
     }

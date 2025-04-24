@@ -18,13 +18,13 @@ export const VerbsList = (): JSX.Element => {
   const {locale} = useLocalization();
   const verbsData = useSelector(selectVerbs);
 
-  const {tenseName} = route.params;
+  const {titleName} = route.params;
 
   const getConjugationsByTense = () => {
     return verbsData
       .map((verb: any) => {
         const matchedTense = verb.tenses.find(
-          (tense: any) => tense.name === tenseName,
+          (tense: any) => tense.name === titleName,
         );
         return {
           infinitive: verb.infinitive,
@@ -38,11 +38,8 @@ export const VerbsList = (): JSX.Element => {
 
   const handleGetVerbsInfinitive = () => {
     const filteredVerbs = getConjugationsByTense();
-    console.log('====================================');
-    console.log(filteredVerbs);
-    console.log('====================================');
     navigation.navigate('VerbLearningScreen', {
-      tenseName,
+      titleName,
       verbs: filteredVerbs,
     });
   };

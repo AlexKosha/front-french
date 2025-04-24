@@ -15,9 +15,9 @@ export const ChooseTense = (): JSX.Element => {
 
   const tenses = verbsData[0].tenses;
 
-  const handlePress = (tenseName: string) => {
-    console.log(`Обрано: ${tenseName}`);
-    navigation.navigate('VerbsList', {tenseName});
+  const handlePress = (titleName: string) => {
+    console.log(`Обрано: ${titleName}`);
+    navigation.navigate('VerbsList', {titleName});
   };
 
   return (

@@ -12,12 +12,11 @@ import * as Components from './index';
 import * as Screen from '../screens/index';
 import {HeaderTitleProfile} from './AppNavigatorComponents/HeaderTitleProfile';
 import {
-  HeaderHome,
-  HeaderBackArrow,
+  HeaderHomeToProfile,
   HeaderNavToHome,
-  HeaderToVocab,
   createHeaderTrainingLevelComponent,
   HeaderBackToLearnOrTrainComponent,
+  HeaderBackToPreviousComponent,
 } from './AppNavigatorComponents/HeadersNavigate';
 
 const MainStack = createNativeStackNavigator();
@@ -82,7 +81,7 @@ export const AppNavigator = (): JSX.Element => {
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
 
-          headerRight: HeaderHome,
+          headerRight: HeaderHomeToProfile,
           headerBackVisible: false,
         })}
       />
@@ -102,7 +101,7 @@ export const AppNavigator = (): JSX.Element => {
       <MainStack.Screen
         name="StudyAndTrain"
         component={Components.StudyAndTrain}
-        options={() => ({
+        options={({navigation}) => ({
           title: studyAndTrain,
           headerTitleAlign: 'center',
           headerStyle: {
@@ -110,13 +109,17 @@ export const AppNavigator = (): JSX.Element => {
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: HeaderBackArrow,
+          headerLeft: HeaderBackToPreviousComponent(
+            isDarkTheme,
+            navigation,
+            'Home',
+          ),
         })}
       />
       <MainStack.Screen
         name="Vocab"
         component={Components.Vocab}
-        options={() => ({
+        options={({navigation}) => ({
           title: vocab,
           headerTitleAlign: 'center',
           headerStyle: {
@@ -124,7 +127,11 @@ export const AppNavigator = (): JSX.Element => {
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: HeaderBackArrow,
+          headerLeft: HeaderBackToPreviousComponent(
+            isDarkTheme,
+            navigation,
+            'StudyAndTrain',
+          ),
           headerRight: HeaderNavToHome,
         })}
       />
@@ -132,7 +139,7 @@ export const AppNavigator = (): JSX.Element => {
       <MainStack.Screen
         name="Verbs"
         component={Components.Verbs}
-        options={() => ({
+        options={({navigation}) => ({
           title: verbs,
           headerTitleAlign: 'center',
           headerStyle: {
@@ -140,10 +147,15 @@ export const AppNavigator = (): JSX.Element => {
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: HeaderBackArrow,
+          headerLeft: HeaderBackToPreviousComponent(
+            isDarkTheme,
+            navigation,
+            'StudyAndTrain',
+          ),
+          headerRight: HeaderNavToHome,
         })}
       />
-      <MainStack.Screen
+      {/* <MainStack.Screen
         name="Phonetic"
         component={Components.Phonetic}
         options={() => ({
@@ -155,24 +167,29 @@ export const AppNavigator = (): JSX.Element => {
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
           headerLeft: HeaderBackArrow,
+          headerRight: HeaderNavToHome,
         })}
-      />
+      /> */}
       <MainStack.Screen
         name="LearnOrTrainTopic"
         component={Components.LearnOrTrainTopic}
-        options={({route}) => {
+        options={({route, navigation}) => {
           const params =
             route.params as RouteProps<'LearnOrTrainTopic'>['params'];
-          const topicName = params?.topicName ?? '';
+          const titleName = params?.titleName ?? '';
           return {
-            title: topicName,
+            title: titleName,
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: isDarkTheme ? '#67104c' : 'white',
             },
             headerShadowVisible: false,
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
-            headerLeft: HeaderToVocab,
+            headerLeft: HeaderBackToPreviousComponent(
+              isDarkTheme,
+              navigation,
+              'Vocab',
+            ),
             headerRight: HeaderNavToHome,
           };
         }}
@@ -183,9 +200,9 @@ export const AppNavigator = (): JSX.Element => {
         component={Components.Learn}
         options={({navigation, route}) => {
           const params = route.params as RouteProps<'Learn'>['params'];
-          const topicName = params?.topicName ?? '';
+          const titleName = params?.titleName ?? '';
           return {
-            title: topicName,
+            title: titleName,
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -193,9 +210,10 @@ export const AppNavigator = (): JSX.Element => {
             headerShadowVisible: false,
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
             headerLeft: HeaderBackToLearnOrTrainComponent(
-              topicName,
+              titleName,
               isDarkTheme,
               navigation,
+              'LearnOrTrainTopic',
             ),
             headerRight: HeaderNavToHome,
           };
@@ -204,16 +222,34 @@ export const AppNavigator = (): JSX.Element => {
       <MainStack.Screen
         name="WordLearningScreen"
         component={Components.WordLearningScreen}
-        options={{headerShown: false}}
+        options={({navigation, route}) => {
+          const params = route.params as RouteProps<'Train'>['params'];
+          const titleName = params?.titleName ?? '';
+          return {
+            title: titleName,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: isDarkTheme ? '#67104c' : 'white',
+            },
+            headerShadowVisible: false,
+            headerTintColor: isDarkTheme ? 'white' : '#67104c',
+            headerLeft: createHeaderTrainingLevelComponent(
+              titleName,
+              isDarkTheme,
+              navigation,
+              'Learn',
+            ),
+          };
+        }}
       />
       <MainStack.Screen
         name="Train"
         component={Components.Train}
         options={({navigation, route}) => {
           const params = route.params as RouteProps<'Train'>['params'];
-          const topicName = params?.topicName ?? '';
+          const titleName = params?.titleName ?? '';
           return {
-            title: topicName,
+            title: titleName,
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -221,9 +257,10 @@ export const AppNavigator = (): JSX.Element => {
             headerShadowVisible: false,
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
             headerLeft: HeaderBackToLearnOrTrainComponent(
-              topicName,
+              titleName,
               isDarkTheme,
               navigation,
+              'LearnOrTrainTopic',
             ),
             headerRight: HeaderNavToHome,
           };
@@ -235,9 +272,9 @@ export const AppNavigator = (): JSX.Element => {
         component={Components.TrainingLevel}
         options={({navigation, route}) => {
           const params = route.params as RouteProps<'Train'>['params'];
-          const topicName = params?.topicName ?? '';
+          const titleName = params?.titleName ?? '';
           return {
-            title: topicName,
+            title: titleName,
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -246,9 +283,10 @@ export const AppNavigator = (): JSX.Element => {
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
             headerBackVisible: false,
             headerTitle: createHeaderTrainingLevelComponent(
-              topicName,
+              titleName,
               isDarkTheme,
               navigation,
+              'Train',
             ),
           };
         }}
@@ -264,13 +302,14 @@ export const AppNavigator = (): JSX.Element => {
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: HeaderBackArrow,
+          // headerLeft: HeaderBackArrow,
+          headerRight: HeaderNavToHome,
         })}
       />
       <MainStack.Screen
         name="TrainVerbs"
         component={Components.TrainVerbs}
-        options={() => ({
+        options={({navigation}) => ({
           // title: lessonsBySubscr,
           headerTitleAlign: 'center',
           headerStyle: {
@@ -278,7 +317,12 @@ export const AppNavigator = (): JSX.Element => {
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: HeaderBackArrow,
+          headerLeft: HeaderBackToPreviousComponent(
+            isDarkTheme,
+            navigation,
+            'Verbs',
+          ),
+          headerRight: HeaderNavToHome,
         })}
       />
       <MainStack.Screen
@@ -287,17 +331,21 @@ export const AppNavigator = (): JSX.Element => {
         options={({navigation, route}) => {
           const params =
             route.params as RouteProps<'VerbLearningScreen'>['params'];
-          const tenseName = params?.tenseName ?? '';
+          const titleName = params?.titleName ?? '';
           return {
-            title: tenseName,
+            title: titleName,
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: isDarkTheme ? '#67104c' : 'white',
             },
             headerShadowVisible: false,
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
-            headerLeft: HeaderBackArrow,
-            headerRight: HeaderNavToHome,
+            headerLeft: HeaderBackToLearnOrTrainComponent(
+              titleName,
+              isDarkTheme,
+              navigation,
+              'VerbsList',
+            ),
           };
         }}
       />
@@ -307,16 +355,20 @@ export const AppNavigator = (): JSX.Element => {
         component={Components.VerbsList}
         options={({navigation, route}) => {
           const params = route.params as RouteProps<'VerbsList'>['params'];
-          const tenseName = params?.tenseName ?? '';
+          const titleName = params?.titleName ?? '';
           return {
-            title: tenseName,
+            title: titleName,
             headerTitleAlign: 'center',
             headerStyle: {
               backgroundColor: isDarkTheme ? '#67104c' : 'white',
             },
             headerShadowVisible: false,
             headerTintColor: isDarkTheme ? 'white' : '#67104c',
-            headerLeft: HeaderBackArrow,
+            headerLeft: HeaderBackToPreviousComponent(
+              isDarkTheme,
+              navigation,
+              'ChooseTense',
+            ),
             headerRight: HeaderNavToHome,
           };
         }}
@@ -324,7 +376,7 @@ export const AppNavigator = (): JSX.Element => {
       <MainStack.Screen
         name="ChooseTense"
         component={Components.ChooseTense}
-        options={() => ({
+        options={({navigation}) => ({
           title: '',
           // headerTitleAlign: 'center',
           // headerShown: true,
@@ -333,7 +385,12 @@ export const AppNavigator = (): JSX.Element => {
           },
           headerShadowVisible: false,
           headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: HeaderBackArrow,
+          headerLeft: HeaderBackToPreviousComponent(
+            isDarkTheme,
+            navigation,
+            'Verbs',
+          ),
+          headerRight: HeaderNavToHome,
         })}
       />
     </MainStack.Navigator>
