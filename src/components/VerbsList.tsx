@@ -20,24 +20,33 @@ export const VerbsList = (): JSX.Element => {
 
   const {titleName} = route.params;
 
-  const getConjugationsByTense = () => {
-    return verbsData
-      .map((verb: any) => {
-        const matchedTense = verb.tenses.find(
-          (tense: any) => tense.name === titleName,
-        );
-        return {
-          infinitive: verb.infinitive,
-          translationUA: verb.translationUA,
-          translationEN: verb.translationEN,
-          conjugations: matchedTense?.conjugations || [],
-        };
-      })
-      .filter(verb => verb.conjugations.length > 0);
+  const getConjugationsByTense = (choosedVerb: string) => {
+    // Знаходимо дієслово за ім'ям
+    const verb = verbsData.find((v: any) => v.infinitive === choosedVerb);
+
+    if (!verb) {
+      return [];
+    }
+
+    // Знаходимо потрібний час у цьому дієслові
+    const matchedTense = verb.tenses.find(
+      (tense: any) => tense.name === titleName,
+    );
+
+    if (!matchedTense) {
+      return [];
+    }
+
+    return {
+      infinitive: verb.infinitive,
+      translationUA: verb.translationUA,
+      translationEN: verb.translationEN,
+      conjugations: matchedTense.conjugations,
+    };
   };
 
-  const handleGetVerbsInfinitive = () => {
-    const filteredVerbs = getConjugationsByTense();
+  const handleGetVerbsInfinitive = (choosedVerb: string) => {
+    const filteredVerbs = getConjugationsByTense(choosedVerb);
     navigation.navigate('VerbLearningScreen', {
       titleName,
       verbs: filteredVerbs,
@@ -51,7 +60,7 @@ export const VerbsList = (): JSX.Element => {
           defaultStyles.button,
           {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
         ]}
-        onPress={handleGetVerbsInfinitive}>
+        onPress={() => handleGetVerbsInfinitive(item.infinitive)}>
         <Text
           style={[
             defaultStyles.btnText,

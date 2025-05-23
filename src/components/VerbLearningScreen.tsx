@@ -37,22 +37,26 @@ export const VerbLearningScreen = () => {
             alignItems: 'center',
           },
         ]}>
-        <Text
-          style={{
-            fontSize: 18,
-            marginBottom: 20,
-            color: isDarkTheme ? 'white' : '#67104c',
-          }}>
-          Обери який час хочеш вивчати
-        </Text>
-
-        {verbs[0].conjugations.map((count: Conjugation) => (
+        {verbs.conjugations.map((count: Conjugation) => (
           <View
             key={count._id}
             style={[
               defaultStyles.button,
-              {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
+
+              {
+                backgroundColor: isDarkTheme ? 'white' : '#67104c',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+              },
             ]}>
+            <Icon
+              onPress={() => playSound(count.pronoun, count.form)}
+              name="sound"
+              size={20}
+              color={isDarkTheme ? '#67104c' : 'white'}
+            />
+
             <Text
               style={[
                 defaultStyles.btnText,
@@ -71,14 +75,6 @@ export const VerbLearningScreen = () => {
               ]}>
               {count.form}
             </Text>
-            <TouchableOpacity
-              onPress={() => playSound(count.pronoun, count.form)}>
-              <Icon
-                name="sound"
-                size={40}
-                color={isDarkTheme ? 'white' : '#67104c'}
-              />
-            </TouchableOpacity>
           </View>
         ))}
       </View>
