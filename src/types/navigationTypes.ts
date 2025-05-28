@@ -33,6 +33,7 @@ export type RootStackParamList = {
   };
   VerbsList: {titleName: string | undefined};
   ChooseTense: undefined;
+  VerbsLevelsSelect: {titleName: string | undefined; selectedVerbs: any};
 };
 
 // Тип для навігації

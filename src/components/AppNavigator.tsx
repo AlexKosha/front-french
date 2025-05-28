@@ -135,41 +135,6 @@ export const AppNavigator = (): JSX.Element => {
           headerRight: HeaderNavToHome,
         })}
       />
-
-      <MainStack.Screen
-        name="Verbs"
-        component={Components.Verbs}
-        options={({navigation}) => ({
-          title: verbs,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: isDarkTheme ? '#67104c' : 'white',
-          },
-          headerShadowVisible: false,
-          headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: HeaderBackToPreviousComponent(
-            isDarkTheme,
-            navigation,
-            'StudyAndTrain',
-          ),
-          headerRight: HeaderNavToHome,
-        })}
-      />
-      {/* <MainStack.Screen
-        name="Phonetic"
-        component={Components.Phonetic}
-        options={() => ({
-          title: phonetic,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: isDarkTheme ? '#67104c' : 'white',
-          },
-          headerShadowVisible: false,
-          headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          headerLeft: HeaderBackArrow,
-          headerRight: HeaderNavToHome,
-        })}
-      /> */}
       <MainStack.Screen
         name="LearnOrTrainTopic"
         component={Components.LearnOrTrainTopic}
@@ -392,6 +357,31 @@ export const AppNavigator = (): JSX.Element => {
           ),
           headerRight: HeaderNavToHome,
         })}
+      />
+      <MainStack.Screen
+        name="VerbsLevelsSelect"
+        component={Components.VerbsLevelsSelect}
+        options={({navigation, route}) => {
+          const params =
+            route.params as RouteProps<'VerbsLevelsSelect'>['params'];
+          const titleName = params?.titleName ?? '';
+          return {
+            title: titleName,
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: isDarkTheme ? '#67104c' : 'white',
+            },
+            headerShadowVisible: false,
+            headerTintColor: isDarkTheme ? 'white' : '#67104c',
+            headerLeft: HeaderBackToLearnOrTrainComponent(
+              titleName,
+              isDarkTheme,
+              navigation,
+              'Verbs',
+            ),
+            headerRight: HeaderNavToHome,
+          };
+        }}
       />
     </MainStack.Navigator>
   );

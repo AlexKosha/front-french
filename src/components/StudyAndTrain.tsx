@@ -43,13 +43,13 @@ export const StudyAndTrain = (): JSX.Element => {
   const handleGetVerbs = async () => {
     try {
       if (verbsData && verbsData.length > 0) {
-        navigation.navigate('Verbs');
+        navigation.navigate('ChooseTense');
         return;
       }
 
       const resultAction = await dispatch(getVerbs());
       if (getVerbs.fulfilled.match(resultAction)) {
-        navigation.navigate('Verbs');
+        navigation.navigate('ChooseTense');
       }
       return;
     } catch (error) {

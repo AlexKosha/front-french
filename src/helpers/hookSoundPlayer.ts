@@ -12,16 +12,22 @@ export const useTTS = ({language = 'fr-FR', pitch = 1.5, rate = 0.5} = {}) => {
       })
       .catch(err => console.error('TTS Init Error:', err));
 
-    // Додаємо слухачів, щоби уникнути варнінгів
-    const noop = () => {};
-    Tts.addEventListener('tts-start', noop);
-    Tts.addEventListener('tts-finish', noop);
-    Tts.addEventListener('tts-progress', noop);
+    const handleStart = () => {};
+    const handleFinish = () => {};
+    const handleProgress = () => {};
+
+    Tts.addEventListener('tts-start', handleStart);
+    Tts.addEventListener('tts-finish', handleFinish);
+    Tts.addEventListener('tts-progress', handleProgress);
 
     return () => {
-      Tts.removeEventListener('tts-start', noop);
-      Tts.removeEventListener('tts-finish', noop);
-      Tts.removeEventListener('tts-progress', noop);
+      try {
+        Tts.removeEventListener('tts-start', handleStart);
+        Tts.removeEventListener('tts-finish', handleFinish);
+        Tts.removeEventListener('tts-progress', handleProgress);
+      } catch (e) {
+        console.warn('TTS removeEventListener failed:', e);
+      }
     };
   }, [language, pitch]);
 

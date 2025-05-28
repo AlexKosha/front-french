@@ -1,0 +1,61 @@
+import React, {useState} from 'react';
+import {SafeAreaView, TouchableOpacity, Text, View} from 'react-native';
+import {Logo} from '../Logo';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps, RouteProps} from '../../types';
+import {defaultStyles} from '../defaultStyles';
+
+export const VerbsLevelsSelect = () => {
+  const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
+  const isDarkTheme = useSelector(selectTheme);
+  const route = useRoute<RouteProps<'VerbsLevelsSelect'>>();
+  const {titleName} = route.params;
+
+  const [completedLevels, setCompletedLevels] = useState<number[]>([]);
+
+  // Обробка переходу до рівнів
+  const handlePress = (level: number) => {
+    if (!titleName) {
+      console.error('titleName is undefined');
+      return;
+    }
+    console.log('====================================');
+    console.log('looooooooooog');
+    console.log('====================================');
+  };
+
+  return (
+    <SafeAreaView
+      style={[
+        defaultStyles.container,
+        {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
+      ]}>
+      <View style={defaultStyles.btnContainer}>
+        {[1, 2, 3, 4, 5, 6, 7].map(level => (
+          <TouchableOpacity
+            key={level}
+            style={[
+              defaultStyles.button,
+              {
+                backgroundColor: isDarkTheme ? 'white' : '#67104c',
+                opacity: completedLevels.includes(level) ? 0.5 : 1,
+              },
+            ]}
+            onPress={() => handlePress(level)}
+            disabled={completedLevels.includes(level)}>
+            <Text
+              style={[
+                defaultStyles.btnText,
+                {color: isDarkTheme ? '#67104c' : 'white'},
+              ]}>
+              Level {level}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <Logo />
+    </SafeAreaView>
+  );
+};

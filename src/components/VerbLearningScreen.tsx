@@ -1,5 +1,11 @@
-import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Pressable,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {defaultStyles} from './defaultStyles';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
@@ -7,11 +13,13 @@ import {Conjugation, RouteProps} from '../types';
 import {useRoute} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useTTS} from '../helpers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const VerbLearningScreen = () => {
   const route = useRoute<RouteProps<'VerbLearningScreen'>>();
   const {titleName, verbs} = route.params;
   const isDarkTheme = useSelector(selectTheme);
+  const [isLearned, setIsLearned] = useState(false);
 
   const {speak} = useTTS();
 
@@ -20,6 +28,44 @@ export const VerbLearningScreen = () => {
       const combinedText = `${pronoun} ${form}`;
       speak(combinedText);
     }
+  };
+
+  const markVerbAsLearned = async (infinitive: any, tense: any) => {
+    const raw = await AsyncStorage.getItem('learnedVerbs');
+    const parsed = raw ? JSON.parse(raw) : [];
+
+    const verb = parsed.find((v: any) => v.infinitive === infinitive);
+
+    if (verb) {
+      const alreadyLearned = verb.tenses.find((t: any) => t.name === tense);
+      if (!alreadyLearned) {
+        verb.tenses.push({name: tense, learnedAt: new Date().toISOString()});
+      }
+    } else {
+      parsed.push({
+        infinitive,
+        tenses: [{name: tense, learnedAt: new Date().toISOString()}],
+      });
+    }
+
+    await AsyncStorage.setItem('learnedVerbs', JSON.stringify(parsed));
+  };
+
+  useEffect(() => {
+    checkLearnedStatus();
+  }, []);
+
+  const checkLearnedStatus = async () => {
+    const raw = await AsyncStorage.getItem('learnedVerbs');
+    const parsed = raw ? JSON.parse(raw) : [];
+    const verb = parsed.find((v: any) => v.infinitive === verbs.infinitive);
+    const learned = verb?.tenses?.some((t: any) => t.name === titleName);
+    setIsLearned(!!learned);
+  };
+
+  const handleLearnVerb = async () => {
+    await markVerbAsLearned(verbs.infinitive, titleName);
+    setIsLearned(true);
   };
 
   return (
@@ -37,6 +83,17 @@ export const VerbLearningScreen = () => {
             alignItems: 'center',
           },
         ]}>
+        {!isLearned && (
+          <Pressable
+            style={[
+              defaultStyles.button,
+              {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
+            ]}
+            onPress={() => handleLearnVerb()}>
+            <Text>Нажми, щоб тренувати </Text>
+          </Pressable>
+        )}
+
         {verbs.conjugations.map((count: Conjugation) => (
           <View
             key={count._id}

@@ -1,6 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {Pressable, SafeAreaView, Text, View, FlatList} from 'react-native';
+import {
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {selectTheme} from '../store/auth/selector';
@@ -19,6 +27,8 @@ export const VerbsList = (): JSX.Element => {
   const verbsData = useSelector(selectVerbs);
 
   const {titleName} = route.params;
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedVerbs, setSelectedVerbs] = useState<any[]>([]);
 
   const getConjugationsByTense = (choosedVerb: string) => {
     // Знаходимо дієслово за ім'ям
@@ -75,21 +85,131 @@ export const VerbsList = (): JSX.Element => {
     );
   };
 
+  const toggleSelect = (verb: any) => {
+    const isSelected = selectedVerbs.find(
+      (v: any) => v.infinitive === verb.infinitive,
+    );
+    if (isSelected) {
+      setSelectedVerbs(
+        selectedVerbs.filter((v: any) => v.infinitive !== verb.infinitive),
+      );
+    } else {
+      if (selectedVerbs.length >= 5) {
+        Alert.alert('Максимум 5 слів');
+        return;
+      }
+      setSelectedVerbs([...selectedVerbs, verb]);
+    }
+  };
+
+  const startTraining = () => {
+    if (selectedVerbs.length < 3) {
+      Alert.alert('Вибери щонайменше 3 слова');
+      return;
+    }
+
+    navigation.navigate('VerbsLevelsSelect', {titleName, selectedVerbs});
+  };
+
+  const goToVerbLearning = (verb: any, choosedVerb: string) => {
+    if (selectionMode) {
+      toggleSelect(verb);
+    } else {
+      handleGetVerbsInfinitive(choosedVerb);
+    }
+  };
+
   return (
     <SafeAreaView
       style={[
         defaultStyles.container,
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
-      <View>
-        <FlatList
-          style={{width: '100%'}}
-          data={verbsData}
-          keyExtractor={(item: any) => item._id}
-          renderItem={renderVerbsInfinitive}
-          contentContainerStyle={{alignItems: 'center'}}
-        />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginBottom: 10,
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectionMode(!selectionMode);
+            setSelectedVerbs([]);
+          }}>
+          <Text style={{color: 'red'}}>
+            {selectionMode ? 'Скасувати' : 'Хочу тренувати'}
+          </Text>
+        </TouchableOpacity>
       </View>
+
+      <FlatList
+        data={verbsData}
+        keyExtractor={item => item.infinitive}
+        renderItem={({item}) => {
+          const isSelected = selectedVerbs.find(
+            (v: any) => v.infinitive === item.infinitive,
+          );
+          return (
+            <TouchableOpacity
+              onPress={() => goToVerbLearning(item, item.infinitive)}
+              style={[
+                defaultStyles.button,
+                {
+                  backgroundColor: isSelected
+                    ? '#ffa'
+                    : isDarkTheme
+                    ? 'white'
+                    : '#67104c',
+                },
+              ]}>
+              <Text
+                style={[
+                  defaultStyles.btnText,
+                  {
+                    color: isDarkTheme ? '#67104c' : 'white',
+                  },
+                ]}>
+                {item.infinitive} /{' '}
+                {locale === 'uk' ? item.translationUA : item.translationEN}
+              </Text>
+            </TouchableOpacity>
+          );
+        }}
+      />
+
+      {selectionMode && selectedVerbs.length >= 3 && (
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 20,
+            left: 20,
+            right: 20,
+            zIndex: 99,
+            elevation: 10, // для Android тінь/поверх
+          }}>
+          <TouchableOpacity
+            onPress={startTraining}
+            style={{
+              backgroundColor: isDarkTheme ? 'white' : '#67104c',
+              padding: 16,
+              alignItems: 'center',
+              borderRadius: 10,
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.3,
+              shadowRadius: 4,
+            }}>
+            <Text
+              style={{
+                color: isDarkTheme ? '#67104c' : 'white',
+                fontSize: 16,
+                fontWeight: 'bold',
+              }}>
+              ТРЕНУВАТИ ({selectedVerbs.length})
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
