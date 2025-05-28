@@ -11,15 +11,15 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {updaterProgressUserThunk} from '../store/auth/authThunks';
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../types/navigationTypes';
-import {AppDispatch} from '../store/store';
-import {RenderProgress} from './RenderProgress';
-import {defaultStyles} from './defaultStyles';
-import {initializeWordStats} from '../helpers/wordHelpers';
-import {markCurrentWordsAsCompleted} from '../helpers/progressHelpers';
-import {LevelProps, WordStat} from '../types';
+import {updaterProgressUserThunk} from '../../store/auth/authThunks';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps} from '../../types/navigationTypes';
+import {AppDispatch} from '../../store/store';
+import {RenderProgress} from '../RenderProgress';
+import {defaultStyles} from '../defaultStyles';
+import {initializeWordStats} from '../../helpers/wordHelpers';
+import {markCurrentWordsAsCompleted} from '../../helpers/progressHelpers';
+import {LevelProps, WordStat} from '../../types';
 
 export const FifthLevel: React.FC<LevelProps> = ({
   progress,
@@ -27,7 +27,7 @@ export const FifthLevel: React.FC<LevelProps> = ({
   titleName,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigation = useNavigation<NavigationProps<'Learn'>>();
+  const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
   const isDarkTheme = useSelector(selectTheme);
 
   const [_word, setWord] = useState('');

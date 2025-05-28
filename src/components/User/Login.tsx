@@ -12,15 +12,15 @@ import {
   StyleSheet,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {loginThunk} from '../store/auth/authThunks';
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../types/navigationTypes';
-import {AppDispatch} from '../store/store';
-import {useLocalization} from '../locale/LocalizationContext';
-import {translations} from '../locale/translations';
-import {useTranslationHelper} from '../locale/useTranslation';
+import {loginThunk} from '../../store/auth/authThunks';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps} from '../../types/navigationTypes';
+import {AppDispatch} from '../../store/store';
+import {useLocalization} from '../../locale/LocalizationContext';
+import {translations} from '../../locale/translations';
+import {useTranslationHelper} from '../../locale/useTranslation';
 import {Logo} from './Logo';
-import {defaultStyles} from './defaultStyles';
+import {defaultStyles} from '../defaultStyles';
 
 export const Login = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Login'>>();

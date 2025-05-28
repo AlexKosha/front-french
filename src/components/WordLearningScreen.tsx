@@ -153,7 +153,7 @@ export const WordLearningScreen = () => {
 
   const handleChooseDifferentCount = () => {
     setTotalShown(0);
-    navigation.navigate('Learn', {titleName});
+    navigation.navigate('LearnVocabTheme', {titleName});
   };
 
   return (

@@ -10,11 +10,11 @@ import {useSelector} from 'react-redux';
 
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps, RouteProps} from '../types/navigationTypes';
-import {Logo} from './Logo';
+import {Logo} from './User/Logo';
 import {defaultStyles} from './defaultStyles';
 
 export const Train = () => {
-  const navigation = useNavigation<NavigationProps<'Learn'>>();
+  const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
   const isDarkTheme = useSelector(selectTheme);
   const route = useRoute<RouteProps<'Train'>>();
   const {titleName} = route.params;
@@ -91,7 +91,7 @@ export const Train = () => {
       return;
     }
 
-    navigation.navigate('Learn', {titleName});
+    navigation.navigate('LearnVocabTheme', {titleName});
   };
 
   return (

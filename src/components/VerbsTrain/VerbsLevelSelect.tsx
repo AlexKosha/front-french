@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {SafeAreaView, TouchableOpacity, Text, View} from 'react-native';
-import {Logo} from '../Logo';
+import {Logo} from '../User/Logo';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';

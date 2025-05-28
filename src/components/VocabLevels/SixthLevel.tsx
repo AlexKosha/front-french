@@ -11,15 +11,15 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {updaterProgressUserThunk} from '../store/auth/authThunks';
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../types/navigationTypes';
-import {AppDispatch} from '../store/store';
-import {RenderProgress} from './RenderProgress';
-import {defaultStyles} from './defaultStyles';
+import {updaterProgressUserThunk} from '../../store/auth/authThunks';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps} from '../../types/navigationTypes';
+import {AppDispatch} from '../../store/store';
+import {RenderProgress} from '../RenderProgress';
+import {defaultStyles} from '../defaultStyles';
 
-import {LevelProps, WordStat} from '../types';
-import {initializeWordStats, markCurrentWordsAsCompleted} from '../helpers';
+import {LevelProps, WordStat} from '../../types';
+import {initializeWordStats, markCurrentWordsAsCompleted} from '../../helpers';
 
 export const SixthLevel: React.FC<LevelProps> = ({
   progress,
@@ -33,7 +33,7 @@ export const SixthLevel: React.FC<LevelProps> = ({
   const [wordStats, setWordStats] = useState<WordStat[]>([]);
   const [userInput, setUserInput] = useState(''); // Змінено для цілих слів
 
-  const navigation = useNavigation<NavigationProps<'Learn'>>();
+  const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
   const dispatch = useDispatch<AppDispatch>();
   const isDarkTheme = useSelector(selectTheme);
 

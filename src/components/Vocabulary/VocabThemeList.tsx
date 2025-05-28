@@ -3,19 +3,19 @@ import {useNavigation} from '@react-navigation/native';
 import {Pressable, SafeAreaView, Text, View, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {selectTopic} from '../store/topic/selectors';
-import {getVocab} from '../store/vocab/vocabThunks';
-import {selectVocab} from '../store/vocab/selectors';
-import {setThemeId} from '../store/vocab/vocabSlice';
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../types/navigationTypes';
-import {AppDispatch} from '../store/store';
-import {useLocalization} from '../locale/LocalizationContext';
-import {defaultStyles} from './defaultStyles';
+import {selectTopic} from '../../store/topic/selectors';
+import {getVocab} from '../../store/vocab/vocabThunks';
+import {selectVocab} from '../../store/vocab/selectors';
+import {setThemeId} from '../../store/vocab/vocabSlice';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps} from '../../types/navigationTypes';
+import {AppDispatch} from '../../store/store';
+import {useLocalization} from '../../locale/LocalizationContext';
+import {defaultStyles} from '../defaultStyles';
 
-export const Vocab = (): JSX.Element => {
+export const VocabThemeList = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
-  const navigation = useNavigation<NavigationProps<'Vocab'>>();
+  const navigation = useNavigation<NavigationProps<'VocabThemeList'>>();
   const vocabData = useSelector(selectVocab);
   const topicsData = useSelector(selectTopic);
   const dispatch = useDispatch<AppDispatch>();

@@ -10,13 +10,13 @@ import {
   Alert,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {updaterPasswordThunk} from '../store/auth/authThunks';
-import {selectTheme} from '../store/auth/selector';
-import {AppDispatch} from '../store/store';
-import {translations} from '../locale/translations';
-import {useLocalization} from '../locale/LocalizationContext';
-import {useTranslationHelper} from '../locale/useTranslation';
-import {defaultStyles} from './defaultStyles';
+import {updaterPasswordThunk} from '../../store/auth/authThunks';
+import {selectTheme} from '../../store/auth/selector';
+import {AppDispatch} from '../../store/store';
+import {translations} from '../../locale/translations';
+import {useLocalization} from '../../locale/LocalizationContext';
+import {useTranslationHelper} from '../../locale/useTranslation';
+import {defaultStyles} from '../defaultStyles';
 
 const PasswordForm = (): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();

@@ -9,16 +9,16 @@ import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../types/navigationTypes';
 import {AppDispatch} from '../store/store';
 import {useTranslationHelper} from '../locale/useTranslation';
-import {Logo} from './Logo';
+import {Logo} from './User/Logo';
 import {defaultStyles} from './defaultStyles';
 import {selectVerbs} from '../store/verb/selectors';
 import {getVerbs} from '../store/verb/verbThunk';
 
-export const StudyAndTrain = (): JSX.Element => {
+export const VocabOrVerbs = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
   const topicsData = useSelector(selectTopic);
   const verbsData = useSelector(selectVerbs);
-  const navigation = useNavigation<NavigationProps<'StudyAndTrain'>>();
+  const navigation = useNavigation<NavigationProps<'VocabOrVerbs'>>();
   const dispatch = useDispatch<AppDispatch>();
 
   const {vocab, verbs} = useTranslationHelper();
@@ -26,13 +26,13 @@ export const StudyAndTrain = (): JSX.Element => {
   const handleGetTheme = async () => {
     try {
       if (topicsData && topicsData.length > 0) {
-        navigation.navigate('Vocab');
+        navigation.navigate('VocabThemeList');
         return;
       }
 
       const resultAction = await dispatch(getTopic());
       if (getTopic.fulfilled.match(resultAction)) {
-        navigation.navigate('Vocab');
+        navigation.navigate('VocabThemeList');
       }
       return;
     } catch (error) {

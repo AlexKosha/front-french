@@ -3,11 +3,11 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {Pressable, SafeAreaView, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../types/navigationTypes';
-import {useTranslationHelper} from '../locale/useTranslation';
-import {Logo} from './Logo';
-import {defaultStyles} from './defaultStyles';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps, RouteProps} from '../../types/navigationTypes';
+import {useTranslationHelper} from '../../locale/useTranslation';
+import {Logo} from '../User/Logo';
+import {defaultStyles} from '../defaultStyles';
 
 export const LearnOrTrainTopic = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
@@ -36,7 +36,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
           ]}
-          onPress={() => navigation.navigate('Learn', {titleName})}>
+          onPress={() => navigation.navigate('LearnVocabTheme', {titleName})}>
           <Text
             style={[
               defaultStyles.btnText,

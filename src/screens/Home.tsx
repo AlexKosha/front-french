@@ -6,13 +6,13 @@ import {useSelector} from 'react-redux';
 import {selectTheme} from '../store/auth/selector';
 import {NavigationProps} from '../types/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
-import {Logo} from '../components/Logo';
+import {Logo} from '../components/User/Logo';
 import {defaultStyles} from '../components/defaultStyles';
 
 export const Home = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
   const isDarkTheme = useSelector(selectTheme);
-  const {welcome, studyAndTrain, lessonsBySubscr} = useTranslationHelper();
+  const {welcome, vocabOrVerbs, lessonsBySubscr} = useTranslationHelper();
 
   return (
     <SafeAreaView
@@ -33,17 +33,17 @@ export const Home = (): JSX.Element => {
               defaultStyles.button,
               {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
             ]}
-            onPress={() => navigation.navigate('StudyAndTrain')}>
+            onPress={() => navigation.navigate('VocabOrVerbs')}>
             <Text
               style={[
                 defaultStyles.btnText,
                 {color: isDarkTheme ? '#67104c' : 'white'},
               ]}>
-              {studyAndTrain}
+              {vocabOrVerbs}
             </Text>
           </Pressable>
 
-          <Pressable
+          {/* <Pressable
             style={[
               defaultStyles.button,
               {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
@@ -56,7 +56,7 @@ export const Home = (): JSX.Element => {
               ]}>
               {lessonsBySubscr}
             </Text>
-          </Pressable>
+          </Pressable> */}
         </View>
       </View>
 

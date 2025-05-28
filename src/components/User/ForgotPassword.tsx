@@ -16,15 +16,15 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import {handleChange} from '../helpers/handleChangeInput';
-import {forgotPass, restorePassword} from '../services/authService';
-import * as Validate from '../helpers/validationInput';
-import {NavigationProps} from '../types/navigationTypes';
-import {useLocalization} from '../locale/LocalizationContext';
-import {useTranslationHelper} from '../locale/useTranslation';
-import {translations} from '../locale/translations';
+import {handleChange} from '../../helpers/handleChangeInput';
+import {forgotPass, restorePassword} from '../../services/authService';
+import * as Validate from '../../helpers/validationInput';
+import {NavigationProps} from '../../types/navigationTypes';
+import {useLocalization} from '../../locale/LocalizationContext';
+import {useTranslationHelper} from '../../locale/useTranslation';
+import {translations} from '../../locale/translations';
 import {Logo} from './Logo';
-import {defaultStyles} from './defaultStyles';
+import {defaultStyles} from '../defaultStyles';
 
 export const ForgotPassword = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'ForgotPassword'>>();

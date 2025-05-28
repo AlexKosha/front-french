@@ -34,7 +34,7 @@ export const useTranslationHelper = () => {
     login: getTranslation('rg', 'login'),
     welcomeBack: getTranslation('rg', 'welcomeBack'),
     welcome: getTranslation('hm', 'welcome'),
-    studyAndTrain: getTranslation('hm', 'studyAndTrain'),
+    vocabOrVerbs: getTranslation('hm', 'vocabOrVerbs'),
     lessonsBySubscr: getTranslation('hm', 'lessonsBySubscr'),
     dontHaveAcc: getTranslation('rg', 'dontHaveAcc'),
     haveAccButForgotPass: getTranslation('rg', 'haveAccButForgotPass'),

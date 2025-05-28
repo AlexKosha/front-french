@@ -16,15 +16,15 @@ import {
   SafeAreaView,
 } from 'react-native';
 
-import {selectTheme} from '../store/auth/selector';
-import {AppDispatch} from '../store/store';
-import {NavigationProps} from '../types/navigationTypes';
-import {updaterProgressUserThunk} from '../store/auth/authThunks';
-import {RenderProgress} from './RenderProgress';
-import {sendAudio} from '../services/authService';
-import {defaultStyles} from './defaultStyles';
-import {LevelProps, WordStat} from '../types';
-import {initializeWordStats, markCurrentWordsAsCompleted} from '../helpers';
+import {selectTheme} from '../../store/auth/selector';
+import {AppDispatch} from '../../store/store';
+import {NavigationProps} from '../../types/navigationTypes';
+import {updaterProgressUserThunk} from '../../store/auth/authThunks';
+import {RenderProgress} from '../RenderProgress';
+import {sendAudio} from '../../services/authService';
+import {defaultStyles} from '../defaultStyles';
+import {LevelProps, WordStat} from '../../types';
+import {initializeWordStats, markCurrentWordsAsCompleted} from '../../helpers';
 
 export const SeventhLevel: React.FC<LevelProps> = ({
   progress,
@@ -33,7 +33,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
 }) => {
   const [isRecording, setIsRecording] = useState(false);
 
-  const navigation = useNavigation<NavigationProps<'Learn'>>();
+  const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
   const dispatch = useDispatch<AppDispatch>();
   const isDarkTheme = useSelector(selectTheme);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);

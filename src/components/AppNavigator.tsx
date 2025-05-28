@@ -25,7 +25,7 @@ export const AppNavigator = (): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
   const isDarkTheme = useSelector(selectTheme);
-  const {studyAndTrain, vocab, phonetic, verbs, lessonsBySubscr} =
+  const {vocabOrVerbs, vocab, phonetic, verbs, lessonsBySubscr} =
     useTranslationHelper();
 
   useEffect(() => {
@@ -99,10 +99,10 @@ export const AppNavigator = (): JSX.Element => {
         })}
       />
       <MainStack.Screen
-        name="StudyAndTrain"
-        component={Components.StudyAndTrain}
+        name="VocabOrVerbs"
+        component={Components.VocabOrVerbs}
         options={({navigation}) => ({
-          title: studyAndTrain,
+          title: vocabOrVerbs,
           headerTitleAlign: 'center',
           headerStyle: {
             backgroundColor: isDarkTheme ? '#67104c' : 'white',
@@ -117,8 +117,8 @@ export const AppNavigator = (): JSX.Element => {
         })}
       />
       <MainStack.Screen
-        name="Vocab"
-        component={Components.Vocab}
+        name="VocabThemeList"
+        component={Components.VocabThemeList}
         options={({navigation}) => ({
           title: vocab,
           headerTitleAlign: 'center',
@@ -130,7 +130,7 @@ export const AppNavigator = (): JSX.Element => {
           headerLeft: HeaderBackToPreviousComponent(
             isDarkTheme,
             navigation,
-            'StudyAndTrain',
+            'VocabOrVerbs',
           ),
           headerRight: HeaderNavToHome,
         })}
@@ -153,7 +153,7 @@ export const AppNavigator = (): JSX.Element => {
             headerLeft: HeaderBackToPreviousComponent(
               isDarkTheme,
               navigation,
-              'Vocab',
+              'VocabThemeList',
             ),
             headerRight: HeaderNavToHome,
           };
@@ -161,10 +161,11 @@ export const AppNavigator = (): JSX.Element => {
       />
 
       <MainStack.Screen
-        name="Learn"
-        component={Components.Learn}
+        name="LearnVocabTheme"
+        component={Components.LearnVocabTheme}
         options={({navigation, route}) => {
-          const params = route.params as RouteProps<'Learn'>['params'];
+          const params =
+            route.params as RouteProps<'LearnVocabTheme'>['params'];
           const titleName = params?.titleName ?? '';
           return {
             title: titleName,
@@ -202,7 +203,7 @@ export const AppNavigator = (): JSX.Element => {
               titleName,
               isDarkTheme,
               navigation,
-              'Learn',
+              'LearnVocabTheme',
             ),
           };
         }}
@@ -256,21 +257,7 @@ export const AppNavigator = (): JSX.Element => {
           };
         }}
       />
-      <MainStack.Screen
-        name="LessonsBySubscription"
-        component={Components.LessonsBySubscription}
-        options={() => ({
-          title: lessonsBySubscr,
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: isDarkTheme ? '#67104c' : 'white',
-          },
-          headerShadowVisible: false,
-          headerTintColor: isDarkTheme ? 'white' : '#67104c',
-          // headerLeft: HeaderBackArrow,
-          headerRight: HeaderNavToHome,
-        })}
-      />
+
       <MainStack.Screen
         name="TrainVerbs"
         component={Components.TrainVerbs}

@@ -9,15 +9,15 @@ export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
   Profile: undefined;
-  StudyAndTrain: undefined;
+  VocabOrVerbs: undefined;
   LessonsBySubscription: undefined;
-  Vocab: undefined;
+  VocabThemeList: undefined;
   ForgotPassword: undefined;
   Support: undefined;
   Phonetic: undefined;
   Verbs: undefined;
   LearnOrTrainTopic: {titleName: string};
-  Learn: {titleName: string | undefined};
+  LearnVocabTheme: {titleName: string | undefined};
   Train: {titleName: string | undefined};
   WordLearningScreen: {
     count: number;

@@ -3,9 +3,9 @@ import {useSelector} from 'react-redux';
 import {View, Text, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-import {LevelComponent} from './LevelComponent';
-import {selectTheme} from '../store/auth/selector';
-import {LevelProps, WordItem} from '../types';
+import {LevelComponent} from '../LevelComponent';
+import {selectTheme} from '../../store/auth/selector';
+import {LevelProps, WordItem} from '../../types';
 
 export const ThirdLevel: React.FC<LevelProps> = ({
   level,

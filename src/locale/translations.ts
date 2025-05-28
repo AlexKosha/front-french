@@ -48,7 +48,7 @@ export interface Translations {
   };
   hm: {
     welcome: TranslationContent;
-    studyAndTrain: TranslationContent;
+    vocabOrVerbs: TranslationContent;
     lessonsBySubscr: TranslationContent;
   };
   alert: {
@@ -154,7 +154,7 @@ export const translations: Translations = {
       en: 'Welcome! This app will help you learn French easily and effectively. Here, you will find interactive lessons, pronunciation exercises, grammar and vocabulary training, as well as practical tasks to improve your skills.',
       uk: 'Привіт! Цей додаток допоможе вам вивчити французьку мову легко та ефективно. Тут ви знайдете інтерактивні уроки, вправи на вимову, граматику та словниковий запас, а також зможете тренувати свої навички через практичні завдання',
     },
-    studyAndTrain: {en: 'Study and Train', uk: 'Навчатися та грати'},
+    vocabOrVerbs: {en: 'Study and Train', uk: 'Навчатися та грати'},
     lessonsBySubscr: {en: 'Lessons by subscription', uk: 'Уроки за підпискою'},
   },
   alert: {

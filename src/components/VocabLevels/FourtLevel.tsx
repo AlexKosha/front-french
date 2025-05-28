@@ -15,11 +15,11 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../types/navigationTypes';
-import {RenderProgress} from './RenderProgress';
-import {defaultStyles} from './defaultStyles';
-import {LevelProps} from '../types';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps} from '../../types/navigationTypes';
+import {RenderProgress} from '../RenderProgress';
+import {defaultStyles} from '../defaultStyles';
+import {LevelProps} from '../../types';
 
 export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
   const navigation = useNavigation<NavigationProps<'Home'>>();

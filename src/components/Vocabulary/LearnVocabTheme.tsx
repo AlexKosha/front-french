@@ -12,21 +12,21 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {selectVocab} from '../store/vocab/selectors';
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../types/navigationTypes';
-import {useLocalization} from '../locale/LocalizationContext';
-import {useTranslationHelper} from '../locale/useTranslation';
-import {translations} from '../locale/translations';
-import {Logo} from './Logo';
-import {defaultStyles} from './defaultStyles';
+import {selectVocab} from '../../store/vocab/selectors';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps, RouteProps} from '../../types/navigationTypes';
+import {useLocalization} from '../../locale/LocalizationContext';
+import {useTranslationHelper} from '../../locale/useTranslation';
+import {translations} from '../../locale/translations';
+import {Logo} from '../User/Logo';
+import {defaultStyles} from '../defaultStyles';
 
-export const Learn = () => {
+export const LearnVocabTheme = () => {
   const [progress, setProgress] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const route = useRoute<RouteProps<'Learn'>>();
-  const navigation = useNavigation<NavigationProps<'Learn'>>();
+  const route = useRoute<RouteProps<'LearnVocabTheme'>>();
+  const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
   const {titleName} = route.params;
 
   const isDarkTheme = useSelector(selectTheme);
