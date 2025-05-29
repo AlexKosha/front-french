@@ -1,11 +1,20 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Alert, Text, TouchableOpacity, View} from 'react-native';
+import {Props} from '../../types';
 
-type Props = {
-  level: number;
-  titleName: string;
-  selectedVerbs: any;
+const getDisplaySentence = (pronoun: string, form: string, ending: string) => {
+  const parts = form.trim().split(' ');
+
+  // Минулий час (Passé composé та подібні) — два слова
+  if (parts.length === 2) {
+    return `${pronoun} ___ ${parts[1]}`; // приклад: "tu ___ mangé"
+  }
+
+  // Теперішній час — одне слово
+  const word = parts[0];
+  const base = word.slice(0, word.length - ending.length);
+  return `${pronoun} ${base}___`; // приклад: "tu mang___"
 };
 
 export const FirstLevel: React.FC<Props> = ({
@@ -30,13 +39,15 @@ export const FirstLevel: React.FC<Props> = ({
 
   useEffect(() => {
     const all = selectedVerbs.flatMap((verb: any) =>
-      verb.tenses.flatMap((tense: any) =>
-        tense.conjugations.map((conj: any) => ({
-          ...conj,
-          infinitive: verb.infinitive,
-          tense: tense.name,
-        })),
-      ),
+      verb.tenses
+        .filter((tense: any) => tense.name === titleName)
+        .flatMap((tense: any) =>
+          tense.conjugations.map((conj: any) => ({
+            ...conj,
+            infinitive: verb.infinitive,
+            tense: tense.name,
+          })),
+        ),
     );
 
     const shuffled = all.sort(() => 0.5 - Math.random());
@@ -76,20 +87,18 @@ export const FirstLevel: React.FC<Props> = ({
   if (!questions.length) return <Text>Завантаження...</Text>;
 
   const current = questions[currentIndex];
-  const baseForm = current.form.slice(
-    0,
-    current.form.length - current.ending.length,
+  const displaySentence = getDisplaySentence(
+    current.pronoun,
+    current.form,
+    current.ending,
   );
-
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
         Рівень {level}: {titleName}
       </Text>
 
-      <Text style={styles.question}>
-        {current.pronoun} {baseForm}___
-      </Text>
+      <Text style={styles.question}>{displaySentence}</Text>
 
       {shuffledOptions.map((opt, idx) => (
         <TouchableOpacity

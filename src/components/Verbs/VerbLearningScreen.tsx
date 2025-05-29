@@ -83,17 +83,6 @@ export const VerbLearningScreen = () => {
             alignItems: 'center',
           },
         ]}>
-        {!isLearned && (
-          <Pressable
-            style={[
-              defaultStyles.button,
-              {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
-            ]}
-            onPress={() => handleLearnVerb()}>
-            <Text>Нажми, щоб тренувати </Text>
-          </Pressable>
-        )}
-
         {verbs.conjugations.map((count: Conjugation) => (
           <View
             key={count._id}

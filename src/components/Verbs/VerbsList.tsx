@@ -107,10 +107,10 @@ export const VerbsList = (): JSX.Element => {
     //   Alert.alert('Вибери щонайменше 3 слова');
     //   return;
     // }
-    if (!selectedVerbs || selectedVerbs.length < 3) {
-      Alert.alert('Вибери щонайменше 3 слова');
-      return;
-    }
+    // if (!selectedVerbs || selectedVerbs.length <= 2) {
+    //   Alert.alert('Вибери щонайменше 3 слова');
+    //   return;
+    // }
 
     navigation.navigate('VerbsLevelsSelect', {titleName, selectedVerbs});
   };
@@ -187,7 +187,7 @@ export const VerbsList = (): JSX.Element => {
         }}
       />
 
-      {selectionMode && selectedVerbs.length >= 3 && (
+      {selectionMode && selectedVerbs.length >= 2 && (
         <View
           style={{
             position: 'absolute',
