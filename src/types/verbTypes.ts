@@ -31,3 +31,9 @@ export interface VerbState {
   isLoading: boolean;
   error: string | null;
 }
+
+export type Props = {
+  selectedVerbs: Verb[];
+  level: number;
+  titleName: string;
+};
