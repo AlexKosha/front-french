@@ -15,7 +15,7 @@ import {updaterProgressUserThunk} from '../../store/auth/authThunks';
 import {selectTheme} from '../../store/auth/selector';
 import {NavigationProps} from '../../types/navigationTypes';
 import {AppDispatch} from '../../store/store';
-import {RenderProgress} from '../RenderProgress';
+import {RenderProgress} from '../Vocabulary/RenderProgress';
 import {defaultStyles} from '../defaultStyles';
 
 import {LevelProps, WordStat} from '../../types';
@@ -81,7 +81,7 @@ export const SixthLevel: React.FC<LevelProps> = ({
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання.');
-        navigation.navigate('Train', {titleName});
+        navigation.navigate('TrainVocabulary', {titleName});
         return;
       }
 

@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {defaultStyles} from './defaultStyles';
+import {defaultStyles} from '../defaultStyles';
 import {useSelector} from 'react-redux';
-import {selectTheme} from '../store/auth/selector';
-import {Conjugation, RouteProps} from '../types';
+import {selectTheme} from '../../store/auth/selector';
+import {Conjugation, RouteProps} from '../../types';
 import {useRoute} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {useTTS} from '../helpers';
+import {useTTS} from '../../helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const VerbLearningScreen = () => {

@@ -1,13 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-interface ProgressBarProps {
+interface ProfileProgressBarProps {
   croissants: number;
   maxCroissants: number;
   theme: boolean;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({
+const ProfileProgressBar: React.FC<ProfileProgressBarProps> = ({
   croissants,
   maxCroissants,
   theme,
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProgressBar;
+export default ProfileProgressBar;

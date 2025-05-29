@@ -1,7 +1,7 @@
 import React from 'react';
 import {useRoute} from '@react-navigation/native';
 import {Text} from 'react-native';
-import {RouteProps} from '../types/navigationTypes';
+import {RouteProps} from '../../types/navigationTypes';
 import {
   FifthLevel,
   FirstLevel,
@@ -10,7 +10,7 @@ import {
   SeventhLevel,
   SixthLevel,
   ThirdLevel,
-} from './VocabLevels';
+} from '../VocabLevels';
 
 export const TrainingLevel = () => {
   const route = useRoute<RouteProps<'TrainingLevel'>>();

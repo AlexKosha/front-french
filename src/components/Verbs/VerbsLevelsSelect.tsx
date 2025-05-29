@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {SafeAreaView, TouchableOpacity, Text, View} from 'react-native';
+import {SafeAreaView, TouchableOpacity, Text, View, Alert} from 'react-native';
 import {Logo} from '../User/Logo';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -9,11 +9,10 @@ import {defaultStyles} from '../defaultStyles';
 
 export const VerbsLevelsSelect = () => {
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
-  const isDarkTheme = useSelector(selectTheme);
   const route = useRoute<RouteProps<'VerbsLevelsSelect'>>();
-  const {titleName} = route.params;
-
+  const {titleName, selectedVerbs} = route.params;
   const [completedLevels, setCompletedLevels] = useState<number[]>([]);
+  const isDarkTheme = useSelector(selectTheme);
 
   // Обробка переходу до рівнів
   const handlePress = (level: number) => {
@@ -21,9 +20,20 @@ export const VerbsLevelsSelect = () => {
       console.error('titleName is undefined');
       return;
     }
-    console.log('====================================');
-    console.log('looooooooooog');
-    console.log('====================================');
+
+    // console.log('titleName', titleName);
+    // console.log('selectedVerbs', selectedVerbs);
+
+    if (!selectedVerbs || selectedVerbs.length === 0) {
+      Alert.alert('Помилка', 'Слова не передані');
+      return;
+    }
+
+    navigation.navigate('TrainingLevelVerbs', {
+      level,
+      titleName,
+      selectedVerbs,
+    });
   };
 
   return (

@@ -15,7 +15,7 @@ import {updaterProgressUserThunk} from '../../store/auth/authThunks';
 import {selectTheme} from '../../store/auth/selector';
 import {NavigationProps} from '../../types/navigationTypes';
 import {AppDispatch} from '../../store/store';
-import {RenderProgress} from '../RenderProgress';
+import {RenderProgress} from '../Vocabulary/RenderProgress';
 import {defaultStyles} from '../defaultStyles';
 import {initializeWordStats} from '../../helpers/wordHelpers';
 import {markCurrentWordsAsCompleted} from '../../helpers/progressHelpers';
@@ -161,7 +161,7 @@ export const FifthLevel: React.FC<LevelProps> = ({
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');
-        navigation.navigate('Train', {titleName});
+        navigation.navigate('TrainVocabulary', {titleName});
         return;
       }
       handleNextIteration();

@@ -17,7 +17,7 @@ import {useSelector} from 'react-redux';
 
 import {selectTheme} from '../../store/auth/selector';
 import {NavigationProps} from '../../types/navigationTypes';
-import {RenderProgress} from '../RenderProgress';
+import {RenderProgress} from '../Vocabulary/RenderProgress';
 import {defaultStyles} from '../defaultStyles';
 import {LevelProps} from '../../types';
 
@@ -132,35 +132,6 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
     });
   };
 
-  // const createPanResponder = (wordId: any, pan: any) => {
-  //   if (!pan) {
-  //     pan = new Animated.ValueXY(); // Якщо `pan` ще не ініціалізований
-  //   }
-  //   return PanResponder.create({
-  //     onStartShouldSetPanResponder: () => true,
-  //     onMoveShouldSetPanResponder: () => true,
-  //     onPanResponderMove: Animated.event([null, {dx: pan.x, dy: pan.y}], {
-  //       useNativeDriver: false,
-  //     }),
-  //     onPanResponderRelease: (_, gestureState) => {
-  //       const droppedWordId = detectDropArea(
-  //         gestureState.moveX,
-  //         gestureState.moveY,
-  //       );
-
-  //       if (droppedWordId && droppedWordId !== wordId) {
-  //         swapWords(wordId, droppedWordId); // Змінюємо місцями слова
-  //       }
-
-  //       // Повертає слово у вихідну позицію
-  //       Animated.spring(pan, {
-  //         toValue: {x: 0, y: 0},
-  //         useNativeDriver: true,
-  //       }).start();
-  //     },
-  //   });
-  // };
-
   const detectDropArea = (x: number, y: number) => {
     for (const word of words) {
       // console.log(x, '- x', y, '- y');
@@ -264,7 +235,7 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
           Alert.alert(
             'Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан',
           );
-          navigation.navigate('Train', {titleName});
+          navigation.navigate('TrainVocabulary', {titleName});
         }
 
         handleNextIteration();
@@ -300,20 +271,6 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
           {words.map(word => {
             const pan = panRefs.current[word.id];
             return (
-              // <Animated.View
-              //   key={word.id}
-              //   style={[
-              //     styles.wordBox,
-              //     {transform: pan.getTranslateTransform()},
-              //   ]}
-              //   {...createPanResponder(word.id, pan).panHandlers}
-              //   ref={
-              //     wordRefs.current[word.id] ||
-              //     (wordRefs.current[word.id] = React.createRef())
-              //   } // створює новий реф, якщо його ще немає
-              // >
-              //   <Text style={styles.word}>{word.text}</Text>
-              // </Animated.View>
               <Animated.View
                 key={word.id}
                 style={[

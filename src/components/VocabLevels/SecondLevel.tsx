@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 
-import {LevelComponent} from '../LevelComponent';
+import {LevelComponent} from '../Vocabulary/LevelComponent';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
 import {LevelProps, WordItem} from '../../types';

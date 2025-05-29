@@ -20,7 +20,7 @@ import {selectTheme} from '../../store/auth/selector';
 import {AppDispatch} from '../../store/store';
 import {NavigationProps} from '../../types/navigationTypes';
 import {updaterProgressUserThunk} from '../../store/auth/authThunks';
-import {RenderProgress} from '../RenderProgress';
+import {RenderProgress} from '../Vocabulary/RenderProgress';
 import {sendAudio} from '../../services/authService';
 import {defaultStyles} from '../defaultStyles';
 import {LevelProps, WordStat} from '../../types';
@@ -241,7 +241,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання.');
-        navigation.navigate('Train', {titleName});
+        navigation.navigate('TrainVocabulary', {titleName});
         return;
       }
 

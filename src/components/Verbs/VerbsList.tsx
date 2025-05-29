@@ -11,12 +11,12 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../types/navigationTypes';
-import {AppDispatch} from '../store/store';
-import {useLocalization} from '../locale/LocalizationContext';
-import {defaultStyles} from './defaultStyles';
-import {selectVerbs} from '../store/verb/selectors';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps, RouteProps} from '../../types/navigationTypes';
+import {AppDispatch} from '../../store/store';
+import {useLocalization} from '../../locale/LocalizationContext';
+import {defaultStyles} from '../defaultStyles';
+import {selectVerbs} from '../../store/verb/selectors';
 
 export const VerbsList = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
@@ -103,7 +103,11 @@ export const VerbsList = (): JSX.Element => {
   };
 
   const startTraining = () => {
-    if (selectedVerbs.length < 3) {
+    // if (selectedVerbs.length < 3) {
+    //   Alert.alert('Вибери щонайменше 3 слова');
+    //   return;
+    // }
+    if (!selectedVerbs || selectedVerbs.length < 3) {
       Alert.alert('Вибери щонайменше 3 слова');
       return;
     }
@@ -125,18 +129,24 @@ export const VerbsList = (): JSX.Element => {
         defaultStyles.container,
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginBottom: 10,
-        }}>
+      <View>
         <TouchableOpacity
+          style={[
+            defaultStyles.button,
+            {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
+          ]}
           onPress={() => {
             setSelectionMode(!selectionMode);
             setSelectedVerbs([]);
           }}>
-          <Text style={{color: 'red'}}>
+          <Text
+            style={[
+              defaultStyles.btnText,
+              {
+                color: 'red',
+                // color: isDarkTheme ? '#67104c' : 'white',
+              },
+            ]}>
             {selectionMode ? 'Скасувати' : 'Хочу тренувати'}
           </Text>
         </TouchableOpacity>

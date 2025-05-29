@@ -8,21 +8,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../types/navigationTypes';
-import {Logo} from './User/Logo';
-import {defaultStyles} from './defaultStyles';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps, RouteProps} from '../../types/navigationTypes';
+import {Logo} from '../User/Logo';
+import {defaultStyles} from '../defaultStyles';
 
-export const Train = () => {
+export const TrainVocabulary = () => {
   const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
   const isDarkTheme = useSelector(selectTheme);
-  const route = useRoute<RouteProps<'Train'>>();
+  const route = useRoute<RouteProps<'TrainVocabulary'>>();
   const {titleName} = route.params;
   const [progress, setProgress] = useState([]);
   const [completedLevels, setCompletedLevels] = useState<number[]>([]);
 
   // Оновлення прогресу
-  // Викликаємо `updateProgress` при фокусуванні на екрані Train
+  // Викликаємо `updateProgress` при фокусуванні на екрані TrainVocabulary
   useFocusEffect(
     useCallback(() => {
       const updateProgress = async () => {

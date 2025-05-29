@@ -18,7 +18,7 @@ export type RootStackParamList = {
   Verbs: undefined;
   LearnOrTrainTopic: {titleName: string};
   LearnVocabTheme: {titleName: string | undefined};
-  Train: {titleName: string | undefined};
+  TrainVocabulary: {titleName: string | undefined};
   WordLearningScreen: {
     count: number;
     titleName: string;
@@ -26,7 +26,7 @@ export type RootStackParamList = {
   };
   TrainingLevel: {titleName: string; level: number; progress: any};
   LearnVerbs: {verbName: string | undefined};
-  TrainVerbs: {verbName: string | undefined};
+
   VerbLearningScreen: {
     titleName: string | undefined;
     verbs: any | undefined;
@@ -34,6 +34,11 @@ export type RootStackParamList = {
   VerbsList: {titleName: string | undefined};
   ChooseTense: undefined;
   VerbsLevelsSelect: {titleName: string | undefined; selectedVerbs: any};
+  TrainingLevelVerbs: {
+    level: number;
+    titleName: string;
+    selectedVerbs: any;
+  };
 };
 
 // Тип для навігації

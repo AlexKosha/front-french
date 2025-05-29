@@ -53,7 +53,7 @@ export const LearnOrTrainTopic = (): JSX.Element => {
             defaultStyles.button,
             {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
           ]}
-          onPress={() => navigation.navigate('Train', {titleName})}>
+          onPress={() => navigation.navigate('TrainVocabulary', {titleName})}>
           <Text
             style={[
               defaultStyles.btnText,

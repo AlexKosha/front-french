@@ -3,15 +3,15 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView, Alert} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {updaterProgressUserThunk} from '../store/auth/authThunks';
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps} from '../types/navigationTypes';
-import {AppDispatch} from '../store/store';
+import {updaterProgressUserThunk} from '../../store/auth/authThunks';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps} from '../../types/navigationTypes';
+import {AppDispatch} from '../../store/store';
 import {RenderProgress} from './RenderProgress';
-import {defaultStyles} from './defaultStyles';
-import {markCurrentWordsAsCompleted} from '../helpers/progressHelpers';
-import {LevelComponentsProps, WordItem, WordStat} from '../types';
-import {useTTS} from '../helpers';
+import {defaultStyles} from '../defaultStyles';
+import {markCurrentWordsAsCompleted} from '../../helpers/progressHelpers';
+import {LevelComponentsProps, WordItem, WordStat} from '../../types';
+import {useTTS} from '../../helpers';
 
 export const LevelComponent: React.FC<LevelComponentsProps> = ({
   level,
@@ -25,7 +25,7 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
   const [wordStats, setWordStats] = useState<WordStat[]>([]);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
 
-  const navigation = useNavigation<NavigationProps<'Train'>>();
+  const navigation = useNavigation<NavigationProps<'TrainVocabulary'>>();
   const dispatch = useDispatch<AppDispatch>();
   const isDarkTheme = useSelector(selectTheme);
   const {speak} = useTTS();
@@ -74,7 +74,7 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');
-        navigation.navigate('Train', {titleName});
+        navigation.navigate('TrainVocabulary', {titleName});
       } else {
         setRandomItem(updatedStats);
       }
@@ -88,7 +88,7 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
       const remainingItems = stats.filter((stat: any) => stat.correctCount < 3);
       if (remainingItems.length === 0) {
         Alert.alert('Вітаю! Ви виконали всі завдання.');
-        navigation.navigate('Train', {titleName});
+        navigation.navigate('TrainVocabulary', {titleName});
         return;
       }
       const randomItem =

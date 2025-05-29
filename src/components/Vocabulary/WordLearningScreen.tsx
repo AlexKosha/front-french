@@ -13,14 +13,14 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 
-import {selectThemeWordId, selectVocab} from '../store/vocab/selectors';
-import {selectTheme} from '../store/auth/selector';
-import {NavigationProps, RouteProps} from '../types/navigationTypes';
-import {useTranslationHelper} from '../locale/useTranslation';
-import {useLocalization} from '../locale/LocalizationContext';
-import {defaultStyles} from './defaultStyles';
-import {WordItem} from '../types';
-import {useTTS} from '../helpers';
+import {selectThemeWordId, selectVocab} from '../../store/vocab/selectors';
+import {selectTheme} from '../../store/auth/selector';
+import {NavigationProps, RouteProps} from '../../types/navigationTypes';
+import {useTranslationHelper} from '../../locale/useTranslation';
+import {useLocalization} from '../../locale/LocalizationContext';
+import {defaultStyles} from '../defaultStyles';
+import {WordItem} from '../../types';
+import {useTTS} from '../../helpers';
 
 export const WordLearningScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -148,7 +148,7 @@ export const WordLearningScreen = () => {
   };
 
   const handleTrainWords = () => {
-    navigation.navigate('Train', {titleName});
+    navigation.navigate('TrainVocabulary', {titleName});
   };
 
   const handleChooseDifferentCount = () => {

@@ -1,11 +1,11 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React from 'react';
 import {SafeAreaView, Text, View, TouchableOpacity} from 'react-native';
-import {NavigationProps, RouteProps} from '../types';
+import {NavigationProps, RouteProps} from '../../types';
 import {useSelector} from 'react-redux';
-import {selectTheme} from '../store/auth/selector';
-import {defaultStyles} from './defaultStyles';
-import {selectVerbs} from '../store/verb/selectors';
+import {selectTheme} from '../../store/auth/selector';
+import {defaultStyles} from '../defaultStyles';
+import {selectVerbs} from '../../store/verb/selectors';
 
 export const ChooseTense = (): JSX.Element => {
   const route = useRoute<RouteProps<'ChooseTense'>>();
@@ -16,7 +16,6 @@ export const ChooseTense = (): JSX.Element => {
   const tenses = verbsData[0].tenses;
 
   const handlePress = (titleName: string) => {
-    // console.log(`Обрано: ${titleName}`);
     navigation.navigate('VerbsList', {titleName});
   };
 
@@ -41,7 +40,7 @@ export const ChooseTense = (): JSX.Element => {
             marginBottom: 20,
             color: isDarkTheme ? 'white' : '#67104c',
           }}>
-          Обери який час хочеш вивчати
+          Обери який час хочеш вивчати чи тренувати
         </Text>
 
         {tenses.map(count => (
