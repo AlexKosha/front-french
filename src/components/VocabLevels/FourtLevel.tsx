@@ -29,7 +29,7 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
   const [words, setWords] = useState<{id: string; text: string}[]>([]);
   const [matches, setMatches] = useState<any>({});
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
-  const [lastWords, setLastWords] = useState<string[]>([]); // Для збереження використаних слів
+  const [lastWords] = useState<string[]>([]); // Для збереження використаних слів
   const [iteration, setIteration] = useState(0); // Лічильник ітерацій
 
   const panRefs = useRef<{[key: string]: Animated.ValueXY}>({});

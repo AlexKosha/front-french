@@ -25,8 +25,7 @@ export const AppNavigator = (): JSX.Element => {
   const dispatch = useDispatch<AppDispatch>();
   const navigat = useNavigation<NavigationProps<'AppNavigator'>>();
   const isDarkTheme = useSelector(selectTheme);
-  const {vocabOrVerbs, vocab, phonetic, verbs, lessonsBySubscr} =
-    useTranslationHelper();
+  const {vocabOrVerbs, vocab} = useTranslationHelper();
 
   useEffect(() => {
     // toggleTheme();
@@ -361,6 +360,7 @@ export const AppNavigator = (): JSX.Element => {
           const params =
             route.params as RouteProps<'TrainingLevelVerbs'>['params'];
           const titleName = params?.titleName ?? '';
+          const selectedVerbs = params?.selectedVerbs ?? '';
           return {
             title: titleName,
             headerTitleAlign: 'center',
@@ -375,6 +375,7 @@ export const AppNavigator = (): JSX.Element => {
               isDarkTheme,
               navigation,
               'VerbsLevelsSelect',
+              selectedVerbs,
             ),
           };
         }}

@@ -1,23 +1,30 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {NavigationProps, Props} from '../../types';
 import {useNavigation} from '@react-navigation/native';
 
-const getDisplaySentence = (pronoun: string, form: string, ending: string) => {
-  const parts = form.trim().split(' ');
+// Показати речення з пропущеним дієсловом
+const getDisplaySentence = (pronoun: string, form: string) => {
+  // const parts = form.trim().split(' ');
 
-  if (parts.length === 2) {
-    return `${pronoun} ___ ${parts[1]}`;
-  }
+  console.log(form);
 
-  // Теперішній час — одне слово
-  const word = parts[0];
-  const base = word.slice(0, word.length - ending.length);
-  return `${pronoun} ${base}___`;
+  // Минулий час — два слова: "tu as mangé" → "tu as ___"
+  // if (parts.length === 2) {
+  //   return `${pronoun} ${parts[0]} ___`;
+  // }
+
+  // Теперішній час — одне слово: "tu manges" → "tu ___"
+  return `${pronoun} ___`;
 };
 
-export const FirstLevel: React.FC<Props> = ({
+// Отримати правильну відповідь (саме дієслово, не допоміжне!)
+const getCorrectWord = (form: string): string => {
+  const parts = form.trim().split(' ');
+  return parts.length === 2 ? parts[1] : parts[0]; // минулий: "mangé", теперішній: "manges"
+};
+
+export const SecondLevel: React.FC<Props> = ({
   selectedVerbs,
   level,
   titleName,
@@ -29,12 +36,14 @@ export const FirstLevel: React.FC<Props> = ({
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
 
   const generateOptions = useCallback(() => {
-    const correct = questions[currentIndex].ending;
-    const endingsPool = questions.map(q => q.ending);
+    const correctWord = getCorrectWord(questions[currentIndex].form);
+    const wordsPool = questions.map(q => getCorrectWord(q.form));
     const uniqueWrong = [
-      ...new Set(endingsPool.filter(e => e !== correct)),
+      ...new Set(wordsPool.filter(w => w !== correctWord)),
     ].slice(0, 3);
-    const options = [...uniqueWrong, correct].sort(() => 0.5 - Math.random());
+    const options = [...uniqueWrong, correctWord].sort(
+      () => 0.5 - Math.random(),
+    );
     setShuffledOptions(options);
   }, [questions, currentIndex]);
 
@@ -64,14 +73,14 @@ export const FirstLevel: React.FC<Props> = ({
   const handleSelect = (option: string) => {
     setSelected(option);
 
-    const correct = questions[currentIndex].ending;
-    const isCorrect = option === correct;
+    const correctWord = getCorrectWord(questions[currentIndex].form);
+    const isCorrect = option === correctWord;
 
     if (isCorrect) {
       setTimeout(() => {
         setSelected(null);
         if (currentIndex < questions.length - 1) {
-          setCurrentIndex((prev: number) => prev + 1);
+          setCurrentIndex(prev => prev + 1);
         } else {
           navigation.navigate('VerbsLevelsSelect', {
             titleName,
@@ -82,7 +91,7 @@ export const FirstLevel: React.FC<Props> = ({
     } else {
       setTimeout(() => {
         setSelected(null);
-        // Не змінюємо currentIndex — залишаємо це саме слово
+        // Залишаємо те саме питання
       }, 800);
     }
   };
@@ -90,11 +99,8 @@ export const FirstLevel: React.FC<Props> = ({
   if (!questions.length) return <Text>Завантаження...</Text>;
 
   const current = questions[currentIndex];
-  const displaySentence = getDisplaySentence(
-    current.pronoun,
-    current.form,
-    current.ending,
-  );
+  const displaySentence = getDisplaySentence(current.pronoun, current.form);
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
@@ -109,7 +115,8 @@ export const FirstLevel: React.FC<Props> = ({
           style={[
             styles.option,
             selected === opt && {
-              backgroundColor: opt === current.ending ? '#4CAF50' : '#f44336',
+              backgroundColor:
+                opt === getCorrectWord(current.form) ? '#4CAF50' : '#f44336',
             },
           ]}
           onPress={() => handleSelect(opt)}
@@ -138,7 +145,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
   },
-  question: {fontSize: 24, marginBottom: 20, textAlign: 'center'},
+  question: {
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
   option: {
     padding: 15,
     backgroundColor: '#eee',
@@ -146,6 +157,13 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     alignItems: 'center',
   },
-  optionText: {fontSize: 18},
-  footer: {textAlign: 'center', marginTop: 30, fontSize: 16, color: '#666'},
+  optionText: {
+    fontSize: 18,
+  },
+  footer: {
+    textAlign: 'center',
+    marginTop: 30,
+    fontSize: 16,
+    color: '#666',
+  },
 });

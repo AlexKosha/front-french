@@ -2,13 +2,11 @@ import React from 'react';
 import {useRoute} from '@react-navigation/native';
 import {Text} from 'react-native';
 import {RouteProps} from '../../types';
-import {FirstLevel} from '../VerbsLevels';
+import {FirstLevel, FourthLevel, SecondLevel} from '../VerbsLevels';
 
 export const TrainingLevelVerbs = () => {
   const route = useRoute<RouteProps<'TrainingLevelVerbs'>>();
   const {level, titleName, selectedVerbs} = route.params;
-
-  console.log('LEVEL SCREEN PARAMS', {level, titleName, selectedVerbs});
 
   const renderLevel = () => {
     switch (level) {
@@ -20,14 +18,14 @@ export const TrainingLevelVerbs = () => {
             selectedVerbs={selectedVerbs}
           />
         );
-      //   case 2:
-      //     return (
-      //       <VerbLevel2
-      //         level={level}
-      //         titleName={titleName}
-      //         selectedVerbs={selectedVerbs}
-      //       />
-      //     );
+      case 2:
+        return (
+          <SecondLevel
+            level={level}
+            titleName={titleName}
+            selectedVerbs={selectedVerbs}
+          />
+        );
       //   case 3:
       //     return (
       //       <VerbLevel3
@@ -36,14 +34,14 @@ export const TrainingLevelVerbs = () => {
       //         selectedVerbs={selectedVerbs}
       //       />
       //     );
-      //   case 4:
-      //     return (
-      //       <VerbLevel4
-      //         level={level}
-      //         titleName={titleName}
-      //         selectedVerbs={selectedVerbs}
-      //       />
-      //     );
+      case 4:
+        return (
+          <FourthLevel
+            level={level}
+            titleName={titleName}
+            selectedVerbs={selectedVerbs}
+          />
+        );
       //   case 5:
       //     return (
       //       <VerbLevel5

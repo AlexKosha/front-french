@@ -83,6 +83,7 @@ export const createHeaderTrainingLevelComponent = (
   isDarkTheme: boolean,
   navigation: any,
   goToPreviousComponent: string,
+  selectedVerbs: any[] = [],
 ): ((props: any) => React.ReactNode) => {
   return props => (
     <View
@@ -103,8 +104,14 @@ export const createHeaderTrainingLevelComponent = (
               {text: 'Залишитись', style: 'cancel'},
               {
                 text: 'Вийти',
-                onPress: () =>
-                  navigation.navigate(goToPreviousComponent, {titleName}),
+                onPress: () => {
+                  setTimeout(() => {
+                    navigation.navigate(goToPreviousComponent, {
+                      titleName,
+                      selectedVerbs,
+                    });
+                  }, 1000);
+                },
                 style: 'destructive',
               },
             ],
@@ -127,7 +134,11 @@ export const createHeaderTrainingLevelComponent = (
               {text: 'Залишитись', style: 'cancel'},
               {
                 text: 'Вийти',
-                onPress: () => navigation.navigate('Home'),
+                onPress: () => {
+                  setTimeout(() => {
+                    navigation.navigate('Home');
+                  }, 1000);
+                },
                 style: 'destructive',
               },
             ],

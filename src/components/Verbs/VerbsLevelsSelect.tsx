@@ -11,7 +11,7 @@ export const VerbsLevelsSelect = () => {
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
   const route = useRoute<RouteProps<'VerbsLevelsSelect'>>();
   const {titleName, selectedVerbs} = route.params;
-  const [completedLevels, setCompletedLevels] = useState<number[]>([]);
+  const [completedLevels] = useState<number[]>([]);
   const isDarkTheme = useSelector(selectTheme);
 
   // Обробка переходу до рівнів
@@ -20,9 +20,6 @@ export const VerbsLevelsSelect = () => {
       console.error('titleName is undefined');
       return;
     }
-
-    // console.log('titleName', titleName);
-    // console.log('selectedVerbs', selectedVerbs);
 
     if (!selectedVerbs || selectedVerbs.length === 0) {
       Alert.alert('Помилка', 'Слова не передані');
