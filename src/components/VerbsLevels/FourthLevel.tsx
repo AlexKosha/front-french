@@ -18,12 +18,13 @@ import {selectTheme} from '../../store/auth/selector';
 import {defaultStyles} from '../defaultStyles';
 import {RenderProgress} from '../Vocabulary/RenderProgress';
 import {NavigationProps} from '../../types/navigationTypes';
+import {Props} from '../../types';
 
-interface Props {
-  selectedVerbs: any[];
-  titleName: string;
-  level: number;
-}
+type FormItem = {
+  id: string;
+  text: string;
+  correctPronoun: string;
+};
 
 export const FourthLevel: React.FC<Props> = ({
   level,
@@ -34,7 +35,7 @@ export const FourthLevel: React.FC<Props> = ({
   const navigation = useNavigation<NavigationProps<'TrainVocabulary'>>();
 
   const [pronouns, setPronouns] = useState<{id: string; text: string}[]>([]);
-  const [forms, setForms] = useState<{id: string; text: string}[]>([]);
+  const [forms, setForms] = useState<FormItem[]>([]);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
   const [iteration, setIteration] = useState(0);
 
@@ -59,21 +60,41 @@ export const FourthLevel: React.FC<Props> = ({
   }, [selectedVerbs, titleName]);
 
   useEffect(() => {
+    // Створюємо копію і перемішуємо всі conjugations
     const shuffled = [...allConjugations].sort(() => Math.random() - 0.5);
-    const selection = shuffled.slice(0, 4);
 
-    const newPronouns = selection.map((item, i) => ({
+    // Унікальні займенники
+    const seenPronouns = new Set<string>();
+    const uniqueSelection: typeof allConjugations = [];
+
+    for (const item of shuffled) {
+      if (!seenPronouns.has(item.pronoun)) {
+        seenPronouns.add(item.pronoun);
+        uniqueSelection.push(item);
+      }
+      if (uniqueSelection.length === 4) break;
+    }
+
+    // Якщо унікальних менше 4 — fallback (щоб не ламався інтерфейс)
+    while (
+      uniqueSelection.length < 4 &&
+      shuffled.length > uniqueSelection.length
+    ) {
+      uniqueSelection.push(shuffled[uniqueSelection.length]);
+    }
+
+    const newPronouns = uniqueSelection.map((item, i) => ({
       id: `p-${i}`,
       text: item.pronoun,
     }));
 
-    const newForms = selection
+    const newForms = uniqueSelection
       .map((item, i) => ({
         id: `f-${i}`,
         text: item.form,
         correctPronoun: item.pronoun,
       }))
-      .sort(() => Math.random() - 0.5); // Перемішані для драгг
+      .sort(() => Math.random() - 0.5);
 
     setPronouns(newPronouns);
     setForms(newForms);
@@ -82,7 +103,7 @@ export const FourthLevel: React.FC<Props> = ({
       panRefs.current[f.id] = new Animated.ValueXY();
       wordRefs.current[f.id] = React.createRef();
     });
-  }, [iteration]);
+  }, [allConjugations, iteration]);
 
   useEffect(() => {
     forms.forEach(form => {
@@ -98,6 +119,7 @@ export const FourthLevel: React.FC<Props> = ({
                 right: pageX + width,
                 bottom: pageY + height,
               };
+              console.log(wordPositions);
             });
           }, 100);
         }
@@ -108,14 +130,17 @@ export const FourthLevel: React.FC<Props> = ({
   const detectDropArea = (x: number, y: number) => {
     for (const f of forms) {
       const bounds = wordPositions.current[f.id];
-      if (
-        bounds &&
-        x >= bounds.left &&
-        x <= bounds.right &&
-        y >= bounds.top &&
-        y <= bounds.bottom
-      ) {
-        return f.id;
+      if (bounds) {
+        const paddingX = (bounds.right - bounds.left) * 0.4; // 20% зліва і справа
+
+        const newLeft = bounds.left + paddingX;
+        const newRight = bounds.right - paddingX;
+        const newTop = bounds.top;
+        const newBottom = bounds.bottom;
+
+        if (x >= newLeft && x <= newRight && y >= newTop && y <= newBottom) {
+          return f.id;
+        }
       }
     }
     return null;
@@ -127,19 +152,29 @@ export const FourthLevel: React.FC<Props> = ({
 
     if (!pos1 || !pos2) return;
 
+    const center1 = {
+      x: (pos1.left + pos1.right) / 2,
+      y: (pos1.top + pos1.bottom) / 2,
+    };
+
+    const center2 = {
+      x: (pos2.left + pos2.right) / 2,
+      y: (pos2.top + pos2.bottom) / 2,
+    };
+
     Animated.parallel([
       Animated.timing(panRefs.current[id1], {
         toValue: {
-          x: pos2.left - pos1.left,
-          y: pos2.top - pos1.top,
+          x: center2.x - center1.x,
+          y: center2.y - center1.y,
         },
         duration: 300,
         useNativeDriver: true,
       }),
       Animated.timing(panRefs.current[id2], {
         toValue: {
-          x: pos1.left - pos2.left,
-          y: pos1.top - pos2.top,
+          x: center1.x - center2.x,
+          y: center1.y - center2.y,
         },
         duration: 300,
         useNativeDriver: true,
