@@ -227,7 +227,7 @@ export const FourthLevel: React.FC<Props> = ({
         Alert.alert('Супер!', 'Ви виконали рівень 🎉');
         navigation.navigate('TrainVocabulary', {titleName});
       } else {
-        Alert.alert('Правильно!', 'Наступне завдання');
+        // Alert.alert('Правильно!', 'Наступне завдання');
         setIteration(prev => prev + 1);
       }
     } else {
@@ -242,7 +242,7 @@ export const FourthLevel: React.FC<Props> = ({
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
       <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
-      <Text style={styles.header}>
+      <Text style={[styles.header, {color: isDarkTheme ? 'white' : '#67104c'}]}>
         Рівень {level}: {titleName}
       </Text>
       <View style={styles.columns}>

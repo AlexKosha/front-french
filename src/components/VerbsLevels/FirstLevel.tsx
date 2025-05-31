@@ -1,8 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {NavigationProps, Props} from '../../types';
 import {useNavigation} from '@react-navigation/native';
+import {defaultStyles} from '../defaultStyles';
+import {useSelector} from 'react-redux';
+import {selectTheme} from '../../store/auth/selector';
 
 const getDisplaySentence = (pronoun: string, form: string, ending: string) => {
   const parts = form.trim().split(' ');
@@ -27,6 +30,7 @@ export const FirstLevel: React.FC<Props> = ({
   const [selected, setSelected] = useState<string | null>(null);
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
+  const isDarkTheme = useSelector(selectTheme);
 
   const generateOptions = useCallback(() => {
     const correct = questions[currentIndex].ending;
@@ -96,32 +100,53 @@ export const FirstLevel: React.FC<Props> = ({
     current.ending,
   );
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>
+    <SafeAreaView
+      style={[
+        defaultStyles.container,
+        {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
+      ]}>
+      <Text style={[styles.header, {color: isDarkTheme ? 'white' : '#67104c'}]}>
         Рівень {level}: {titleName}
       </Text>
 
-      <Text style={styles.question}>{displaySentence}</Text>
+      <Text
+        style={[styles.question, {color: isDarkTheme ? 'white' : '#67104c'}]}>
+        {displaySentence}
+      </Text>
 
       {shuffledOptions.map((opt, idx) => (
         <TouchableOpacity
           key={idx}
           style={[
-            styles.option,
-            selected === opt && {
-              backgroundColor: opt === current.ending ? '#4CAF50' : '#f44336',
+            defaultStyles.button,
+            {
+              backgroundColor: (() => {
+                if (selected === opt) {
+                  return opt === current.ending ? '#4CAF50' : '#f44336';
+                } else {
+                  return isDarkTheme ? 'white' : '#67104c';
+                }
+              })(),
             },
           ]}
           onPress={() => handleSelect(opt)}
           disabled={selected !== null}>
-          <Text style={styles.optionText}>{opt}</Text>
+          <Text
+            style={[
+              defaultStyles.btnText,
+              {
+                color: isDarkTheme ? '#67104c' : 'white',
+              },
+            ]}>
+            {opt}
+          </Text>
         </TouchableOpacity>
       ))}
 
       <Text style={styles.footer}>
         {currentIndex + 1}/{questions.length}
       </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 
