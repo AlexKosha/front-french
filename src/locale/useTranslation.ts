@@ -35,7 +35,6 @@ export const useTranslationHelper = () => {
     welcomeBack: getTranslation('rg', 'welcomeBack'),
     welcome: getTranslation('hm', 'welcome'),
     vocabOrVerbs: getTranslation('hm', 'vocabOrVerbs'),
-    lessonsBySubscr: getTranslation('hm', 'lessonsBySubscr'),
     dontHaveAcc: getTranslation('rg', 'dontHaveAcc'),
     haveAccButForgotPass: getTranslation('rg', 'haveAccButForgotPass'),
     resetPassHere: getTranslation('rg', 'resetPassHere'),
@@ -76,5 +75,7 @@ export const useTranslationHelper = () => {
     password: getTranslation('validation', 'password'),
     code: getTranslation('validation', 'code'),
     verify: getTranslation('btn', 'verify'),
+    chooseTense: getTranslation('verbsSection', 'chooseTense'),
+    wantTrainVerbs: getTranslation('verbsSection', 'wantTrainVerbs'),
   };
 };

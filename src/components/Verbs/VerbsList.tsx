@@ -17,6 +17,7 @@ import {AppDispatch} from '../../store/store';
 import {useLocalization} from '../../locale/LocalizationContext';
 import {defaultStyles} from '../defaultStyles';
 import {selectVerbs} from '../../store/verb/selectors';
+import {useTranslationHelper} from '../../locale/useTranslation';
 
 export const VerbsList = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
@@ -29,6 +30,8 @@ export const VerbsList = (): JSX.Element => {
   const {titleName} = route.params;
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedVerbs, setSelectedVerbs] = useState<any[]>([]);
+
+  const {wantTrainVerbs, cancel, train} = useTranslationHelper();
 
   const getConjugationsByTense = (choosedVerb: string) => {
     // Знаходимо дієслово за ім'ям
@@ -147,7 +150,7 @@ export const VerbsList = (): JSX.Element => {
                 // color: isDarkTheme ? '#67104c' : 'white',
               },
             ]}>
-            {selectionMode ? 'Скасувати' : 'Хочу тренувати'}
+            {selectionMode ? cancel : wantTrainVerbs}
           </Text>
         </TouchableOpacity>
       </View>
@@ -215,7 +218,7 @@ export const VerbsList = (): JSX.Element => {
                 fontSize: 16,
                 fontWeight: 'bold',
               }}>
-              ТРЕНУВАТИ ({selectedVerbs.length})
+              {train} ({selectedVerbs.length})
             </Text>
           </TouchableOpacity>
         </View>

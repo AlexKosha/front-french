@@ -12,7 +12,7 @@ import {defaultStyles} from '../components/defaultStyles';
 export const Home = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
   const isDarkTheme = useSelector(selectTheme);
-  const {welcome, vocabOrVerbs, lessonsBySubscr} = useTranslationHelper();
+  const {welcome, vocabOrVerbs} = useTranslationHelper();
 
   return (
     <SafeAreaView

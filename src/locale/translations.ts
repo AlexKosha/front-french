@@ -49,7 +49,6 @@ export interface Translations {
   hm: {
     welcome: TranslationContent;
     vocabOrVerbs: TranslationContent;
-    lessonsBySubscr: TranslationContent;
   };
   alert: {
     welcomeAlert: TranslationContent;
@@ -89,6 +88,10 @@ export interface Translations {
     goBack: TranslationContent;
     next: TranslationContent;
     verify: TranslationContent;
+  };
+  verbsSection: {
+    chooseTense: TranslationContent;
+    wantTrainVerbs: TranslationContent;
   };
 }
 
@@ -155,7 +158,6 @@ export const translations: Translations = {
       uk: 'Привіт! Цей додаток допоможе вам вивчити французьку мову легко та ефективно. Тут ви знайдете інтерактивні уроки, вправи на вимову, граматику та словниковий запас, а також зможете тренувати свої навички через практичні завдання',
     },
     vocabOrVerbs: {en: 'Study and Train', uk: 'Навчатися та грати'},
-    lessonsBySubscr: {en: 'Lessons by subscription', uk: 'Уроки за підпискою'},
   },
   alert: {
     welcomeAlert: {en: 'Welcome Alert', uk: 'Привітання'},
@@ -217,11 +219,18 @@ export const translations: Translations = {
     cancel: {en: 'Cancel', uk: 'Скасувати'},
     confirm: {en: 'Confirm', uk: 'Підтвердити'},
     repeat: {en: 'Repeat', uk: 'Повторити'},
-    train: {en: 'Train', uk: 'Тренуватися'},
+    train: {en: 'Train', uk: 'Тренувати'},
     chooseCount: {en: 'Choose Count', uk: 'Виберіть кількість'},
     goBack: {en: 'Go Back', uk: 'Повернутися'},
     next: {en: 'Next', uk: 'Далі'},
     verify: {en: 'Verify', uk: 'Перевірити'},
+  },
+  verbsSection: {
+    chooseTense: {
+      en: 'Choose a tense to study or practice',
+      uk: 'Обери час для вивчення або тренування',
+    },
+    wantTrainVerbs: {en: 'Train Verbs', uk: 'Тренувати дієслова'},
   },
 };
 

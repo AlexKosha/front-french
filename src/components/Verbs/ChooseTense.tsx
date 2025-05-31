@@ -6,12 +6,14 @@ import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
 import {defaultStyles} from '../defaultStyles';
 import {selectVerbs} from '../../store/verb/selectors';
+import {useTranslationHelper} from '../../locale/useTranslation';
 
 export const ChooseTense = (): JSX.Element => {
   const route = useRoute<RouteProps<'ChooseTense'>>();
   const navigation = useNavigation<NavigationProps<'ChooseTense'>>();
   const isDarkTheme = useSelector(selectTheme);
   const verbsData = useSelector(selectVerbs);
+  const {chooseTense} = useTranslationHelper();
 
   const tenses = verbsData[0].tenses;
 
@@ -40,7 +42,7 @@ export const ChooseTense = (): JSX.Element => {
             marginBottom: 20,
             color: isDarkTheme ? 'white' : '#67104c',
           }}>
-          Обери який час хочеш вивчати чи тренувати
+          {chooseTense}
         </Text>
 
         {tenses.map(count => (
