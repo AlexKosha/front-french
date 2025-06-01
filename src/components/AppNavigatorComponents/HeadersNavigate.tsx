@@ -7,14 +7,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {NavigationProps} from '../../types/navigationTypes';
 import {selectTheme} from '../../store/auth/selector';
 import {useTranslationHelper} from '../../locale/useTranslation';
-import {useLocalization} from '../../locale/LocalizationContext';
 
 export const HeaderHomeToProfile = () => {
   const navigation = useNavigation<NavigationProps<'AppNavigator'>>();
   const isDarkTheme = useSelector(selectTheme);
-  // const {locale} = useLocalization();
-  const {warning, progressWillBeLost} = useTranslationHelper();
-
   return (
     <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
       <AntDesign
@@ -89,51 +85,52 @@ export const createHeaderTrainingLevelComponent = (
   goToPreviousComponent: string,
   selectedVerbs: any[] = [],
 ): ((props: any) => React.ReactNode) => {
-  return props => (
-    <View
-      {...props}
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        paddingHorizontal: 10,
-      }}>
-      <TouchableOpacity
-        onPress={() => {
-          Alert.alert(warning, progressWillBeLost, [
-            {text: 'Залишитись', style: 'cancel'},
-            {
-              text: 'Вийти',
-              onPress: () => {
-                setTimeout(() => {
-                  navigation.navigate(goToPreviousComponent, {
-                    titleName,
-                    selectedVerbs,
-                  });
-                }, 1000);
-              },
-              style: 'destructive',
-            },
-          ]);
-        }}>
-        <AntDesign
-          name="arrowleft"
-          size={30}
-          color={isDarkTheme ? 'white' : '#67104c'}
-          style={{marginLeft: 5}}
-        />
-      </TouchableOpacity>
+  return (props: any) => {
+    const {warning, progressWillBeLost, stayText, exitText} =
+      useTranslationHelper(); // <-- всередині компонента
 
-      <TouchableOpacity
-        onPress={() => {
-          Alert.alert(
-            'Попередження',
-            'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
-            [
-              {text: 'Залишитись', style: 'cancel'},
+    return (
+      <View
+        {...props}
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          paddingHorizontal: 10,
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert(warning, progressWillBeLost, [
+              {text: stayText, style: 'cancel'},
               {
-                text: 'Вийти',
+                text: exitText,
+                onPress: () => {
+                  setTimeout(() => {
+                    navigation.navigate(goToPreviousComponent, {
+                      titleName,
+                      selectedVerbs,
+                    });
+                  }, 1000);
+                },
+                style: 'destructive',
+              },
+            ]);
+          }}>
+          <AntDesign
+            name="arrowleft"
+            size={30}
+            color={isDarkTheme ? 'white' : '#67104c'}
+            style={{marginLeft: 5}}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert(warning, progressWillBeLost, [
+              {text: stayText, style: 'cancel'},
+              {
+                text: exitText,
                 onPress: () => {
                   setTimeout(() => {
                     navigation.navigate('Home');
@@ -141,16 +138,16 @@ export const createHeaderTrainingLevelComponent = (
                 },
                 style: 'destructive',
               },
-            ],
-          );
-        }}>
-        <AntDesign
-          name="home"
-          size={30}
-          color={isDarkTheme ? 'white' : '#67104c'}
-          style={{marginRight: 5}}
-        />
-      </TouchableOpacity>
-    </View>
-  );
+            ]);
+          }}>
+          <AntDesign
+            name="home"
+            size={30}
+            color={isDarkTheme ? 'white' : '#67104c'}
+            style={{marginRight: 5}}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 };

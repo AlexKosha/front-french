@@ -80,5 +80,7 @@ export const useTranslationHelper = () => {
     trainVerbCompleted: getTranslation('alert', 'trainVerbCompleted'),
     warning: getTranslation('btn', 'warning'),
     progressWillBeLost: getTranslation('alert', 'progressWillBeLost'),
+    stayText: getTranslation('alert', 'stayText'),
+    exitText: getTranslation('alert', 'exitText'),
   };
 };

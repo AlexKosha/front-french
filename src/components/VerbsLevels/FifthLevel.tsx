@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useRef} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -35,8 +35,9 @@ export const FifthLevel: React.FC<Props> = ({
   const {trainVerbCompleted} = useTranslationHelper();
   const isDarkTheme = useSelector(selectTheme);
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
+  const isFirstRender = useRef(true);
+
   const {speak} = useTTS();
-  const [wasFirstPlayed, setWasFirstPlayed] = useState(false);
 
   useEffect(() => {
     const all: Question[] = selectedVerbs.flatMap(verb =>
@@ -68,7 +69,11 @@ export const FifthLevel: React.FC<Props> = ({
       const options = [...uniqueWrong, correct].sort(() => 0.5 - Math.random());
       setShuffledOptions(options);
 
-      speak(correct);
+      if (isFirstRender.current) {
+        isFirstRender.current = false; // наступні рендери вже не перші
+      } else {
+        speak(correct);
+      }
     }
   }, [questions, currentIndex, speak]);
 
@@ -97,7 +102,14 @@ export const FifthLevel: React.FC<Props> = ({
         }
       }, 1000);
     },
-    [currentIndex, questions, navigation, selectedVerbs, titleName],
+    [
+      questions,
+      currentIndex,
+      trainVerbCompleted,
+      navigation,
+      titleName,
+      selectedVerbs,
+    ],
   );
 
   if (!questions.length) {

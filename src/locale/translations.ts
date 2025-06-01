@@ -60,6 +60,8 @@ export interface Translations {
     registerError: TranslationContent;
     trainVerbCompleted: TranslationContent;
     progressWillBeLost: TranslationContent;
+    stayText: TranslationContent;
+    exitText: TranslationContent;
   };
   validation: {
     name: TranslationContent;
@@ -165,6 +167,8 @@ export const translations: Translations = {
   alert: {
     welcomeAlert: {en: 'Welcome Alert', uk: 'Привітання'},
     close: {en: 'Close', uk: 'Закрити'},
+    stayText: {en: 'Stay', uk: 'Залишитись'},
+    exitText: {en: 'Exit', uk: 'Вийти'},
     codeOnMail: {
       en: 'Code sent to your email',
       uk: 'Код надіслано на вашу пошту',
