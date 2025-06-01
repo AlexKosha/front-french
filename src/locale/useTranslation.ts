@@ -77,5 +77,8 @@ export const useTranslationHelper = () => {
     verify: getTranslation('btn', 'verify'),
     chooseTense: getTranslation('verbsSection', 'chooseTense'),
     wantTrainVerbs: getTranslation('verbsSection', 'wantTrainVerbs'),
+    trainVerbCompleted: getTranslation('alert', 'trainVerbCompleted'),
+    warning: getTranslation('btn', 'warning'),
+    progressWillBeLost: getTranslation('alert', 'progressWillBeLost'),
   };
 };

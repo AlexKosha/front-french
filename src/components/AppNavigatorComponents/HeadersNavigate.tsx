@@ -6,10 +6,14 @@ import {useSelector} from 'react-redux';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {NavigationProps} from '../../types/navigationTypes';
 import {selectTheme} from '../../store/auth/selector';
+import {useTranslationHelper} from '../../locale/useTranslation';
+import {useLocalization} from '../../locale/LocalizationContext';
 
 export const HeaderHomeToProfile = () => {
   const navigation = useNavigation<NavigationProps<'AppNavigator'>>();
   const isDarkTheme = useSelector(selectTheme);
+  // const {locale} = useLocalization();
+  const {warning, progressWillBeLost} = useTranslationHelper();
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -97,25 +101,21 @@ export const createHeaderTrainingLevelComponent = (
       }}>
       <TouchableOpacity
         onPress={() => {
-          Alert.alert(
-            'Попередження',
-            'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
-            [
-              {text: 'Залишитись', style: 'cancel'},
-              {
-                text: 'Вийти',
-                onPress: () => {
-                  setTimeout(() => {
-                    navigation.navigate(goToPreviousComponent, {
-                      titleName,
-                      selectedVerbs,
-                    });
-                  }, 1000);
-                },
-                style: 'destructive',
+          Alert.alert(warning, progressWillBeLost, [
+            {text: 'Залишитись', style: 'cancel'},
+            {
+              text: 'Вийти',
+              onPress: () => {
+                setTimeout(() => {
+                  navigation.navigate(goToPreviousComponent, {
+                    titleName,
+                    selectedVerbs,
+                  });
+                }, 1000);
               },
-            ],
-          );
+              style: 'destructive',
+            },
+          ]);
         }}>
         <AntDesign
           name="arrowleft"

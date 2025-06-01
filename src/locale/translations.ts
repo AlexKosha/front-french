@@ -58,6 +58,8 @@ export interface Translations {
     dataChanged: TranslationContent;
     loginError: TranslationContent;
     registerError: TranslationContent;
+    trainVerbCompleted: TranslationContent;
+    progressWillBeLost: TranslationContent;
   };
   validation: {
     name: TranslationContent;
@@ -88,6 +90,7 @@ export interface Translations {
     goBack: TranslationContent;
     next: TranslationContent;
     verify: TranslationContent;
+    warning: TranslationContent;
   };
   verbsSection: {
     chooseTense: TranslationContent;
@@ -179,6 +182,14 @@ export const translations: Translations = {
       en: 'Registration failed, please try again',
       uk: 'Не вдалося зареєструватися, спробуйте ще раз',
     },
+    trainVerbCompleted: {
+      en: 'Congratulations! You’ve completed the level 🎉',
+      uk: 'Вітаємо! Ти виконав(-ла) рівень 🎉',
+    },
+    progressWillBeLost: {
+      en: 'If you exit now, your progress will be lost. Are you sure you want to leave?',
+      uk: 'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
+    },
   },
   validation: {
     name: {
@@ -224,6 +235,7 @@ export const translations: Translations = {
     goBack: {en: 'Go Back', uk: 'Повернутися'},
     next: {en: 'Next', uk: 'Далі'},
     verify: {en: 'Verify', uk: 'Перевірити'},
+    warning: {en: ' Warning', uk: 'Попередження'},
   },
   verbsSection: {
     chooseTense: {

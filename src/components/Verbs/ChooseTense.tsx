@@ -7,6 +7,7 @@ import {selectTheme} from '../../store/auth/selector';
 import {defaultStyles} from '../defaultStyles';
 import {selectVerbs} from '../../store/verb/selectors';
 import {useTranslationHelper} from '../../locale/useTranslation';
+import {useLocalization} from '../../locale/LocalizationContext';
 
 export const ChooseTense = (): JSX.Element => {
   const route = useRoute<RouteProps<'ChooseTense'>>();
@@ -14,6 +15,7 @@ export const ChooseTense = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
   const verbsData = useSelector(selectVerbs);
   const {chooseTense} = useTranslationHelper();
+  const {locale} = useLocalization();
 
   const tenses = verbsData[0].tenses;
 
@@ -60,7 +62,8 @@ export const ChooseTense = (): JSX.Element => {
                   color: isDarkTheme ? '#67104c' : 'white',
                 },
               ]}>
-              {count.name}
+              {count.name} /{' '}
+              {locale === 'uk' ? count.translationUA : count.translationEN}
             </Text>
           </TouchableOpacity>
         ))}

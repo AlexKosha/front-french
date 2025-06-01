@@ -2,7 +2,13 @@ import React from 'react';
 import {useRoute} from '@react-navigation/native';
 import {Text} from 'react-native';
 import {RouteProps} from '../../types';
-import {FirstLevel, SecondLevel, ThirdLevel, FourthLevel} from '../VerbsLevels';
+import {
+  FirstLevel,
+  SecondLevel,
+  ThirdLevel,
+  FourthLevel,
+  FifthLevel,
+} from '../VerbsLevels';
 
 export const TrainingLevelVerbs = () => {
   const route = useRoute<RouteProps<'TrainingLevelVerbs'>>();
@@ -42,14 +48,14 @@ export const TrainingLevelVerbs = () => {
             selectedVerbs={selectedVerbs}
           />
         );
-      //   case 5:
-      //     return (
-      //       <VerbLevel5
-      //         level={level}
-      //         titleName={titleName}
-      //         selectedVerbs={selectedVerbs}
-      //       />
-      //     );
+      case 5:
+        return (
+          <FifthLevel
+            level={level}
+            titleName={titleName}
+            selectedVerbs={selectedVerbs}
+          />
+        );
       //   case 6:
       //     return (
       //       <VerbLevel6
