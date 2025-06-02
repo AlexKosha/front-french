@@ -46,47 +46,6 @@ export const SeventhLevel: React.FC<LevelProps> = ({
   // Використовуємо useRef для збереження інстансу AudioRecorderPlayer
   const audioRecorderPlayer = useRef(new AudioRecorderPlayer());
 
-  // useEffect(() => {
-  //   if (wordStats.length > 0 && iteration < wordStats.length) {
-  //     const currentWord = wordStats[iteration];
-
-  //     if (currentWord.word.world !== word) {
-  //       setWord(currentWord.word.world);
-  //       setImageUrl(currentWord.word.image);
-  //     }
-  //   }
-  // }, [iteration, wordStats]);
-
-  // useEffect(() => {
-  //   const initializeWordStats = () => {
-  //     const unfinishedWords = progress.filter(
-  //       word => !word.completed.includes(level),
-  //     );
-  //     if (unfinishedWords.length === 0) return;
-
-  //     const selectedWords = unfinishedWords.slice(0, 5);
-  //     const repeatedWords = [];
-  //     for (let i = 0; i < 3; i++) {
-  //       repeatedWords.push(...selectedWords);
-  //     }
-  //     setWordStats(repeatedWords.map(word => ({word, correctCount: 0})));
-  //   };
-
-  //   initializeWordStats();
-  // }, [level, progress]);
-
-  // Почати запис аудіо
-  // useEffect(() => {
-  //   audioRecorderPlayer.addRecordBackListener(() => {});
-
-  //   // Запит дозволу на мікрофон
-  //   requestMicrophonePermission();
-
-  //   return () => {
-  //     audioRecorderPlayer.removeRecordBackListener();
-  //   };
-  // }, []);
-
   useEffect(() => {
     initializeWordStats(progress, level, setWordStats);
   }, [level, progress]);
