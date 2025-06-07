@@ -8,7 +8,8 @@ export const markCurrentWordsAsCompleted = async (
   titleName: string,
 ): Promise<void> => {
   try {
-    const updatedProgress = progress.map(word => {
+    // Оновлюємо слова в темі
+    const updatedWords = progress.map(word => {
       if (wordStats.some(stat => stat.word._id === word._id)) {
         return {
           ...word,
@@ -20,10 +21,21 @@ export const markCurrentWordsAsCompleted = async (
       return word;
     });
 
-    await AsyncStorage.setItem(
-      `progress_${titleName}`,
-      JSON.stringify(updatedProgress),
-    );
+    // Отримуємо поточні дані
+    const jsonValue = await AsyncStorage.getItem('progress_all');
+    const allData = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+    // Ініціалізуємо прогрес
+    allData.progress = allData.progress || {};
+
+    // Оновлюємо тему з датою
+    allData.progress[`progress_${titleName}`] = {
+      updatedAt: Date.now(),
+      words: updatedWords,
+    };
+
+    // Зберігаємо назад у сховище
+    await AsyncStorage.setItem('progress_all', JSON.stringify(allData));
   } catch (error) {
     console.error('Помилка оновлення прогресу:', error);
   }

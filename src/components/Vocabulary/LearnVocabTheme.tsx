@@ -40,11 +40,15 @@ export const LearnVocabTheme = () => {
     useCallback(() => {
       const fetchProgress = async () => {
         try {
-          const jsonValue = await AsyncStorage.getItem(`progress_${titleName}`);
-          const storegeProgress =
-            jsonValue != null ? JSON.parse(jsonValue) : [];
-          if (Array.isArray(storegeProgress)) {
-            setProgress(storegeProgress.length); // Записуємо довжину масиву прогресу
+          const jsonValue = await AsyncStorage.getItem('progress_all');
+          const allProgress = jsonValue != null ? JSON.parse(jsonValue) : {};
+          const topicProgress =
+            allProgress?.progress?.[`progress_${titleName}`];
+
+          if (topicProgress && Array.isArray(topicProgress.words)) {
+            setProgress(topicProgress.words.length);
+          } else {
+            setProgress(0);
           }
         } catch (error) {
           console.error('Error fetching progress from storage:', error);
@@ -66,7 +70,14 @@ export const LearnVocabTheme = () => {
 
   const deleteStore = async () => {
     try {
-      await AsyncStorage.removeItem(`progress_${titleName}`);
+      const jsonValue = await AsyncStorage.getItem('progress_all');
+      const allProgress = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+      if (allProgress?.progress?.[`progress_${titleName}`]) {
+        delete allProgress.progress[`progress_${titleName}`];
+      }
+
+      await AsyncStorage.setItem('progress_all', JSON.stringify(allProgress));
       setProgress(0);
       console.log(`Progress for topic ${titleName} has been deleted.`);
     } catch (error) {

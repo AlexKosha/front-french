@@ -4,7 +4,7 @@ import * as HelpersReducer from './helpersAuthReducer';
 import {AuthState} from '../../types';
 
 const initialState: AuthState = {
-  user: {name: null, email: null, birthDate: null, croissants: 0},
+  user: {name: null, email: null, birthDate: null, croissants: 0, id: null},
   token: null,
   theme: false,
   isRefreshing: false,

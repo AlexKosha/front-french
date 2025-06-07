@@ -3,6 +3,7 @@ export interface User {
   email: string | null;
   birthDate: string | null;
   croissants: number;
+  id: string | null;
   theme?: boolean;
   lng?: string;
 }

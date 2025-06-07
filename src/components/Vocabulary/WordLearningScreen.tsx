@@ -1,5 +1,5 @@
 import {useRoute, useNavigation} from '@react-navigation/native';
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -14,12 +14,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useSelector} from 'react-redux';
 
 import {selectThemeWordId, selectVocab} from '../../store/vocab/selectors';
-import {selectTheme} from '../../store/auth/selector';
+import {selectTheme, selectUserId} from '../../store/auth/selector';
 import {NavigationProps, RouteProps} from '../../types/navigationTypes';
 import {useTranslationHelper} from '../../locale/useTranslation';
 import {useLocalization} from '../../locale/LocalizationContext';
 import {defaultStyles} from '../defaultStyles';
-import {WordItem} from '../../types';
+import {WordItem, WordItemProgress} from '../../types';
 import {useTTS} from '../../helpers';
 
 export const WordLearningScreen = () => {
@@ -43,6 +43,7 @@ export const WordLearningScreen = () => {
   } = useTranslationHelper();
 
   const vocabData = useSelector(selectVocab);
+  const userId = useSelector(selectUserId);
   const route = useRoute<RouteProps<'WordLearningScreen'>>();
   const {count, titleName, wordItem} = route.params;
   const [savedProgress, setSavedProgress] = useState<
@@ -65,16 +66,35 @@ export const WordLearningScreen = () => {
       speak(selectedWords[currentIndex].world);
   };
 
-  const filteredWords = vocabData.filter(word => word.themeId === id);
+  const saveProgress = async (words: WordItemProgress[]) => {
+    try {
+      const updatedProgress = words.map(w => ({
+        ...w,
+        completed: w.completed || [],
+      }));
 
-  const saveProgress = async (word: any) => {
-    const updatedProgress = word.map((w: any) => ({
-      ...w,
-      completed: w.completed || [],
-    }));
-    const mergedProgress = [...savedProgress, ...updatedProgress];
-    const progressForStorege = JSON.stringify(mergedProgress);
-    await AsyncStorage.setItem(`progress_${titleName}`, progressForStorege);
+      const jsonValue = await AsyncStorage.getItem('progress_all');
+      const allProgress = jsonValue ? JSON.parse(jsonValue) : {};
+
+      const themeKey = `progress_${titleName}`;
+
+      allProgress.progress = allProgress.progress || {};
+
+      const merged = [...savedProgress, ...updatedProgress];
+
+      allProgress.progress[themeKey] = {
+        updatedAt: Date.now(),
+        words: merged,
+      };
+
+      if (!allProgress.userId) {
+        allProgress.userId = userId;
+      }
+
+      await AsyncStorage.setItem('progress_all', JSON.stringify(allProgress));
+    } catch (error) {
+      console.error('Error saving progress:', error);
+    }
   };
 
   const checkCompletion = (totalShown: number) => {
@@ -83,38 +103,44 @@ export const WordLearningScreen = () => {
     }
   };
 
+  const filteredWords = useMemo(
+    () => vocabData.filter(word => word.themeId === id),
+    [vocabData, id],
+  );
+
   useEffect(() => {
     const loadProgress = async () => {
       try {
-        const jsonValue = await AsyncStorage.getItem(`progress_${titleName}`);
-        const progress = jsonValue != null ? JSON.parse(jsonValue) : [];
-        if (Array.isArray(progress)) {
-          const updatedProgress = progress.map(word => ({
-            ...word,
-            completed: word.completed || [],
-          }));
-          setSavedProgress(updatedProgress);
-          setTotalShown(updatedProgress.length);
-        }
+        const jsonValue = await AsyncStorage.getItem('progress_all');
+        const allProgress = jsonValue ? JSON.parse(jsonValue) : {};
+
+        const themeKey = `progress_${titleName}`;
+        const progressData = allProgress?.progress?.[themeKey];
+
+        const progress = Array.isArray(progressData?.words)
+          ? progressData.words
+          : [];
+
+        const updatedProgress = progress.map((word: WordItemProgress) => ({
+          ...word,
+          completed: word.completed || [],
+        }));
+
+        setSavedProgress(updatedProgress);
+        setTotalShown(updatedProgress.length);
         setSelectedWords(
-          filteredWords.slice(progress.length, progress.length + count),
+          filteredWords.slice(
+            updatedProgress.length,
+            updatedProgress.length + count,
+          ),
         );
       } catch (error) {
         console.error('Error loading progress:', error);
       }
     };
 
-    if (!isSingleWordMode) {
-      loadProgress();
-    }
-  }, [
-    totalShown,
-    filteredWords.length,
-    isSingleWordMode,
-    titleName,
-    filteredWords,
-    count,
-  ]);
+    if (!isSingleWordMode) loadProgress();
+  }, [isSingleWordMode, titleName, count, filteredWords]);
 
   const handleNextWord = () => {
     if (currentIndex < selectedWords.length - 1) {

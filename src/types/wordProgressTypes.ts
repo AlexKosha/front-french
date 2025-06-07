@@ -5,6 +5,7 @@ export interface WordProgress {
   translationUK: string;
   image: string;
   audio: string;
+  themeId: string;
   completed: number[];
 }
 
@@ -21,6 +22,16 @@ export interface WordItem {
   translationUK: string;
   image: string;
   audio: string;
+}
+
+export interface WordItemProgress {
+  world: string;
+  _id: string;
+  translationEN: string;
+  translationUK: string;
+  image: string;
+  audio: string;
+  completed: [number];
 }
 
 export interface LevelComponentsProps {

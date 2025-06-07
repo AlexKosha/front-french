@@ -27,18 +27,23 @@ export const TrainVocabulary = () => {
     useCallback(() => {
       const updateProgress = async () => {
         try {
-          const jsonValue = await AsyncStorage.getItem(`progress_${titleName}`);
-          const storageProgress =
-            jsonValue != null ? JSON.parse(jsonValue) : [];
-          setProgress(storageProgress);
+          const jsonValue = await AsyncStorage.getItem('progress_all');
+          const allProgress = jsonValue != null ? JSON.parse(jsonValue) : {};
+          const topicData = allProgress?.progress?.[`progress_${titleName}`];
 
-          // Перевірка завершення кожного рівня
+          const storedWords = Array.isArray(topicData?.words)
+            ? topicData.words
+            : [];
+
+          setProgress(storedWords);
+
+          // Визначаємо завершені рівні
           const levels = [];
           for (let level = 1; level <= 7; level++) {
-            const isLevelCompleted = storageProgress.every(
-              (word: any) => word.completed && word.completed.includes(level),
+            const isLevelCompleted = storedWords.every((word: any) =>
+              word.completed?.includes(level),
             );
-            if (isLevelCompleted) levels.push(level); // Додаємо завершений рівень
+            if (isLevelCompleted) levels.push(level);
           }
           setCompletedLevels(levels);
         } catch (error) {
@@ -54,10 +59,18 @@ export const TrainVocabulary = () => {
   useEffect(() => {
     const saveProgressToStorage = async () => {
       try {
-        await AsyncStorage.setItem(
-          `progress_${titleName}`,
-          JSON.stringify(progress),
-        );
+        const jsonValue = await AsyncStorage.getItem('progress_all');
+        const allProgress = jsonValue != null ? JSON.parse(jsonValue) : {};
+
+        // Ініціалізуємо прогрес-об'єкт, якщо потрібно
+        allProgress.progress = allProgress.progress || {};
+
+        allProgress.progress[`progress_${titleName}`] = {
+          updatedAt: Date.now(),
+          words: progress,
+        };
+
+        await AsyncStorage.setItem('progress_all', JSON.stringify(allProgress));
       } catch (error) {
         console.error('Error saving progress:', error);
       }

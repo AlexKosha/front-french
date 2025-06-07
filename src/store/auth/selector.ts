@@ -3,6 +3,8 @@ import {RootState} from '../store'; // Імпортуємо RootState з ваш�
 // Селектор для отримання користувача
 export const selectUser = (state: RootState) => state.auth.user;
 
+export const selectUserId = (state: RootState) => state.auth.user.id;
+
 // Селектор для отримання токену
 export const selectToken = (state: RootState) => state.auth.token;
 
