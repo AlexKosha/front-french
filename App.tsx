@@ -6,6 +6,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {persistor, store} from './src/store/store';
 import {AppNavigator} from './src/components/AppNavigator';
 import {LocalizationProvider} from './src/locale/LocalizationContext';
+import {AutoProgressUpdater} from './src/helpers/updateProgressInterval';
 
 export default function App(): JSX.Element {
   return (
@@ -20,6 +21,7 @@ export default function App(): JSX.Element {
                 </View>
               }>
               <AppNavigator />
+              <AutoProgressUpdater />
             </Suspense>
           </NavigationContainer>
         </LocalizationProvider>

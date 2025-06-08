@@ -71,6 +71,7 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
           wordStats,
           level,
           titleName,
+          dispatch,
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');

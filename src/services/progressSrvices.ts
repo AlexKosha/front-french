@@ -11,6 +11,11 @@ export const fetchProgress = async () => {
 // Додати або оновити прогрес (перезапис усього об'єкта)
 export const addProgress = async (progressData: ProgressPayload) => {
   const {data} = await instance.post('/progress', progressData);
-  console.log(data.progress);
+  return data.progress;
+};
+
+export const updateProgressTheme = async (progressData: ProgressPayload) => {
+  const {data} = await instance.patch('/progress', progressData);
+  console.log(data);
   return data.progress;
 };

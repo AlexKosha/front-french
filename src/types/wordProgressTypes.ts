@@ -4,9 +4,13 @@ export interface WordProgress {
   translationEN: string;
   translationUK: string;
   image: string;
-  audio: string;
   themeId: string;
   completed: number[];
+}
+
+export interface ThemeSaveProgress {
+  updatedAt: number;
+  words: WordProgress[];
 }
 
 export interface LevelProps {

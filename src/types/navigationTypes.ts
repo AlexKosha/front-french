@@ -1,6 +1,5 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {Verb, VerbsInChoosenTense} from '.';
 
 // Визначення всіх маршрутів додатку та їх параметрів
 export type RootStackParamList = {

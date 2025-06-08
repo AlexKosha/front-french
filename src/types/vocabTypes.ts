@@ -4,7 +4,6 @@ export interface Vocab {
   translationUK: string;
   image: string;
   themeId: string;
-  audio: string;
 }
 
 export interface VocabState {

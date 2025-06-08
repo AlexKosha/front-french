@@ -158,6 +158,7 @@ export const FifthLevel: React.FC<LevelProps> = ({
           wordStats,
           level,
           titleName,
+          dispatch,
         );
         await dispatch(updaterProgressUserThunk());
         Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');

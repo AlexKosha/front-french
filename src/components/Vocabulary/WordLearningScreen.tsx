@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {selectThemeWordId, selectVocab} from '../../store/vocab/selectors';
 import {selectTheme, selectUserId} from '../../store/auth/selector';
@@ -19,8 +19,10 @@ import {NavigationProps, RouteProps} from '../../types/navigationTypes';
 import {useTranslationHelper} from '../../locale/useTranslation';
 import {useLocalization} from '../../locale/LocalizationContext';
 import {defaultStyles} from '../defaultStyles';
-import {WordItem, WordItemProgress} from '../../types';
+import {WordItemProgress, WordProgress} from '../../types';
 import {useTTS} from '../../helpers';
+import {updateLocallyProgress} from '../../store/progress/progressThunk';
+import {AppDispatch} from '../../store/store';
 
 export const WordLearningScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -45,13 +47,9 @@ export const WordLearningScreen = () => {
   const vocabData = useSelector(selectVocab);
   const userId = useSelector(selectUserId);
   const route = useRoute<RouteProps<'WordLearningScreen'>>();
+  const dispatch = useDispatch<AppDispatch>();
   const {count, titleName, wordItem} = route.params;
-  const [savedProgress, setSavedProgress] = useState<
-    {
-      word: WordItem;
-      completed: any[];
-    }[]
-  >([]);
+  const [savedProgress, setSavedProgress] = useState<WordProgress[]>([]);
 
   const isSingleWordMode = Boolean(wordItem);
 
@@ -66,10 +64,15 @@ export const WordLearningScreen = () => {
       speak(selectedWords[currentIndex].world);
   };
 
-  const saveProgress = async (words: WordItemProgress[]) => {
+  const saveProgress = async (words: WordProgress[]) => {
     try {
-      const updatedProgress = words.map(w => ({
-        ...w,
+      const updatedProgress: WordProgress[] = words.map(w => ({
+        _id: w._id,
+        world: w.world,
+        translationEN: w.translationEN,
+        translationUK: w.translationUK,
+        image: w.image,
+        themeId: w.themeId,
         completed: w.completed || [],
       }));
 
@@ -82,16 +85,20 @@ export const WordLearningScreen = () => {
 
       const merged = [...savedProgress, ...updatedProgress];
 
-      allProgress.progress[themeKey] = {
+      const updatedTheme = {
         updatedAt: Date.now(),
         words: merged,
       };
+
+      allProgress.progress[themeKey] = updatedTheme;
 
       if (!allProgress.userId) {
         allProgress.userId = userId;
       }
 
       await AsyncStorage.setItem('progress_all', JSON.stringify(allProgress));
+
+      dispatch(updateLocallyProgress({[themeKey]: updatedTheme}));
     } catch (error) {
       console.error('Error saving progress:', error);
     }

@@ -7,12 +7,14 @@ export interface ProgressState {
   data: ProgressPayload | null;
   isLoading: boolean;
   error: string | null;
+  updatedProgress: ProgressPayload | null;
 }
 
 const initialState: ProgressState = {
   data: null,
   isLoading: false,
   error: null,
+  updatedProgress: null,
 };
 
 export const progressSlice = createSlice({
@@ -26,8 +28,16 @@ export const progressSlice = createSlice({
         HelpersReducer.handleFulfilledSaveProgress,
       )
       .addCase(
-        progressThunk.addThunk.fulfilled,
+        progressThunk.addThunkProgress.fulfilled,
         HelpersReducer.handleFulfilledSaveProgress,
+      )
+      .addCase(
+        progressThunk.updateThunkProgress.fulfilled,
+        HelpersReducer.handleFulfilledSaveProgress,
+      )
+      .addCase(
+        progressThunk.updateLocallyProgress.fulfilled, // <- твій новий thunk
+        HelpersReducer.handleOnlyUpdatedProgress,
       )
       .addMatcher(
         action => action.type.endsWith('pending'),

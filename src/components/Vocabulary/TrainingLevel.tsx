@@ -11,10 +11,15 @@ import {
   SixthLevel,
   ThirdLevel,
 } from '../VocabLevels';
+import {useSelector} from 'react-redux';
+import {selectUpdatedProgressData} from '../../store/progress/selector';
 
 export const TrainingLevel = () => {
   const route = useRoute<RouteProps<'TrainingLevel'>>();
   const {level, titleName, progress} = route.params;
+  const updateProgress = useSelector(selectUpdatedProgressData);
+
+  console.log(updateProgress);
 
   const renderLevelComponent = () => {
     switch (level) {
