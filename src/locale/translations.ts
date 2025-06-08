@@ -62,6 +62,9 @@ export interface Translations {
     progressWillBeLost: TranslationContent;
     stayText: TranslationContent;
     exitText: TranslationContent;
+    emptyInput: TranslationContent;
+    incorrect: TranslationContent;
+    tryAgain: TranslationContent;
   };
   validation: {
     name: TranslationContent;
@@ -97,6 +100,9 @@ export interface Translations {
   verbsSection: {
     chooseTense: TranslationContent;
     wantTrainVerbs: TranslationContent;
+  };
+  inputs: {
+    typeHeard: TranslationContent;
   };
 }
 
@@ -194,6 +200,18 @@ export const translations: Translations = {
       en: 'If you exit now, your progress will be lost. Are you sure you want to leave?',
       uk: 'Якщо ви вийдете, ваш прогрес буде втрачено. Ви впевнені, що хочете вийти?',
     },
+    emptyInput: {
+      en: 'The input field cannot be empty',
+      uk: 'Поле введення не може бути порожнім',
+    },
+    incorrect: {
+      en: 'Incorrect',
+      uk: 'Неправильно',
+    },
+    tryAgain: {
+      en: 'Try again, please',
+      uk: 'Спробуйте ще раз',
+    },
   },
   validation: {
     name: {
@@ -247,6 +265,9 @@ export const translations: Translations = {
       uk: 'Обери час для вивчення або тренування',
     },
     wantTrainVerbs: {en: 'Train Verbs', uk: 'Тренувати дієслова'},
+  },
+  inputs: {
+    typeHeard: {en: 'Type what you heard', uk: 'Введіть те, що ви почули'},
   },
 };
 

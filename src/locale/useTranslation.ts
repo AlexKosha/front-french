@@ -82,5 +82,9 @@ export const useTranslationHelper = () => {
     progressWillBeLost: getTranslation('alert', 'progressWillBeLost'),
     stayText: getTranslation('alert', 'stayText'),
     exitText: getTranslation('alert', 'exitText'),
+    emptyInput: getTranslation('alert', 'emptyInput'),
+    incorrect: getTranslation('alert', 'incorrect'),
+    tryAgain: getTranslation('alert', 'tryAgain'),
+    typeHeard: getTranslation('inputs', ' typeHeard'),
   };
 };

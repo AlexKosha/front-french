@@ -9,6 +9,7 @@ import {
   FourthLevel,
   FifthLevel,
   SeventhLevel,
+  SixthLevel,
 } from '../VerbsLevels';
 
 export const TrainingLevelVerbs = () => {
@@ -57,14 +58,14 @@ export const TrainingLevelVerbs = () => {
             selectedVerbs={selectedVerbs}
           />
         );
-      //   case 6:
-      //     return (
-      //       <VerbLevel6
-      //         level={level}
-      //         titleName={titleName}
-      //         selectedVerbs={selectedVerbs}
-      //       />
-      //     );
+      case 6:
+        return (
+          <SixthLevel
+            level={level}
+            titleName={titleName}
+            selectedVerbs={selectedVerbs}
+          />
+        );
       case 7:
         return (
           <SeventhLevel
