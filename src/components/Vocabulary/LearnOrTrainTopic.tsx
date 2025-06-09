@@ -8,7 +8,6 @@ import {useTranslationHelper} from '../../locale/useTranslation';
 import {useSelector} from 'react-redux';
 import {Logo} from '../User/Logo';
 import {defaultStyles} from '../defaultStyles';
-import {useSyncProgress} from '../../helpers/hookSyncProgress';
 
 export const LearnOrTrainTopic = (): JSX.Element => {
   const isDarkTheme = useSelector(selectTheme);
@@ -17,8 +16,6 @@ export const LearnOrTrainTopic = (): JSX.Element => {
   const {titleName} = route.params;
 
   const {learn, train} = useTranslationHelper();
-
-  useSyncProgress();
 
   return (
     <SafeAreaView

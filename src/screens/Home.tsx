@@ -8,11 +8,14 @@ import {NavigationProps} from '../types/navigationTypes';
 import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from '../components/User/Logo';
 import {defaultStyles} from '../components/defaultStyles';
+import {useSyncProgress} from '../helpers/hookSyncProgress';
 
 export const Home = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
   const isDarkTheme = useSelector(selectTheme);
   const {welcome, vocabOrVerbs} = useTranslationHelper();
+
+  useSyncProgress();
 
   return (
     <SafeAreaView
