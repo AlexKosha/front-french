@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView, Text, View, StyleSheet, Pressable} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -9,6 +9,7 @@ import {useTranslationHelper} from '../locale/useTranslation';
 import {Logo} from '../components/User/Logo';
 import {defaultStyles} from '../components/defaultStyles';
 import {useSyncProgress} from '../helpers/hookSyncProgress';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Home = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
@@ -16,6 +17,19 @@ export const Home = (): JSX.Element => {
   const {welcome, vocabOrVerbs} = useTranslationHelper();
 
   useSyncProgress();
+
+  // useEffect(() => {
+  //   const deleteStore = async () => {
+  //     await AsyncStorage.clear();
+
+  //     const dataStore = await AsyncStorage.getItem('progress_all');
+  //     const parseData = dataStore != null ? JSON.parse(dataStore) : {};
+
+  //     console.log(parseData);
+  //   };
+
+  //   deleteStore(); // 🟥 закоментуй або видали, щоб не стерти дані випадково
+  // }, []);
 
   return (
     <SafeAreaView

@@ -38,6 +38,13 @@ export const handleOnlyUpdatedProgress = (
   state.error = null;
 };
 
+export const handleLogOutProgress = (state: ProgressState) => {
+  state.isLoading = false;
+  state.error = null;
+  state.data = null;
+  state.updatedProgress = null;
+};
+
 export const handleRejected = (
   state: ProgressState,
   {payload}: PayloadAction<string>,

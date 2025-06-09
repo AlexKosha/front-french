@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import {ProgressPayload} from '../../types';
 import * as progressThunk from './progressThunk';
 import * as HelpersReducer from './helpersProgressReducer';
+import {logoutThunk} from '../auth/authThunks';
 
 export interface ProgressState {
   data: ProgressPayload | null;
@@ -39,6 +40,7 @@ export const progressSlice = createSlice({
         progressThunk.updateLocallyProgress.fulfilled, // <- твій новий thunk
         HelpersReducer.handleOnlyUpdatedProgress,
       )
+      .addCase(logoutThunk.fulfilled, HelpersReducer.handleLogOutProgress)
       .addMatcher(
         action => action.type.endsWith('pending'),
         HelpersReducer.handlePending,

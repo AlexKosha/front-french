@@ -58,7 +58,7 @@ export const useSyncProgress = () => {
         }
 
         // 🔁 Якщо обидва джерела є, але не збігаються — вибираємо краще
-        else if (!isEqual(localProgress, backendProgress)) {
+        else if (!isEqual(localProgress, backendProgress) && isSameUser) {
           const backendHasMore =
             Object.keys(backendProgress).length >
             Object.keys(localProgress).length;
@@ -70,14 +70,18 @@ export const useSyncProgress = () => {
           const backendCompleted = completedCount(backendProgress);
           const localCompleted = completedCount(localProgress);
 
-          if (backendHasMore || backendCompleted > localCompleted) {
+          if (
+            (backendHasMore || backendCompleted > localCompleted) &&
+            isSameUser
+          ) {
             // 🔼 Оновити локальне сховище з бекенду
             await AsyncStorage.setItem(
               'progress_all',
               JSON.stringify({userId, progress: backendProgress}),
             );
-          } else {
+          } else if (isSameUser) {
             // 🔼 Оновити бекенд локальними
+
             await dispatch(addThunkProgress({userId, progress: localProgress}));
           }
         }

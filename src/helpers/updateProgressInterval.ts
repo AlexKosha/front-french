@@ -38,7 +38,7 @@ export const AutoProgressUpdater = () => {
         console.log('відправило');
         dispatch(updateThunkProgress(updatedProgressWithId));
       }
-    }, 15000); // кожні 15 хв
+    }, 15 * 60 * 1000); // кожні 15 хв
 
     return () => clearInterval(interval);
   }, [dispatch]); // інтервал створюється один раз
