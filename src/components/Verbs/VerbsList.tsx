@@ -203,10 +203,11 @@ export const VerbsList = (): JSX.Element => {
           <TouchableOpacity
             onPress={startTraining}
             style={{
-              backgroundColor: isDarkTheme ? 'white' : '#67104c',
+              // backgroundColor: isDarkTheme ? 'white' : '#67104c',
+              backgroundColor: '#ffa',
               padding: 16,
               alignItems: 'center',
-              borderRadius: 10,
+              borderRadius: 100,
               shadowColor: '#000',
               shadowOffset: {width: 0, height: 2},
               shadowOpacity: 0.3,

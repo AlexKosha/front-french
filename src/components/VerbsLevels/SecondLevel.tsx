@@ -11,6 +11,7 @@ import {hookVerbQuiz} from '../../helpers/hookVerbQuiz';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
 import {defaultStyles} from '../defaultStyles';
+import {useTranslationHelper} from '../../locale/useTranslation';
 
 const getDisplaySentence = (pronoun: string, form: string) => {
   return `${pronoun} ___`;
@@ -31,6 +32,8 @@ export const SecondLevel: React.FC<Props> = ({
 
   const [options, setOptions] = useState<string[]>([]);
   const isDarkTheme = useSelector(selectTheme);
+
+  const {trainVerbCompleted} = useTranslationHelper();
 
   // Генеруємо варіанти відповідей
   useEffect(() => {

@@ -19,6 +19,7 @@ import {defaultStyles} from '../defaultStyles';
 import {RenderProgress} from '../Vocabulary/RenderProgress';
 import {NavigationProps} from '../../types/navigationTypes';
 import {Props} from '../../types';
+import {useTranslationHelper} from '../../locale/useTranslation';
 
 type FormItem = {
   id: string;
@@ -43,6 +44,7 @@ export const FourthLevel: React.FC<Props> = ({
   const wordRefs = useRef<Record<string, React.RefObject<any>>>({});
   const wordPositions = useRef<{[key: string]: any}>({});
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  const {trainVerbCompleted, incorrect, tryAgain} = useTranslationHelper();
 
   // Отримуємо всі conjugations по часу
   const allConjugations = useMemo(() => {
@@ -224,14 +226,13 @@ export const FourthLevel: React.FC<Props> = ({
       setTotalCorrectAnswers(updated);
 
       if (updated >= 15) {
-        Alert.alert('Супер!', 'Ви виконали рівень 🎉');
+        Alert.alert('', trainVerbCompleted);
         navigation.navigate('TrainVocabulary', {titleName});
       } else {
-        // Alert.alert('Правильно!', 'Наступне завдання');
         setIteration(prev => prev + 1);
       }
     } else {
-      Alert.alert('Помилка', 'Спробуйте ще раз!');
+      Alert.alert(incorrect, tryAgain);
     }
   };
 

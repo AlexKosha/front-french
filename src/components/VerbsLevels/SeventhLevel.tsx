@@ -23,6 +23,9 @@ import {sendAudio} from '../../services/authService';
 import {defaultStyles} from '../defaultStyles';
 import {Props} from '../../types';
 import {useTTS} from '../../helpers';
+import {useTranslationHelper} from '../../locale/useTranslation';
+import {translations} from '../../locale/translations';
+import {useLocalization} from '../../locale/LocalizationContext';
 
 export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
   const [wordStats, setWordStats] = useState<any[]>([]);
@@ -34,6 +37,16 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [correctAnswer, setCorrectAnswer] = useState('');
   const recordingTimeout = useRef<NodeJS.Timeout | null>(null);
+  const {
+    trainVerbCompleted,
+    incorrect,
+    tryAgain,
+    emptyInput,
+    microphoneFirst,
+    enterWords,
+    microphoneOff,
+  } = useTranslationHelper();
+  const {locale, setLocale} = useLocalization();
 
   const audioRecorderPlayer = useRef(new AudioRecorderPlayer());
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
@@ -83,7 +96,7 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
         );
         if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-          Alert.alert('Доступ до мікрофона відхилено');
+          Alert.alert(microphoneOff);
         }
       } catch (err) {
         console.warn(err);
@@ -143,7 +156,7 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
 
   const checkAnswer = async () => {
     if (!userInput) {
-      Alert.alert('Помилка', 'Поле не може бути порожнім!');
+      Alert.alert('', emptyInput);
       return;
     }
 
@@ -163,7 +176,7 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
       setWrongAttempts(0); // скидаємо після правильної відповіді
 
       if (iteration + 1 >= wordStats.length) {
-        Alert.alert('Вітаю! Ви завершили вправу.');
+        Alert.alert('', trainVerbCompleted);
         navigation.navigate('VerbsLevelsSelect', {titleName, selectedVerbs});
         return;
       }
@@ -173,7 +186,7 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
     } else {
       setWrongAttempts(prev => prev + 1);
       setUserInput('');
-      Alert.alert('Неправильно', 'Спробуйте ще раз.');
+      Alert.alert(incorrect, tryAgain);
     }
   };
 
@@ -197,7 +210,7 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
           />
         </View>
       )}
-      {wrongAttempts >= 1 && (
+      {wrongAttempts >= 3 && (
         <View style={{alignItems: 'center'}}>
           <TouchableOpacity onPress={() => speak(correctAnswer)}>
             <Icon name="sound" size={40} color="red" />
@@ -233,6 +246,18 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
       </TouchableOpacity>
 
       <TextInput
+        // style={{
+        //   fontSize: 24,
+        //   textAlign: 'center',
+        //   borderWidth: 1,
+        //   borderColor: isDarkTheme ? 'white' : '#67104c',
+        //   borderRadius: 10,
+        //   padding: 10,
+        //   marginHorizontal: 20,
+        //   marginVertical: 20,
+        //   color: isDarkTheme ? 'white' : '#67104c',
+        //   backgroundColor: wrongAttempts < 3 ? '#ccc' : 'transparent', // сірий фон коли заблоковано
+        // }}
         style={{
           fontSize: 24,
           textAlign: 'center',
@@ -243,12 +268,16 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
           marginHorizontal: 20,
           marginVertical: 20,
           color: isDarkTheme ? 'white' : '#67104c',
-          backgroundColor: wrongAttempts < 3 ? '#ccc' : 'transparent', // сірий фон коли заблоковано
         }}
+        // placeholder={
+        //   wrongAttempts < 1
+        //     ? 'Спочатку спробуй через мікрофон'
+        //     : 'Введіть слово'
+        // }
         placeholder={
           wrongAttempts < 3
-            ? 'Спочатку спробуй через мікрофон'
-            : 'Введіть слово'
+            ? translations.inputs.microphoneFirst[locale as 'en' | 'uk']
+            : translations.inputs.typeHeard[locale as 'en' | 'uk']
         }
         placeholderTextColor={isDarkTheme ? 'white' : '#67104c'}
         value={userInput}

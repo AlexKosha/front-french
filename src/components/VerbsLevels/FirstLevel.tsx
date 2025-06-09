@@ -1,11 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {Alert, SafeAreaView, StyleSheet} from 'react-native';
 import {Text, TouchableOpacity} from 'react-native';
 import {NavigationProps, Props} from '../../types';
 import {useNavigation} from '@react-navigation/native';
 import {defaultStyles} from '../defaultStyles';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
+import {useTranslationHelper} from '../../locale/useTranslation';
 
 const getDisplaySentence = (pronoun: string, form: string, ending: string) => {
   const parts = form.trim().split(' ');
@@ -31,6 +32,8 @@ export const FirstLevel: React.FC<Props> = ({
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
   const isDarkTheme = useSelector(selectTheme);
+
+  const {trainVerbCompleted} = useTranslationHelper();
 
   const generateOptions = useCallback(() => {
     const correct = questions[currentIndex].ending;
@@ -77,6 +80,7 @@ export const FirstLevel: React.FC<Props> = ({
         if (currentIndex < questions.length - 1) {
           setCurrentIndex((prev: number) => prev + 1);
         } else {
+          Alert.alert('', trainVerbCompleted);
           navigation.navigate('VerbsLevelsSelect', {
             titleName,
             selectedVerbs,

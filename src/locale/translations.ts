@@ -65,6 +65,7 @@ export interface Translations {
     emptyInput: TranslationContent;
     incorrect: TranslationContent;
     tryAgain: TranslationContent;
+    microphoneOff: TranslationContent;
   };
   validation: {
     name: TranslationContent;
@@ -103,6 +104,8 @@ export interface Translations {
   };
   inputs: {
     typeHeard: TranslationContent;
+    microphoneFirst: TranslationContent;
+    enterWords: TranslationContent;
   };
 }
 
@@ -212,6 +215,10 @@ export const translations: Translations = {
       en: 'Try again, please',
       uk: 'Спробуйте ще раз',
     },
+    microphoneOff: {
+      en: 'Microphone permission denied',
+      uk: 'Доступ до мікрофона відхилено',
+    },
   },
   validation: {
     name: {
@@ -268,6 +275,11 @@ export const translations: Translations = {
   },
   inputs: {
     typeHeard: {en: 'Type what you heard', uk: 'Введіть те, що ви почули'},
+    microphoneFirst: {
+      en: 'Use the microphone first',
+      uk: 'Спочатку спробуй через мікрофон',
+    },
+    enterWords: {en: 'Enter the word', uk: 'Введіть слово'},
   },
 };
 

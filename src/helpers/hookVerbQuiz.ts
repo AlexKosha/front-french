@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProps} from '../types';
 import {Alert} from 'react-native';
+import {useTranslationHelper} from '../locale/useTranslation';
 
 type Question = {
   pronoun: string;
@@ -19,6 +20,7 @@ export const hookVerbQuiz = (
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
+  const {trainVerbCompleted} = useTranslationHelper();
 
   useEffect(() => {
     const all = selectedVerbs.flatMap(verb =>
@@ -41,7 +43,7 @@ export const hookVerbQuiz = (
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      Alert.alert('Супер!', 'Ви виконали рівень 🎉');
+      Alert.alert('', trainVerbCompleted);
       navigation.navigate('VerbsLevelsSelect', {
         titleName,
         selectedVerbs,

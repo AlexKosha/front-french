@@ -86,5 +86,8 @@ export const useTranslationHelper = () => {
     incorrect: getTranslation('alert', 'incorrect'),
     tryAgain: getTranslation('alert', 'tryAgain'),
     typeHeard: getTranslation('inputs', ' typeHeard'),
+    microphoneFirst: getTranslation('inputs', 'microphoneFirst'),
+    enterWords: getTranslation('inputs', 'enterWords'),
+    microphoneOff: getTranslation('alert', 'microphoneOff'),
   };
 };
