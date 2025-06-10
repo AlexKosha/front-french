@@ -31,10 +31,14 @@ export const useSyncProgress = () => {
             ? progressData
             : null;
 
+        console.log('backendProgress', backendProgress);
+        console.log('localProgress', localData);
+
         if (!backendProgress) {
           const backendResponse = await dispatch(getProgress());
           if (getProgress.fulfilled.match(backendResponse)) {
             backendProgress = backendResponse.payload?.progress || null;
+            console.log('getbackendProgress', backendProgress);
           }
         }
 
@@ -43,6 +47,7 @@ export const useSyncProgress = () => {
         // 🟢 Якщо є лише локальні, а бекенд порожній — оновлюємо бек
         if (localProgress && !backendProgress && isSameUser) {
           await dispatch(addThunkProgress({userId, progress: localProgress}));
+          console.log('updateBack');
           return;
         }
 
@@ -51,6 +56,7 @@ export const useSyncProgress = () => {
 
         // 🔄 Якщо користувач змінився або немає локальних — оновити local
         if (!localData || !isSameUser) {
+          console.log('localProgressUpdate', backendProgress);
           await AsyncStorage.setItem(
             'progress_all',
             JSON.stringify({userId, progress: backendProgress}),
@@ -69,20 +75,28 @@ export const useSyncProgress = () => {
 
           const backendCompleted = completedCount(backendProgress);
           const localCompleted = completedCount(localProgress);
+          console.log('isEgval');
 
           if (
             (backendHasMore || backendCompleted > localCompleted) &&
             isSameUser
           ) {
             // 🔼 Оновити локальне сховище з бекенду
+            console.log('isEgvalLocal');
             await AsyncStorage.setItem(
               'progress_all',
               JSON.stringify({userId, progress: backendProgress}),
             );
-          } else if (isSameUser) {
+          } else if (
+            !backendHasMore ||
+            (backendCompleted < localCompleted && isSameUser)
+          ) {
             // 🔼 Оновити бекенд локальними
-
+            console.log('isEgvalBack');
             await dispatch(addThunkProgress({userId, progress: localProgress}));
+          } else {
+            console.log('return');
+            return;
           }
         }
       } catch (error) {
