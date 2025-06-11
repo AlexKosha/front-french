@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import {
   View,
@@ -36,17 +36,12 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [correctAnswer, setCorrectAnswer] = useState('');
+  const [manualCheck, setManualCheck] = useState(false);
+  const [isAwaitingResponse, setIsAwaitingResponse] = useState(false);
   const recordingTimeout = useRef<NodeJS.Timeout | null>(null);
-  const {
-    trainVerbCompleted,
-    incorrect,
-    tryAgain,
-    emptyInput,
-    microphoneFirst,
-    enterWords,
-    microphoneOff,
-  } = useTranslationHelper();
-  const {locale, setLocale} = useLocalization();
+  const {trainVerbCompleted, incorrect, tryAgain, emptyInput, microphoneOff} =
+    useTranslationHelper();
+  const {locale} = useLocalization();
 
   const audioRecorderPlayer = useRef(new AudioRecorderPlayer());
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
@@ -78,18 +73,7 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
     }
   }, [iteration, wordStats]);
 
-  useEffect(() => {
-    requestMicrophonePermission();
-
-    const recorder = audioRecorderPlayer.current;
-    recorder.addRecordBackListener(() => {});
-
-    return () => {
-      recorder.removeRecordBackListener();
-    };
-  }, []);
-
-  const requestMicrophonePermission = async () => {
+  const requestMicrophonePermission = useCallback(async () => {
     if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(
@@ -102,7 +86,19 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
         console.warn(err);
       }
     }
-  };
+  }, [microphoneOff]);
+
+  useEffect(() => {
+    requestMicrophonePermission();
+    console.log(1);
+
+    const recorder = audioRecorderPlayer.current;
+    recorder.addRecordBackListener(() => {});
+
+    return () => {
+      recorder.removeRecordBackListener();
+    };
+  }, [requestMicrophonePermission]);
 
   const startRecording = async () => {
     setIsRecording(true);
@@ -111,7 +107,7 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
     // ⏱ Автоматично зупинити запис через 5 секунд
     recordingTimeout.current = setTimeout(async () => {
       await autoStopRecording(); // викликає stop і надсилає аудіо
-    }, 6000);
+    }, 4000);
   };
 
   const autoStopRecording = async () => {
@@ -138,6 +134,8 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
   };
 
   const sendAudioForRecognition = async (audioUri: string) => {
+    setIsAwaitingResponse(true); // 👉 Блокуємо кнопку
+
     const formData = new FormData();
     formData.append('audio', {
       uri: audioUri,
@@ -149,31 +147,63 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
       const data = await sendAudio(formData);
       const {transcript} = data;
       setUserInput(transcript);
+
+      if (!transcript) {
+        const newAttempts = wrongAttempts + 1;
+        setWrongAttempts(newAttempts);
+
+        if (newAttempts >= 3) {
+          setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
+        }
+
+        setUserInput('');
+        Alert.alert(incorrect, tryAgain);
+
+        return;
+      }
+
+      if (wrongAttempts < 2) {
+        checkAnswer(transcript);
+      }
     } catch (err) {
+      const newAttempts = wrongAttempts + 1;
+      setWrongAttempts(newAttempts);
+
+      if (newAttempts >= 3) {
+        setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
+      }
+
+      setUserInput('');
+      Alert.alert(incorrect, tryAgain);
       console.error('Помилка при надсиланні аудіо:', err);
+    } finally {
+      setIsAwaitingResponse(false); // 👉 Розблокуємо кнопку
     }
   };
 
-  const checkAnswer = async () => {
-    if (!userInput) {
-      Alert.alert('', emptyInput);
+  const checkAnswer = (inputOverride?: string) => {
+    const input = inputOverride !== undefined ? inputOverride : userInput;
+
+    if (!input) {
+      if (manualCheck) Alert.alert('', emptyInput);
       return;
     }
 
     const pronoun = wordStats[iteration]?.pronoun.trim().toLowerCase();
     const form = wordStats[iteration]?.form.trim().toLowerCase();
 
-    // 👇 Формуємо правильну відповідь з урахуванням апострофа
     const correctFullForm = pronoun.endsWith("'")
-      ? `${pronoun}${form}` // без пробілу
-      : `${pronoun} ${form}`; // з пробілом
+      ? `${pronoun}${form}`
+      : `${pronoun} ${form}`;
 
+    const user = input.trim().toLowerCase();
     setCorrectAnswer(correctFullForm);
-    const user = userInput.trim().toLowerCase();
 
     if (user === correctFullForm) {
       setTotalCorrectAnswers(prev => prev + 1);
-      setWrongAttempts(0); // скидаємо після правильної відповіді
+      setWrongAttempts(0);
+      setManualCheck(false);
+      setUserInput('');
 
       if (iteration + 1 >= wordStats.length) {
         Alert.alert('', trainVerbCompleted);
@@ -182,9 +212,15 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
       }
 
       setIteration(prev => prev + 1);
-      setUserInput('');
     } else {
-      setWrongAttempts(prev => prev + 1);
+      console.log(wrongAttempts);
+      const newAttempts = wrongAttempts + 1;
+      setWrongAttempts(newAttempts);
+
+      if (newAttempts >= 3) {
+        setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
+      }
+
       setUserInput('');
       Alert.alert(incorrect, tryAgain);
     }
@@ -210,7 +246,7 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
           />
         </View>
       )}
-      {wrongAttempts >= 3 && (
+      {wrongAttempts >= 2 && (
         <View style={{alignItems: 'center'}}>
           <TouchableOpacity onPress={() => speak(correctAnswer)}>
             <Icon name="sound" size={40} color="red" />
@@ -231,8 +267,15 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
       </Text>
 
       <TouchableOpacity
-        onPress={isRecording ? stopRecording : startRecording}
-        style={styles.voiceButton}>
+        onPress={
+          isRecording
+            ? stopRecording
+            : isAwaitingResponse
+            ? undefined // 👉 Заборонити запис, якщо чекаємо
+            : startRecording
+        }
+        disabled={isAwaitingResponse} // 👉 Блокує на рівні TouchableOpacity
+        style={[styles.voiceButton, isAwaitingResponse && {opacity: 0.5}]}>
         {isRecording ? (
           <Text style={styles.voiceButtonText}>•••</Text>
         ) : (
@@ -245,62 +288,45 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
         )}
       </TouchableOpacity>
 
-      <TextInput
-        // style={{
-        //   fontSize: 24,
-        //   textAlign: 'center',
-        //   borderWidth: 1,
-        //   borderColor: isDarkTheme ? 'white' : '#67104c',
-        //   borderRadius: 10,
-        //   padding: 10,
-        //   marginHorizontal: 20,
-        //   marginVertical: 20,
-        //   color: isDarkTheme ? 'white' : '#67104c',
-        //   backgroundColor: wrongAttempts < 3 ? '#ccc' : 'transparent', // сірий фон коли заблоковано
-        // }}
-        style={{
-          fontSize: 24,
-          textAlign: 'center',
-          borderWidth: 1,
-          borderColor: isDarkTheme ? 'white' : '#67104c',
-          borderRadius: 10,
-          padding: 10,
-          marginHorizontal: 20,
-          marginVertical: 20,
-          color: isDarkTheme ? 'white' : '#67104c',
-        }}
-        // placeholder={
-        //   wrongAttempts < 1
-        //     ? 'Спочатку спробуй через мікрофон'
-        //     : 'Введіть слово'
-        // }
-        placeholder={
-          wrongAttempts < 3
-            ? translations.inputs.microphoneFirst[locale as 'en' | 'uk']
-            : translations.inputs.typeHeard[locale as 'en' | 'uk']
-        }
-        placeholderTextColor={isDarkTheme ? 'white' : '#67104c'}
-        value={userInput}
-        onChangeText={setUserInput}
-        autoCapitalize="none"
-        keyboardType="default"
-        editable={wrongAttempts >= 3}
-      />
+      {manualCheck && (
+        <>
+          <TextInput
+            style={{
+              fontSize: 24,
+              textAlign: 'center',
+              borderWidth: 1,
+              borderColor: isDarkTheme ? 'white' : '#67104c',
+              borderRadius: 10,
+              padding: 10,
+              marginHorizontal: 20,
+              marginVertical: 20,
+              color: isDarkTheme ? 'white' : '#67104c',
+            }}
+            placeholder={translations.inputs.typeHeard[locale as 'en' | 'uk']}
+            placeholderTextColor={isDarkTheme ? 'white' : '#67104c'}
+            value={userInput}
+            onChangeText={setUserInput}
+            autoCapitalize="none"
+            keyboardType="default"
+            editable
+          />
 
-      <Pressable
-        style={[
-          defaultStyles.button,
-          {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
-        ]}
-        onPress={checkAnswer}>
-        <Text
-          style={[
-            defaultStyles.btnText,
-            {color: isDarkTheme ? '#67104c' : 'white'},
-          ]}>
-          Перевірити
-        </Text>
-      </Pressable>
+          <Pressable
+            style={[
+              defaultStyles.button,
+              {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
+            ]}
+            onPress={() => checkAnswer()}>
+            <Text
+              style={[
+                defaultStyles.btnText,
+                {color: isDarkTheme ? '#67104c' : 'white'},
+              ]}>
+              Перевірити
+            </Text>
+          </Pressable>
+        </>
+      )}
     </SafeAreaView>
   );
 };

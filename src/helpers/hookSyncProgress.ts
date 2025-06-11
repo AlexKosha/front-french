@@ -93,6 +93,7 @@ export const useSyncProgress = () => {
           ) {
             // 🔼 Оновити бекенд локальними
             console.log('isEgvalBack');
+            console.log(localProgress);
             await dispatch(addThunkProgress({userId, progress: localProgress}));
           } else {
             console.log('return');

@@ -40,15 +40,9 @@ export const SixthLevel: React.FC<Props> = ({
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
   const [iteration, setIteration] = useState(0);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
-  const {locale, setLocale} = useLocalization();
-  const {
-    emptyInput,
-    trainVerbCompleted,
-    incorrect,
-    tryAgain,
-    verify,
-    typeHeard,
-  } = useTranslationHelper();
+  const {locale} = useLocalization();
+  const {emptyInput, trainVerbCompleted, incorrect, tryAgain, verify} =
+    useTranslationHelper();
 
   const currentQuestion = questions[iteration];
 

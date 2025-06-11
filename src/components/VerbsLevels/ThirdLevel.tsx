@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Props} from '../../types';
 import {hookVerbQuiz} from '../../helpers/hookVerbQuiz';
 import {defaultStyles} from '../defaultStyles';
