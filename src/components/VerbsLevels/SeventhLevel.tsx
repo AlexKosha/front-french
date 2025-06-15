@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import {
   View,
@@ -27,19 +27,23 @@ import {useTranslationHelper} from '../../locale/useTranslation';
 import {translations} from '../../locale/translations';
 import {useLocalization} from '../../locale/LocalizationContext';
 
-export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
+export const SeventhLevel: React.FC<Props> = ({
+  selectedVerbs,
+  titleName,
+  level,
+}) => {
   const [wordStats, setWordStats] = useState<any[]>([]);
   const [iteration, setIteration] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
-  const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
+  // const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [manualCheck, setManualCheck] = useState(false);
   const [isAwaitingResponse, setIsAwaitingResponse] = useState(false);
   const recordingTimeout = useRef<NodeJS.Timeout | null>(null);
-  const {trainVerbCompleted, incorrect, tryAgain, emptyInput, microphoneOff} =
+  const {trainVerbCompleted, incorrect, tryAgain, emptyInput} =
     useTranslationHelper();
   const {locale} = useLocalization();
 
@@ -73,32 +77,42 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
     }
   }, [iteration, wordStats]);
 
-  const requestMicrophonePermission = useCallback(async () => {
+  const requestMicrophonePermission = async () => {
     if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+          {
+            title: 'Microphone Permission',
+            message:
+              'This app needs access to your microphone to recognize speech.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
         );
-        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-          Alert.alert(microphoneOff);
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Дозвіл отримано');
+        } else {
+          console.log('Дозвіл відхилено');
         }
       } catch (err) {
         console.warn(err);
       }
     }
-  }, [microphoneOff]);
+  };
 
   useEffect(() => {
-    requestMicrophonePermission();
-    console.log(1);
-
     const recorder = audioRecorderPlayer.current;
+    if (!recorder) return;
+    requestMicrophonePermission();
     recorder.addRecordBackListener(() => {});
 
     return () => {
       recorder.removeRecordBackListener();
     };
-  }, [requestMicrophonePermission]);
+  }, []);
 
   const startRecording = async () => {
     setIsRecording(true);
@@ -133,8 +147,28 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
     }
   };
 
+  const handleFailedAttempt = () => {
+    const newAttempts = wrongAttempts + 1;
+    setWrongAttempts(newAttempts);
+
+    const pronoun = wordStats[iteration]?.pronoun.trim().toLowerCase();
+    const form = wordStats[iteration]?.form.trim().toLowerCase();
+    const correctFullForm = pronoun.endsWith("'")
+      ? `${pronoun}${form}`
+      : `${pronoun} ${form}`;
+
+    setCorrectAnswer(correctFullForm);
+
+    if (newAttempts >= 3) {
+      setManualCheck(true);
+    }
+
+    setUserInput('');
+    Alert.alert(incorrect, tryAgain);
+  };
+
   const sendAudioForRecognition = async (audioUri: string) => {
-    setIsAwaitingResponse(true); // 👉 Блокуємо кнопку
+    setIsAwaitingResponse(true);
 
     const formData = new FormData();
     formData.append('audio', {
@@ -144,21 +178,11 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
     } as any);
 
     try {
-      const data = await sendAudio(formData);
-      const {transcript} = data;
+      const {transcript} = await sendAudio(formData);
       setUserInput(transcript);
 
       if (!transcript) {
-        const newAttempts = wrongAttempts + 1;
-        setWrongAttempts(newAttempts);
-
-        if (newAttempts >= 3) {
-          setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
-        }
-
-        setUserInput('');
-        Alert.alert(incorrect, tryAgain);
-
+        handleFailedAttempt();
         return;
       }
 
@@ -166,23 +190,77 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
         checkAnswer(transcript);
       }
     } catch (err) {
-      const newAttempts = wrongAttempts + 1;
-      setWrongAttempts(newAttempts);
-
-      if (newAttempts >= 3) {
-        setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
-      }
-
-      setUserInput('');
-      Alert.alert(incorrect, tryAgain);
       console.error('Помилка при надсиланні аудіо:', err);
+      handleFailedAttempt();
     } finally {
-      setIsAwaitingResponse(false); // 👉 Розблокуємо кнопку
+      setIsAwaitingResponse(false);
+    }
+  };
+
+  // const sendAudioForRecognition = async (audioUri: string) => {
+  //   setIsAwaitingResponse(true); // 👉 Блокуємо кнопку
+
+  //   const formData = new FormData();
+  //   formData.append('audio', {
+  //     uri: audioUri,
+  //     type: 'video/mp4',
+  //     name: 'audio.mp4',
+  //   } as any);
+
+  //   try {
+  //     const data = await sendAudio(formData);
+  //     const {transcript} = data;
+  //     setUserInput(transcript);
+
+  //     if (!transcript) {
+  //       const newAttempts = wrongAttempts + 1;
+  //       setWrongAttempts(newAttempts);
+
+  //       if (newAttempts >= 3) {
+  //         setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
+  //       }
+
+  //       setUserInput('');
+  //       Alert.alert(incorrect, tryAgain);
+
+  //       return;
+  //     }
+
+  //     if (wrongAttempts < 2) {
+  //       checkAnswer(transcript);
+  //     }
+  //   } catch (err) {
+  //     const newAttempts = wrongAttempts + 1;
+  //     setWrongAttempts(newAttempts);
+
+  //     if (newAttempts >= 3) {
+  //       setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
+  //     }
+
+  //     setUserInput('');
+  //     Alert.alert(incorrect, tryAgain);
+  //     console.error('Помилка при надсиланні аудіо:', err);
+  //   } finally {
+  //     setIsAwaitingResponse(false); // 👉 Розблокуємо кнопку
+  //   }
+  // };
+
+  const handleCorrectAnswer = () => {
+    setWrongAttempts(0);
+    setManualCheck(false);
+    setUserInput('');
+
+    const isLast = iteration + 1 >= wordStats.length;
+    if (isLast) {
+      Alert.alert('', trainVerbCompleted);
+      navigation.navigate('VerbsLevelsSelect', {titleName, selectedVerbs});
+    } else {
+      setIteration(prev => prev + 1);
     }
   };
 
   const checkAnswer = (inputOverride?: string) => {
-    const input = inputOverride !== undefined ? inputOverride : userInput;
+    const input = inputOverride ?? userInput;
 
     if (!input) {
       if (manualCheck) Alert.alert('', emptyInput);
@@ -191,38 +269,18 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
 
     const pronoun = wordStats[iteration]?.pronoun.trim().toLowerCase();
     const form = wordStats[iteration]?.form.trim().toLowerCase();
-
     const correctFullForm = pronoun.endsWith("'")
       ? `${pronoun}${form}`
       : `${pronoun} ${form}`;
 
-    const user = input.trim().toLowerCase();
     setCorrectAnswer(correctFullForm);
 
+    const user = input.trim().toLowerCase();
+
     if (user === correctFullForm) {
-      setTotalCorrectAnswers(prev => prev + 1);
-      setWrongAttempts(0);
-      setManualCheck(false);
-      setUserInput('');
-
-      if (iteration + 1 >= wordStats.length) {
-        Alert.alert('', trainVerbCompleted);
-        navigation.navigate('VerbsLevelsSelect', {titleName, selectedVerbs});
-        return;
-      }
-
-      setIteration(prev => prev + 1);
+      handleCorrectAnswer();
     } else {
-      console.log(wrongAttempts);
-      const newAttempts = wrongAttempts + 1;
-      setWrongAttempts(newAttempts);
-
-      if (newAttempts >= 3) {
-        setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
-      }
-
-      setUserInput('');
-      Alert.alert(incorrect, tryAgain);
+      handleFailedAttempt();
     }
   };
 
@@ -234,9 +292,12 @@ export const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName}) => {
         defaultStyles.container,
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
-      <Text style={{color: isDarkTheme ? 'white' : '#67104c', fontSize: 20}}>
-        Правильних відповідей: {totalCorrectAnswers}
+      <Text style={[styles.header, {color: isDarkTheme ? 'white' : '#67104c'}]}>
+        Рівень {level}: {titleName}
       </Text>
+      {/* <Text style={{color: isDarkTheme ? 'white' : '#67104c', fontSize: 20}}>
+        Правильних відповідей: {totalCorrectAnswers}
+      </Text> */}
 
       {imageUrl && (
         <View style={{alignItems: 'center', marginVertical: 20}}>
@@ -337,6 +398,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     alignItems: 'center',
     marginBottom: 10,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   voiceButtonText: {
     fontSize: 24,
