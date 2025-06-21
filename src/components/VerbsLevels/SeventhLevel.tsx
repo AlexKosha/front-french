@@ -197,54 +197,6 @@ export const SeventhLevel: React.FC<Props> = ({
     }
   };
 
-  // const sendAudioForRecognition = async (audioUri: string) => {
-  //   setIsAwaitingResponse(true); // 👉 Блокуємо кнопку
-
-  //   const formData = new FormData();
-  //   formData.append('audio', {
-  //     uri: audioUri,
-  //     type: 'video/mp4',
-  //     name: 'audio.mp4',
-  //   } as any);
-
-  //   try {
-  //     const data = await sendAudio(formData);
-  //     const {transcript} = data;
-  //     setUserInput(transcript);
-
-  //     if (!transcript) {
-  //       const newAttempts = wrongAttempts + 1;
-  //       setWrongAttempts(newAttempts);
-
-  //       if (newAttempts >= 3) {
-  //         setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
-  //       }
-
-  //       setUserInput('');
-  //       Alert.alert(incorrect, tryAgain);
-
-  //       return;
-  //     }
-
-  //     if (wrongAttempts < 2) {
-  //       checkAnswer(transcript);
-  //     }
-  //   } catch (err) {
-  //     const newAttempts = wrongAttempts + 1;
-  //     setWrongAttempts(newAttempts);
-
-  //     if (newAttempts >= 3) {
-  //       setManualCheck(true); // ⬅️ Тепер юзер має сам ввести
-  //     }
-
-  //     setUserInput('');
-  //     Alert.alert(incorrect, tryAgain);
-  //     console.error('Помилка при надсиланні аудіо:', err);
-  //   } finally {
-  //     setIsAwaitingResponse(false); // 👉 Розблокуємо кнопку
-  //   }
-  // };
-
   const handleCorrectAnswer = () => {
     setWrongAttempts(0);
     setManualCheck(false);

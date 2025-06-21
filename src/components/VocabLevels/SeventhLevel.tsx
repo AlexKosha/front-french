@@ -247,18 +247,6 @@ export const SeventhLevel: React.FC<LevelProps> = ({
     }
   };
 
-  const handleIncorrectAnswer = () => {
-    const newAttempts = wrongAttempts + 1;
-    setWrongAttempts(newAttempts);
-
-    if (newAttempts >= 3) {
-      setManualCheck(true);
-    }
-
-    setUserInput('');
-    Alert.alert(incorrect, tryAgain);
-  };
-
   // Перевірка введеного слова
   const checkAnswer = (inputOverride?: string) => {
     const input = inputOverride ?? userInput;
@@ -275,7 +263,7 @@ export const SeventhLevel: React.FC<LevelProps> = ({
     if (user === normalizedCorrectWord) {
       handleCorrectAnswer();
     } else {
-      handleIncorrectAnswer();
+      handleFailedAttempt();
     }
   };
 
