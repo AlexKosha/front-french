@@ -43,10 +43,57 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
 
   const [draggingWordId, setDraggingWordId] = useState<string | null>(null);
 
+  // useEffect(() => {
+  //   if (!progress || progress.length === 0) return;
+
+  //   // Вибір слів, уникаючи повторення з попередньої ітерації
+  //   const availableWords = progress.filter(
+  //     item => !lastWords.includes(item.world),
+  //   );
+
+  //   // Якщо доступних слів менше 4, дозволяємо повернутись до використаних
+  //   const selectedWords =
+  //     availableWords.length >= 4 ? availableWords : progress;
+
+  //   const shuffledSelection = selectedWords
+  //     .sort(() => Math.random() - 0.5)
+  //     .slice(0, 4);
+
+  //   // setLastWords(shuffledSelection.map(item => item.world)); // Оновлюємо останні слова
+
+  //   // Підготовка картинок та слів
+  //   const shuffledImages = shuffledSelection
+  //     .map(item => ({id: item.world, uri: item.image}))
+  //     .sort(() => Math.random() - 0.5);
+
+  //   const shuffledWords = shuffledSelection
+  //     .map(item => ({id: item.world, text: item.world}))
+  //     .sort(() => Math.random() - 0.5);
+
+  //   setImages(shuffledImages);
+  //   setWords(shuffledWords);
+
+  //   // Ініціалізація стану відповідностей
+  //   const initialMatches: Record<string, string | null> = {};
+  //   shuffledWords.forEach(word => {
+  //     initialMatches[word.id] = null;
+  //   });
+  //   setMatches({...initialMatches});
+
+  //   // Ініціалізація координат
+  //   shuffledWords.forEach(word => {
+  //     panRefs.current[word.id] = new Animated.ValueXY();
+  //     wordPositions.current[word.id] = {left: 0, top: 0, right: 0, bottom: 0};
+  //   });
+
+  //   shuffledImages.forEach(image => {
+  //     imageRefs.current[image.id] = null;
+  //   });
+  // }, [iteration, lastWords, progress]);
   useEffect(() => {
     if (!progress || progress.length === 0) return;
 
-    // Вибір слів, уникаючи повторення з попередньої ітерації
+    // Вибираємо слова, уникаючи повторення з попередньої ітерації
     const availableWords = progress.filter(
       item => !lastWords.includes(item.world),
     );
@@ -59,17 +106,32 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
       .sort(() => Math.random() - 0.5)
       .slice(0, 4);
 
-    // setLastWords(shuffledSelection.map(item => item.world)); // Оновлюємо останні слова
-
-    // Підготовка картинок та слів
-    const shuffledImages = shuffledSelection
-      .map(item => ({id: item.world, uri: item.image}))
-      .sort(() => Math.random() - 0.5);
-
+    // Створюємо список слів (shuffledWords), окремо перемішуючи
     const shuffledWords = shuffledSelection
       .map(item => ({id: item.world, text: item.world}))
       .sort(() => Math.random() - 0.5);
 
+    // Створюємо список картинок (shuffledImages), окремо перемішуючи
+    const shuffledImages = shuffledSelection
+      .map(item => ({id: item.world, uri: item.image}))
+      .sort(() => Math.random() - 0.5);
+
+    // Перевіряємо, чи не співпадають слова з картинками на позиціях
+    let isSameOrder = shuffledWords.every(
+      (word, index) => word.id === shuffledImages[index]?.id,
+    );
+
+    // Якщо повний збіг — міняємо місцями випадкові елементи в shuffledImages
+    if (isSameOrder && shuffledWords.length >= 2) {
+      const idx1 = 0;
+      const idx2 = 1;
+      [shuffledImages[idx1], shuffledImages[idx2]] = [
+        shuffledImages[idx2],
+        shuffledImages[idx1],
+      ];
+    }
+
+    // Встановлюємо у стан
     setImages(shuffledImages);
     setWords(shuffledWords);
 
@@ -80,7 +142,7 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
     });
     setMatches({...initialMatches});
 
-    // Ініціалізація координат
+    // Ініціалізація координат і панів
     shuffledWords.forEach(word => {
       panRefs.current[word.id] = new Animated.ValueXY();
       wordPositions.current[word.id] = {left: 0, top: 0, right: 0, bottom: 0};
@@ -148,7 +210,6 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
     }
     return null; // Якщо слово не знайдено
   };
-
   const swapWords = (wordId1: string, wordId2: string) => {
     const pos1 = wordPositions.current[wordId1];
     const pos2 = wordPositions.current[wordId2];
@@ -167,11 +228,9 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      // Після анімації скидаємо позиції
       panRefs.current[wordId1].setValue({x: 0, y: 0});
       panRefs.current[wordId2].setValue({x: 0, y: 0});
 
-      // Міняємо місцями слова в стані
       setWords(prevWords => {
         const newWords = [...prevWords];
         const index1 = newWords.findIndex(word => word.id === wordId1);
@@ -184,18 +243,79 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
           ];
         }
 
+        // Перевірка правильності співставлення після оновлення:
+        const isCorrect = newWords.every(
+          (word, index) => word.id === images[index].id,
+        );
+        if (isCorrect) {
+          // Якщо все вірно, викликаємо автоматичний перехід
+          const updatedTotalCorrectAnswers = totalCorrectAnswers + 1;
+          setTotalCorrectAnswers(updatedTotalCorrectAnswers);
+
+          if (updatedTotalCorrectAnswers === 15) {
+            Alert.alert(
+              'Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан',
+            );
+            navigation.navigate('TrainVocabulary', {titleName});
+          } else {
+            handleNextIteration();
+          }
+        }
+
         return newWords;
       });
 
-      // Перевіряємо правильність після переміщення
-      const isCorrect = words.every(
-        (word, index) => word.id === images[index].id,
-      );
-      if (isCorrect) {
-        checkMatches();
-      }
+      setDraggingWordId(null);
     });
   };
+
+  // const swapWords = (wordId1: string, wordId2: string) => {
+  //   const pos1 = wordPositions.current[wordId1];
+  //   const pos2 = wordPositions.current[wordId2];
+
+  //   if (!pos1 || !pos2) return;
+
+  //   Animated.parallel([
+  //     Animated.timing(panRefs.current[wordId1], {
+  //       toValue: {x: pos2.left - pos1.left, y: pos2.top - pos1.top},
+  //       duration: 300,
+  //       useNativeDriver: true,
+  //     }),
+  //     Animated.timing(panRefs.current[wordId2], {
+  //       toValue: {x: pos1.left - pos2.left, y: pos1.top - pos2.top},
+  //       duration: 300,
+  //       useNativeDriver: true,
+  //     }),
+  //   ]).start(() => {
+  //     // Після анімації скидаємо позиції
+  //     panRefs.current[wordId1].setValue({x: 0, y: 0});
+  //     panRefs.current[wordId2].setValue({x: 0, y: 0});
+
+  //     // Міняємо місцями слова в стані
+  //     setWords(prevWords => {
+  //       const newWords = [...prevWords];
+  //       const index1 = newWords.findIndex(word => word.id === wordId1);
+  //       const index2 = newWords.findIndex(word => word.id === wordId2);
+
+  //       if (index1 !== -1 && index2 !== -1) {
+  //         [newWords[index1], newWords[index2]] = [
+  //           newWords[index2],
+  //           newWords[index1],
+  //         ];
+  //       }
+
+  //       return newWords;
+  //     });
+
+  //     // Перевіряємо правильність після переміщення
+  //     const isCorrect = words.every(
+  //       (word, index) => word.id === images[index].id,
+  //     );
+  //     if (isCorrect) {
+  //       checkMatches();
+  //     }
+  //   });
+  // };
 
   useEffect(() => {
     words.forEach(word => {
