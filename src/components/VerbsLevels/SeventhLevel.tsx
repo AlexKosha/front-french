@@ -27,6 +27,13 @@ import {useTranslationHelper} from '../../locale/useTranslation';
 import {translations} from '../../locale/translations';
 import {useLocalization} from '../../locale/LocalizationContext';
 
+interface Question {
+  pronoun: string;
+  form: string;
+  infinitive: string;
+  tense: string;
+}
+
 export const SeventhLevel: React.FC<Props> = ({
   selectedVerbs,
   titleName,
@@ -46,6 +53,7 @@ export const SeventhLevel: React.FC<Props> = ({
   const {trainVerbCompleted, incorrect, tryAgain, emptyInput} =
     useTranslationHelper();
   const {locale} = useLocalization();
+  const [questions, setQuestions] = useState<Question[]>([]);
 
   const audioRecorderPlayer = useRef(new AudioRecorderPlayer());
   const navigation = useNavigation<NavigationProps<'VerbsLevelsSelect'>>();
@@ -67,8 +75,28 @@ export const SeventhLevel: React.FC<Props> = ({
         ),
     );
 
-    setWordStats(allConjugations);
+    const shuffled = [...allConjugations].sort(() => 0.5 - Math.random());
+
+    setWordStats(allConjugations); // оригінальний масив (неперемішаний)
+    setQuestions(shuffled); // перемішаний масив для тесту
   }, [selectedVerbs, titleName]);
+
+  // useEffect(() => {
+  //   const allConjugations = selectedVerbs.flatMap(verb =>
+  //     verb.tenses
+  //       .filter((tense: any) => tense.name === titleName)
+  //       .flatMap((tense: any) =>
+  //         tense.conjugations.map((conj: any) => ({
+  //           infinitive: verb.infinitive,
+  //           tense: tense.name,
+  //           pronoun: conj.pronoun,
+  //           form: conj.form,
+  //         })),
+  //       ),
+  //   );
+
+  //   setWordStats(allConjugations);
+  // }, [selectedVerbs, titleName]);
 
   useEffect(() => {
     if (wordStats.length > 0 && iteration < wordStats.length) {
@@ -340,6 +368,9 @@ export const SeventhLevel: React.FC<Props> = ({
           </Pressable>
         </>
       )}
+      <Text style={styles.footer}>
+        {iteration + 1}/{questions.length}
+      </Text>
     </SafeAreaView>
   );
 };
@@ -360,5 +391,11 @@ const styles = StyleSheet.create({
   voiceButtonText: {
     fontSize: 24,
     height: 45,
+  },
+  footer: {
+    textAlign: 'center',
+    marginTop: 30,
+    fontSize: 16,
+    color: '#666',
   },
 });
