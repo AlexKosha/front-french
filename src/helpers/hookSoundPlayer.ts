@@ -2,6 +2,13 @@ import {useEffect, useCallback} from 'react';
 import Tts from 'react-native-tts';
 
 export const useTTS = ({language = 'fr-FR', pitch = 1.5, rate = 0.5} = {}) => {
+  const voices = [
+    'com.apple.ttsbundle.Thomas-compact',
+    'com.apple.voice.compact.fr-CA.Amelie',
+  ];
+
+  // com.apple.voice.compact.fr-FR.Thomas
+
   useEffect(() => {
     Tts.getInitStatus()
       .then(() => {
@@ -34,8 +41,10 @@ export const useTTS = ({language = 'fr-FR', pitch = 1.5, rate = 0.5} = {}) => {
   const speak = useCallback(
     (text: string) => {
       if (text) {
+        const randomVoiceId = voices[Math.floor(Math.random() * voices.length)];
+
         Tts.speak(text, {
-          iosVoiceId: 'com.apple.ttsbundle.Thomas-compact',
+          iosVoiceId: randomVoiceId,
           rate,
           androidParams: {
             KEY_PARAM_PAN: 0,
