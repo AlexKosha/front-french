@@ -4,7 +4,6 @@ import {instance} from './authService';
 // Отримати прогрес поточного користувача
 export const fetchProgress = async () => {
   const {data} = await instance.get('/progress');
-  console.log(data);
   return data;
 };
 
@@ -16,6 +15,5 @@ export const addProgress = async (progressData: ProgressPayload) => {
 
 export const updateProgressTheme = async (progressData: ProgressPayload) => {
   const {data} = await instance.patch('/progress', progressData);
-  console.log(data);
   return data.progress;
 };
