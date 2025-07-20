@@ -18,6 +18,7 @@ import {
   HeaderBackToLearnOrTrainComponent,
   HeaderBackToPreviousComponent,
 } from './AppNavigatorComponents/HeadersNavigate';
+import {Test} from './Test';
 
 const MainStack = createNativeStackNavigator();
 
@@ -379,6 +380,24 @@ export const AppNavigator = (): JSX.Element => {
             ),
           };
         }}
+      />
+      <MainStack.Screen
+        name="Test"
+        component={Test}
+        options={({navigation}) => ({
+          title: vocabOrVerbs,
+          headerTitleAlign: 'center',
+          headerStyle: {
+            backgroundColor: isDarkTheme ? '#67104c' : 'white',
+          },
+          headerShadowVisible: false,
+          headerTintColor: isDarkTheme ? 'white' : '#67104c',
+          headerLeft: HeaderBackToPreviousComponent(
+            isDarkTheme,
+            navigation,
+            'Home',
+          ),
+        })}
       />
     </MainStack.Navigator>
   );

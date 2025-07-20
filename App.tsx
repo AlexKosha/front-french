@@ -1,3 +1,4 @@
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import React, {Suspense} from 'react';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -10,23 +11,25 @@ import {AutoProgressUpdater} from './src/helpers/updateProgressInterval';
 
 export default function App(): JSX.Element {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <LocalizationProvider>
-          <NavigationContainer>
-            <Suspense
-              fallback={
-                <View style={styles.loadingContainer}>
-                  <Text>Loading...</Text>
-                </View>
-              }>
-              <AppNavigator />
-              <AutoProgressUpdater />
-            </Suspense>
-          </NavigationContainer>
-        </LocalizationProvider>
-      </PersistGate>
-    </Provider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <LocalizationProvider>
+            <NavigationContainer>
+              <Suspense
+                fallback={
+                  <View style={styles.loadingContainer}>
+                    <Text>Loading...</Text>
+                  </View>
+                }>
+                <AppNavigator />
+                <AutoProgressUpdater />
+              </Suspense>
+            </NavigationContainer>
+          </LocalizationProvider>
+        </PersistGate>
+      </Provider>
+    </GestureHandlerRootView>
   );
 }
 

@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Home = (): JSX.Element => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
+
   const isDarkTheme = useSelector(selectTheme);
   const {welcome, vocabOrVerbs} = useTranslationHelper();
 
@@ -57,6 +58,21 @@ export const Home = (): JSX.Element => {
                 {color: isDarkTheme ? '#67104c' : 'white'},
               ]}>
               {vocabOrVerbs}
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              defaultStyles.button,
+              {backgroundColor: isDarkTheme ? 'white' : '#67104c'},
+            ]}
+            onPress={() => navigation.navigate('Test')}>
+            <Text
+              style={[
+                defaultStyles.btnText,
+                {color: isDarkTheme ? '#67104c' : 'white'},
+              ]}>
+              Test
             </Text>
           </Pressable>
 
