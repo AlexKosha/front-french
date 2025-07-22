@@ -40,10 +40,12 @@ export const useTTS = ({language = 'fr-FR', pitch = 1.5, rate = 0.5} = {}) => {
 
   const speak = useCallback(
     (text: string) => {
+      // Видаляємо пробіли після апострофа
+      const fixedText = text.replace(/'\s+/g, "'");
       if (text) {
         const randomVoiceId = voices[Math.floor(Math.random() * voices.length)];
 
-        Tts.speak(text, {
+        Tts.speak(fixedText, {
           iosVoiceId: randomVoiceId,
           rate,
           androidParams: {
