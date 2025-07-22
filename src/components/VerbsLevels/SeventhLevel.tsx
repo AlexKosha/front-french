@@ -81,23 +81,6 @@ export const SeventhLevel: React.FC<Props> = ({
     setQuestions(shuffled); // перемішаний масив для тесту
   }, [selectedVerbs, titleName]);
 
-  // useEffect(() => {
-  //   const allConjugations = selectedVerbs.flatMap(verb =>
-  //     verb.tenses
-  //       .filter((tense: any) => tense.name === titleName)
-  //       .flatMap((tense: any) =>
-  //         tense.conjugations.map((conj: any) => ({
-  //           infinitive: verb.infinitive,
-  //           tense: tense.name,
-  //           pronoun: conj.pronoun,
-  //           form: conj.form,
-  //         })),
-  //       ),
-  //   );
-
-  //   setWordStats(allConjugations);
-  // }, [selectedVerbs, titleName]);
-
   useEffect(() => {
     if (wordStats.length > 0 && iteration < wordStats.length) {
       const current = wordStats[iteration];

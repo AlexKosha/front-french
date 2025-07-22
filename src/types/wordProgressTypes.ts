@@ -43,7 +43,13 @@ export interface LevelComponentsProps {
   progress: any[];
   titleName: string;
   renderContent: (param: WordItem, playText: () => void) => JSX.Element;
-  renderChoices: (choices: any, handleChoice: any) => JSX.Element;
+  // renderChoices: (choices: any, handleChoice: any) => JSX.Element;
+  renderChoices: (
+    choices: WordItem[],
+    handleChoice: (item: WordItem) => void,
+    selectedId: string | null,
+    isCorrect: boolean | null,
+  ) => JSX.Element;
 }
 
 export interface WordStat {

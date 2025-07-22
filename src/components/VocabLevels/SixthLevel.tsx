@@ -36,6 +36,8 @@ export const SixthLevel: React.FC<LevelProps> = ({
   const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
   const dispatch = useDispatch<AppDispatch>();
   const isDarkTheme = useSelector(selectTheme);
+  const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
+  const [isWrongAnswer, setIsWrongAnswer] = useState(false);
 
   // Ініціалізація слів з прогресу
   useEffect(() => {
@@ -53,42 +55,57 @@ export const SixthLevel: React.FC<LevelProps> = ({
 
   // Обробка введення користувача
   const handleUserInputChange = (value: string) => {
-    setUserInput(value);
+    // Дозволяємо: латинські літери (включно з діакритиками), пробіли, апострофи ’'` (різні види)
+    const filteredValue = value.replace(/[^a-zA-Z\u00C0-\u017F\s'’`]/g, '');
+    setUserInput(filteredValue);
+  };
+
+  const normalizeApostrophes = (text: string) => {
+    return text.replace(/[’‘`´‛]/g, "'"); // замінюємо різні апострофи на звичайний '
   };
 
   // Перевірка введеного слова
   const checkAnswer = async () => {
-    // console.log("Перевірка відповіді почалась");
     if (!userInput) {
       Alert.alert('Помилка', 'Поле не може бути порожнім!');
       return;
     }
-
-    const normalizedUserInput = userInput.trim().toLowerCase();
-    const normalizedCorrectWord = word.trim().toLowerCase();
+    const normalizedUserInput = normalizeApostrophes(
+      userInput.trim().toLowerCase(),
+    );
+    const normalizedCorrectWord = normalizeApostrophes(
+      word.trim().toLowerCase(),
+    );
 
     if (normalizedUserInput === normalizedCorrectWord) {
-      // console.log('Вірно! Слово співпало.');
+      setIsCorrectAnswer(true); // підсвітка зеленим
       const updatedTotalCorrectAnswers = totalCorrectAnswers + 1;
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
-      if (updatedTotalCorrectAnswers === 15) {
-        await markCurrentWordsAsCompleted(
-          progress,
-          wordStats,
-          level,
-          titleName,
-          dispatch,
-        );
-        await dispatch(updaterProgressUserThunk());
-        Alert.alert('Вітаю! Ви виконали всі завдання.');
-        navigation.navigate('TrainVocabulary', {titleName});
-        return;
-      }
-
-      handleNextIteration();
+      setTimeout(async () => {
+        setIsCorrectAnswer(false);
+        if (updatedTotalCorrectAnswers === 15) {
+          await markCurrentWordsAsCompleted(
+            progress,
+            wordStats,
+            level,
+            titleName,
+            dispatch,
+          );
+          await dispatch(updaterProgressUserThunk());
+          Alert.alert('Вітаю! Ви виконали всі завдання.');
+          navigation.navigate('TrainVocabulary', {titleName});
+          return;
+        }
+        handleNextIteration();
+      }, 2000);
     } else {
-      Alert.alert('Неправильно', 'Спробуйте ще раз.');
+      setIsWrongAnswer(true);
+      setIsCorrectAnswer(false);
+
+      setTimeout(() => {
+        setIsWrongAnswer(false);
+      }, 2000);
     }
   };
 
@@ -119,8 +136,14 @@ export const SixthLevel: React.FC<LevelProps> = ({
         style={{
           fontSize: 24,
           textAlign: 'center',
-          borderWidth: 1,
-          borderColor: isDarkTheme ? 'white' : '#67104c',
+          borderWidth: 5,
+          borderColor: isCorrectAnswer
+            ? '#4CAF50'
+            : isWrongAnswer
+            ? '#f44336'
+            : isDarkTheme
+            ? 'white'
+            : '#67104c',
           borderRadius: 10,
           padding: 10,
           marginHorizontal: 20,

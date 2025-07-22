@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Text,
   View,
@@ -10,6 +10,7 @@ import {
   Pressable,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import {InteractionManager} from 'react-native';
 
 import {updaterProgressUserThunk} from '../../store/auth/authThunks';
 import {selectTheme} from '../../store/auth/selector';
@@ -34,41 +35,76 @@ export const FifthLevel: React.FC<LevelProps> = ({
   const [imageUrl, setImageUrl] = useState('');
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
   const [iteration, setIteration] = useState(0); // Лічильник ітерацій
-  const [correctLetters, setCorrectLetters] = useState<string[]>([]);
+  const [correctLetters, setCorrectLetters] = useState<
+    {index: number; char: string}[]
+  >([]);
+
   const [userInput, setUserInput] = useState<string[]>([]);
   const [wordWithBlanks, setWordWithBlanks] = useState<string[]>([]);
   const [wordStats, setWordStats] = useState<WordStat[]>([]);
+  const inputRefs = useRef<Array<TextInput | null>>([]);
+  const [blankIndices, setBlankIndices] = useState<number[]>([]);
+  const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
 
   useEffect(() => {
     initializeWordStats(progress, level, setWordStats);
   }, [level, progress]);
 
   useEffect(() => {
+    // Очистимо refs перед новим рендером
+    inputRefs.current = [];
+
     if (wordStats.length > 0 && iteration < wordStats.length) {
       const currentWord = wordStats[iteration];
       setWord(currentWord.word.world);
       setImageUrl(currentWord.word.image);
 
-      // Викликаємо функцію і отримуємо пропуски та правильні літери
-      const {wordWithBlanks, correctLetters} = generateWordWithBlanks(
-        currentWord.word.world,
-      );
+      const {wordWithBlanks, correctLetters, blankIndices} =
+        generateWordWithBlanks(currentWord.word.world);
 
-      // Оновлюємо стани
       setWordWithBlanks(wordWithBlanks);
       setCorrectLetters(correctLetters);
+      setBlankIndices(blankIndices);
 
-      // Ініціалізуємо userInput для введення користувачем
-      setUserInput(
-        wordWithBlanks.map((char: string) => (char === '_' ? '' : char)),
-      );
+      setUserInput(wordWithBlanks.map(char => (char === '_' ? '' : char)));
+
+      // Через маленьку затримку перевіряємо refs і фокус
+      InteractionManager.runAfterInteractions(() => {
+        setTimeout(() => {
+          console.log('Blank indices:', blankIndices);
+          console.log('Input refs keys:', Object.keys(inputRefs.current));
+          console.log('Trying to focus input at index:', blankIndices[0]);
+
+          if (inputRefs.current[blankIndices[0]]) {
+            inputRefs.current[blankIndices[0]]?.focus();
+          } else {
+            console.log('No input ref found at index:', blankIndices[0]);
+          }
+        }, 50);
+      });
     }
   }, [iteration, wordStats]);
 
-  // Функція генерації пропусків
+  const focusNextInput = (currentIndex: number) => {
+    const currentBlankIndex = blankIndices.indexOf(currentIndex);
+    const nextBlankIndex = blankIndices[currentBlankIndex + 1];
+
+    if (nextBlankIndex !== undefined) {
+      InteractionManager.runAfterInteractions(() => {
+        const nextRef = inputRefs.current[nextBlankIndex];
+        if (nextRef) {
+          nextRef.focus();
+        }
+      });
+    }
+  };
+
   const generateWordWithBlanks = (word: string) => {
     const wordArray = word.split('').map(char => char.toLowerCase());
-    const wordLength = wordArray.filter(char => char !== ' ').length; // Ігноруємо пробіли
+    // рахуємо довжину слова без пробілів і апострофів
+    const wordLength = wordArray.filter(
+      char => char !== ' ' && char !== "'",
+    ).length;
 
     let numBlanks = 0;
     if (wordLength <= 3) {
@@ -79,31 +115,37 @@ export const FifthLevel: React.FC<LevelProps> = ({
       numBlanks = 3;
     }
 
-    // Explicitly type indices as number[] to fix the error
-    const indices: number[] = []; // <-- Add type here
+    const indices: number[] = [];
     while (indices.length < numBlanks) {
       const randomIndex = Math.floor(Math.random() * wordArray.length);
-      if (!indices.includes(randomIndex) && wordArray[randomIndex] !== ' ') {
+      // пропуски не ставимо на пробіли і апострофи
+      if (
+        !indices.includes(randomIndex) &&
+        wordArray[randomIndex] !== ' ' &&
+        wordArray[randomIndex] !== "'"
+      ) {
         indices.push(randomIndex);
       }
     }
 
-    // Генеруємо слово з пропусками
+    indices.sort((a, b) => a - b);
+
     const wordWithBlanks = wordArray.map((char, index) =>
       indices.includes(index) ? '_' : char,
     );
 
-    // Зберігаємо правильні літери в тому ж порядку, як вони з'являються
-    const correctLetters = indices.map(index => wordArray[index]);
+    const correctLetters = indices.map(index => ({
+      index,
+      char: wordArray[index],
+    }));
 
-    // Повертаємо об'єкти для оновлення стану
-    return {wordWithBlanks, correctLetters};
+    return {wordWithBlanks, correctLetters, blankIndices: indices};
   };
 
   // Обробка введених букв
   const handleInputChange = (index: number, value: string) => {
-    // Дозволяємо лише латинські літери, діакритичні символи та апостроф
-    if (value && /^[a-zA-Z\u00C0-\u017F']$/.test(value)) {
+    // Дозволяємо лише латинські літери,
+    if (value && /^[a-zA-Z\u00C0-\u017F]$/.test(value)) {
       setUserInput(prevUserInput => {
         const newUserInput = [...prevUserInput];
         if (wordWithBlanks[index] !== ' ') {
@@ -123,11 +165,8 @@ export const FifthLevel: React.FC<LevelProps> = ({
 
   const checkAnswer = async () => {
     const filteredUserInput = userInput
-      .filter((_, index) => wordWithBlanks[index] === '_') // Беремо лише пропуски
-      .filter(char => char !== ' '); // Ігноруємо пробіли
-
-    // console.log('Filtered User Input:', filteredUserInput);
-    // console.log('Correct Letters:', correctLetters);
+      .filter((_, index) => wordWithBlanks[index] === '_') // беремо лише пропуски
+      .filter(char => char !== ' '); // ігноруємо пробіли
 
     if (filteredUserInput.length !== correctLetters.length) {
       Alert.alert(
@@ -141,31 +180,39 @@ export const FifthLevel: React.FC<LevelProps> = ({
       return;
     }
 
-    const sortedUserInput = [...filteredUserInput].sort();
-    const sortedCorrectLetters = [...correctLetters].sort();
-
-    const isCorrect = sortedUserInput.every(
-      (char, index) => char === sortedCorrectLetters[index],
+    // Порівняння по позиціях
+    const isCorrect = correctLetters.every(
+      ({index, char}) => userInput[index] === char,
     );
 
     if (isCorrect) {
+      setIsCorrectAnswer(true); // Включаємо підсвітку зеленим
+
       const updatedTotalCorrectAnswers = totalCorrectAnswers + 1;
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
-      if (updatedTotalCorrectAnswers === 15) {
-        await markCurrentWordsAsCompleted(
-          progress,
-          wordStats,
-          level,
-          titleName,
-          dispatch,
-        );
-        await dispatch(updaterProgressUserThunk());
-        Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');
-        navigation.navigate('TrainVocabulary', {titleName});
-        return;
-      }
-      handleNextIteration();
+      // Затримка 2 секунди, щоб користувач побачив підсвітку
+      setTimeout(async () => {
+        setIsCorrectAnswer(false); // Вимикаємо підсвітку
+
+        if (updatedTotalCorrectAnswers === 15) {
+          await markCurrentWordsAsCompleted(
+            progress,
+            wordStats,
+            level,
+            titleName,
+            dispatch,
+          );
+          await dispatch(updaterProgressUserThunk());
+          Alert.alert(
+            'Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан',
+          );
+          navigation.navigate('TrainVocabulary', {titleName});
+          return;
+        }
+
+        handleNextIteration();
+      }, 2000);
     } else {
       Alert.alert('Неправильно', 'Спробуйте ще раз.');
     }
@@ -197,12 +244,18 @@ export const FifthLevel: React.FC<LevelProps> = ({
           flexDirection: 'row', // Розташування елементів у рядок
           justifyContent: 'center', // Центруємо по горизонталі
           alignItems: 'center', // Центруємо по вертикалі
-          flexWrap: 'wrap', // Дозволяємо перенесення на новий рядок, якщо не вистачає місця
+          flexWrap: 'wrap',
+          backgroundColor: isCorrectAnswer ? '#4CAF50' : 'transparent',
+          borderRadius: 5,
+          padding: 5, // Дозволяємо перенесення на новий рядок, якщо не вистачає місця
         }}>
         {wordWithBlanks.map((char, index) =>
           char === '_' ? (
             <TextInput
               key={`${index}-input`}
+              ref={ref => {
+                inputRefs.current[index] = ref;
+              }}
               style={{
                 fontSize: 24,
                 textAlign: 'center',
@@ -216,7 +269,13 @@ export const FifthLevel: React.FC<LevelProps> = ({
               }}
               maxLength={1}
               value={userInput[index] || ''}
-              onChangeText={value => handleInputChange(index, value)}
+              onChangeText={value => {
+                handleInputChange(index, value);
+
+                if (value && /^[a-zA-Z\u00C0-\u017F']$/.test(value)) {
+                  focusNextInput(index);
+                }
+              }}
               keyboardType="default"
             />
           ) : (
@@ -225,10 +284,10 @@ export const FifthLevel: React.FC<LevelProps> = ({
               style={{
                 fontSize: 24,
                 textAlign: 'center',
-                marginHorizontal: char === ' ' ? 10 : 5, // Більший відступ для пробілів
+                marginHorizontal: char === ' ' ? 10 : 5,
                 marginVertical: 10,
                 padding: 5,
-                width: char === ' ' ? 20 : 40, // Менша ширина для пробілів
+                width: char === ' ' ? 20 : 40,
                 height: 40,
                 lineHeight: 40,
                 borderRadius: 5,

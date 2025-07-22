@@ -24,6 +24,9 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
   const [currentItem, setCurrentItem] = useState<WordItem | null>(null);
   const [wordStats, setWordStats] = useState<WordStat[]>([]);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const navigation = useNavigation<NavigationProps<'TrainVocabulary'>>();
   const dispatch = useDispatch<AppDispatch>();
@@ -53,10 +56,16 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
     },
     [progress],
   );
+  const handleChoice = async (chosenItem: WordItem) => {
+    if (!currentItem) return;
 
-  const handleChoice = async (chosenItem: any) => {
-    if (currentItem && chosenItem._id === currentItem._id) {
-      const updatedStats = wordStats.map((stat: any) =>
+    setSelectedId(chosenItem._id);
+    const correct = chosenItem._id === currentItem._id;
+    setIsCorrect(correct);
+
+    if (correct) {
+      setHasStarted(true);
+      const updatedStats = wordStats.map(stat =>
         stat.word._id === currentItem._id
           ? {...stat, correctCount: stat.correctCount + 1}
           : stat,
@@ -65,22 +74,32 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
       const updatedTotalCorrectAnswers = totalCorrectAnswers + 1;
       setTotalCorrectAnswers(updatedTotalCorrectAnswers);
 
-      if (updatedTotalCorrectAnswers === 15) {
-        await markCurrentWordsAsCompleted(
-          progress,
-          wordStats,
-          level,
-          titleName,
-          dispatch,
-        );
-        await dispatch(updaterProgressUserThunk());
-        Alert.alert('Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан');
-        navigation.navigate('TrainVocabulary', {titleName});
-      } else {
-        setRandomItem(updatedStats);
-      }
+      setTimeout(async () => {
+        if (updatedTotalCorrectAnswers === 15) {
+          await markCurrentWordsAsCompleted(
+            progress,
+            wordStats,
+            level,
+            titleName,
+            dispatch,
+          );
+          await dispatch(updaterProgressUserThunk());
+          Alert.alert(
+            'Вітаю! Ви виконали всі завдання. Ви отримуєте 1 круасан',
+          );
+          navigation.navigate('TrainVocabulary', {titleName});
+        } else {
+          setSelectedId(null);
+          setIsCorrect(null);
+          setRandomItem(updatedStats);
+        }
+      }, 1000); // затримка 1 секунда
     } else {
-      Alert.alert('Спробуйте ще раз!');
+      // 🔴 Червона рамка на 2 секунди, потім скидується
+      setTimeout(() => {
+        setSelectedId(null);
+        setIsCorrect(null);
+      }, 2000);
     }
   };
 
@@ -88,17 +107,29 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
     (stats: any) => {
       const remainingItems = stats.filter((stat: any) => stat.correctCount < 3);
       if (remainingItems.length === 0) {
-        Alert.alert('Вітаю! Ви виконали всі завдання.');
-        navigation.navigate('TrainVocabulary', {titleName});
-        return;
+        return; // більше нічого не робимо
       }
       const randomItem =
         remainingItems[Math.floor(Math.random() * remainingItems.length)];
-      setCurrentItem(randomItem.word);
+      setCurrentItem({...randomItem.word}); // Створюємо новий об'єкт з таким самим вмістом
+
       generateChoices(randomItem.word);
     },
-    [generateChoices, navigation, titleName],
+    [generateChoices],
   );
+
+  // useEffect(() => {
+  //   if (currentItem?.world) {
+  //     speak(currentItem.world);
+  //   }
+  // }, [currentItem]);
+
+  // Автоматичне програвання звуку тільки після першої правильної відповіді
+  useEffect(() => {
+    if (currentItem?.world && hasStarted) {
+      speak(currentItem.world);
+    }
+  }, [currentItem, hasStarted]);
 
   useEffect(() => {
     const initializeWordStats = () => {
@@ -125,7 +156,7 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
       ]}>
       <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
       {currentItem ? renderContent(currentItem, playText) : null}
-      {renderChoices(choices, handleChoice)}
+      {renderChoices(choices, handleChoice, selectedId, isCorrect)}
     </SafeAreaView>
   );
 };

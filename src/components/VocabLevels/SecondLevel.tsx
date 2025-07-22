@@ -1,8 +1,8 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {useSelector} from 'react-redux';
 
 import {LevelComponent} from '../Vocabulary/LevelComponent';
-import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
 import {LevelProps, WordItem} from '../../types';
 
@@ -12,6 +12,7 @@ export const SecondLevel: React.FC<LevelProps> = ({
   titleName,
 }) => {
   const isDarkTheme = useSelector(selectTheme);
+
   const renderContent = (currentImage: WordItem) => (
     <View style={{alignItems: 'center', marginVertical: 20}}>
       {currentImage && (
@@ -23,7 +24,12 @@ export const SecondLevel: React.FC<LevelProps> = ({
     </View>
   );
 
-  const renderChoices = (choices: WordItem[], handleChoice: any) => (
+  const renderChoices = (
+    choices: WordItem[],
+    handleChoice: (item: WordItem) => void,
+    selectedId: string | null,
+    isCorrect: boolean | null,
+  ) => (
     <View
       style={{
         flexDirection: 'row',
@@ -31,28 +37,38 @@ export const SecondLevel: React.FC<LevelProps> = ({
         justifyContent: 'space-around',
         paddingHorizontal: 20,
       }}>
-      {choices.map((choice: WordItem) => (
-        <TouchableOpacity
-          key={choice._id}
-          onPress={() => handleChoice(choice)}
-          style={{
-            backgroundColor: isDarkTheme ? 'white' : '#67104c',
-            padding: 15,
-            margin: 10,
-            borderRadius: 10,
-            width: '40%',
-            alignItems: 'center',
-          }}>
-          <Text
+      {choices.map((choice: WordItem) => {
+        const isSelected = choice._id === selectedId;
+        let borderColor = isDarkTheme ? '#67104c' : 'white';
+
+        if (isSelected && isCorrect === true) borderColor = '#4CAF50'; // ✅ зелений
+        if (isSelected && isCorrect === false) borderColor = '#f44336'; // ❌ червоний
+
+        return (
+          <TouchableOpacity
+            key={choice._id}
+            onPress={() => handleChoice(choice)}
             style={{
-              fontSize: 18,
-              fontWeight: 'bold',
-              color: isDarkTheme ? '#67104c' : 'white',
+              backgroundColor: isDarkTheme ? 'white' : '#67104c',
+              padding: 15,
+              margin: 10,
+              borderRadius: 10,
+              width: '40%',
+              alignItems: 'center',
+              borderWidth: 5,
+              borderColor,
             }}>
-            {choice.world}
-          </Text>
-        </TouchableOpacity>
-      ))}
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: isDarkTheme ? '#67104c' : 'white',
+              }}>
+              {choice.world}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 
