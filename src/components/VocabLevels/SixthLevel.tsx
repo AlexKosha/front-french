@@ -21,11 +21,7 @@ import {defaultStyles} from '../defaultStyles';
 import {LevelProps, WordStat} from '../../types';
 import {initializeWordStats, markCurrentWordsAsCompleted} from '../../helpers';
 
-export const SixthLevel: React.FC<LevelProps> = ({
-  progress,
-  level,
-  titleName,
-}) => {
+const SixthLevel: React.FC<LevelProps> = ({progress, level, titleName}) => {
   const [word, setWord] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
@@ -175,3 +171,5 @@ export const SixthLevel: React.FC<LevelProps> = ({
     </SafeAreaView>
   );
 };
+
+export default SixthLevel;

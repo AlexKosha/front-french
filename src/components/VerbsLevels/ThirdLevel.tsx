@@ -6,11 +6,7 @@ import {defaultStyles} from '../defaultStyles';
 import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
 
-export const ThirdLevel: React.FC<Props> = ({
-  selectedVerbs,
-  level,
-  titleName,
-}) => {
+const ThirdLevel: React.FC<Props> = ({selectedVerbs, level, titleName}) => {
   const {questions, current, currentIndex, selected, setSelected, next} =
     hookVerbQuiz(selectedVerbs, titleName, level);
 
@@ -121,6 +117,8 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
+
+export default ThirdLevel;
 
 // import React from 'react';
 // import {Text, View} from 'react-native';

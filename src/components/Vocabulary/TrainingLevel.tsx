@@ -1,25 +1,20 @@
-import React from 'react';
+import React, {lazy, Suspense} from 'react';
 import {useRoute} from '@react-navigation/native';
-import {Text} from 'react-native';
+import {Text, View, ActivityIndicator} from 'react-native';
 import {RouteProps} from '../../types/navigationTypes';
-import {
-  FifthLevel,
-  FirstLevel,
-  FourthLevel,
-  SecondLevel,
-  SeventhLevel,
-  SixthLevel,
-  ThirdLevel,
-} from '../VocabLevels';
-import {useSelector} from 'react-redux';
-import {selectUpdatedProgressData} from '../../store/progress/selector';
+
+// Lazy imports
+const FirstLevel = lazy(() => import('../VocabLevels/FirstLevel'));
+const SecondLevel = lazy(() => import('../VocabLevels/SecondLevel'));
+const ThirdLevel = lazy(() => import('../VocabLevels/ThirdLevel'));
+const FourthLevel = lazy(() => import('../VocabLevels/FourtLevel'));
+const FifthLevel = lazy(() => import('../VocabLevels/FifthLevel'));
+const SixthLevel = lazy(() => import('../VocabLevels/SixthLevel'));
+const SeventhLevel = lazy(() => import('../VocabLevels/SeventhLevel'));
 
 export const TrainingLevel = () => {
   const route = useRoute<RouteProps<'TrainingLevel'>>();
   const {level, titleName, progress} = route.params;
-  const updateProgress = useSelector(selectUpdatedProgressData);
-
-  console.log(updateProgress);
 
   const renderLevelComponent = () => {
     switch (level) {
@@ -68,5 +63,15 @@ export const TrainingLevel = () => {
     }
   };
 
-  return <>{renderLevelComponent()}</>;
+  return (
+    <Suspense
+      fallback={
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" />
+          <Text>Завантаження рівня...</Text>
+        </View>
+      }>
+      {renderLevelComponent()}
+    </Suspense>
+  );
 };

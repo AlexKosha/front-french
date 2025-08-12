@@ -34,11 +34,7 @@ import {useTranslationHelper} from '../../locale/useTranslation';
 import {translations} from '../../locale/translations';
 import {useLocalization} from '../../locale/LocalizationContext';
 
-export const SeventhLevel: React.FC<LevelProps> = ({
-  progress,
-  level,
-  titleName,
-}) => {
+const SeventhLevel: React.FC<LevelProps> = ({progress, level, titleName}) => {
   const [isRecording, setIsRecording] = useState(false);
 
   const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
@@ -382,3 +378,5 @@ const styles = StyleSheet.create({
     height: 45,
   },
 });
+
+export default SeventhLevel;

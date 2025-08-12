@@ -7,11 +7,7 @@ import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
 import {LevelProps, WordItem} from '../../types';
 
-export const FirstLevel: React.FC<LevelProps> = ({
-  level,
-  progress,
-  titleName,
-}) => {
+const FirstLevel: React.FC<LevelProps> = ({level, progress, titleName}) => {
   const isDarkTheme = useSelector(selectTheme);
   const renderContent = (currentItem: WordItem, playText: any) => {
     return (
@@ -132,3 +128,5 @@ export const FirstLevel: React.FC<LevelProps> = ({
     />
   );
 };
+
+export default FirstLevel;

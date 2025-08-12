@@ -21,7 +21,7 @@ const getDisplaySentence = (pronoun: string, form: string, ending: string) => {
   return `${pronoun} ${base}___`;
 };
 
-export const FirstLevel: React.FC<Props> = ({
+const FirstLevel: React.FC<Props> = ({
   selectedVerbs,
   level,
   titleName,
@@ -178,3 +178,5 @@ const styles = StyleSheet.create({
   optionText: {fontSize: 18},
   footer: {textAlign: 'center', marginTop: 30, fontSize: 16, color: '#666'},
 });
+
+export default FirstLevel;

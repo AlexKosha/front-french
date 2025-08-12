@@ -6,20 +6,23 @@ import {useSelector} from 'react-redux';
 import {selectTheme} from '../../store/auth/selector';
 import {defaultStyles} from '../defaultStyles';
 
-const getDisplaySentence = (pronoun: string) => {
-  return `${pronoun} ___`;
+const getDisplaySentence = (pronoun: string, form: string): string => {
+  const parts = form.trim().split(' ');
+
+  if (parts.length === 2) {
+    // passé composé
+    return `${pronoun} ___ ${parts[1]}`;
+  } else {
+    // інші часи
+    return `${pronoun} ___`;
+  }
 };
 
 const getCorrectWord = (form: string): string => {
-  const parts = form.trim().split(' ');
-  return parts.length === 2 ? parts[1] : parts[0];
+  return form.trim().split(' ')[0];
 };
 
-export const SecondLevel: React.FC<Props> = ({
-  selectedVerbs,
-  level,
-  titleName,
-}) => {
+const SecondLevel: React.FC<Props> = ({selectedVerbs, level, titleName}) => {
   const {questions, current, currentIndex, selected, setSelected, next} =
     hookVerbQuiz(selectedVerbs, titleName, level);
 
@@ -56,7 +59,7 @@ export const SecondLevel: React.FC<Props> = ({
 
   if (!current) return <Text>Завантаження...</Text>;
 
-  const displaySentence = getDisplaySentence(current.pronoun);
+  const displaySentence = getDisplaySentence(current.pronoun, current.form);
 
   return (
     <SafeAreaView
@@ -130,3 +133,5 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
+
+export default SecondLevel;

@@ -27,11 +27,7 @@ interface Question {
   tense: string;
 }
 
-export const SixthLevel: React.FC<Props> = ({
-  selectedVerbs,
-  titleName,
-  level,
-}) => {
+const SixthLevel: React.FC<Props> = ({selectedVerbs, titleName, level}) => {
   const isDarkTheme = useSelector(selectTheme);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -202,3 +198,5 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
+
+export default SixthLevel;

@@ -6,11 +6,7 @@ import {LevelComponent} from '../Vocabulary/LevelComponent';
 import {selectTheme} from '../../store/auth/selector';
 import {LevelProps, WordItem} from '../../types';
 
-export const SecondLevel: React.FC<LevelProps> = ({
-  level,
-  progress,
-  titleName,
-}) => {
+const SecondLevel: React.FC<LevelProps> = ({level, progress, titleName}) => {
   const isDarkTheme = useSelector(selectTheme);
 
   const renderContent = (currentImage: WordItem) => (
@@ -82,3 +78,5 @@ export const SecondLevel: React.FC<LevelProps> = ({
     />
   );
 };
+
+export default SecondLevel;

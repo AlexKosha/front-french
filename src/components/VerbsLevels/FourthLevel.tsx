@@ -27,7 +27,7 @@ type FormItem = {
   correctPronoun: string;
 };
 
-export const FourthLevel: React.FC<Props> = ({
+const FourthLevel: React.FC<Props> = ({
   level,
   selectedVerbs,
   titleName,
@@ -334,3 +334,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
+export default FourthLevel;

@@ -8,7 +8,6 @@ import {
   Image,
   Alert,
   Pressable,
-  findNodeHandle,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -19,9 +18,9 @@ import {defaultStyles} from '../defaultStyles';
 import {LevelProps} from '../../types';
 
 import {UIManager} from 'react-native';
-import {DraggableWord} from '.';
+import {DraggableWord} from './DraggableWord';
 
-export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
+const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
   const navigation = useNavigation<NavigationProps<'Home'>>();
   const isDarkTheme = useSelector(selectTheme);
 
@@ -198,7 +197,7 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
       Alert.alert('Спробуйте ще раз.');
     }
   };
-  console.log('WORDS to render:', words);
+  console.log('WORDS to render:', words, images);
 
   return (
     <SafeAreaView
@@ -211,7 +210,12 @@ export const FourthLevel: React.FC<LevelProps> = ({progress, titleName}) => {
         <View style={styles.imagesContainer}>
           {images.map(image => (
             <View key={image.id} style={styles.imageBox}>
-              <Image source={{uri: image.uri}} style={styles.image} />
+              <Image
+                source={{
+                  uri: image.uri,
+                }}
+                style={styles.image}
+              />
             </View>
           ))}
         </View>
@@ -275,3 +279,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default FourthLevel;

@@ -9,11 +9,7 @@ import {LevelProps, WordItem} from '../../types';
 
 // треба забрати озвучку після самого першого натискання на слово.
 
-export const ThirdLevel: React.FC<LevelProps> = ({
-  level,
-  progress,
-  titleName,
-}) => {
+const ThirdLevel: React.FC<LevelProps> = ({level, progress, titleName}) => {
   const isDarkTheme = useSelector(selectTheme);
 
   const renderContent = (
@@ -91,3 +87,5 @@ export const ThirdLevel: React.FC<LevelProps> = ({
     />
   );
 };
+
+export default ThirdLevel;

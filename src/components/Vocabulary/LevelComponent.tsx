@@ -26,7 +26,8 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [hasFirstSpoken, setHasFirstSpoken] = useState(false);
+  const [wasManuallySpoken, setWasManuallySpoken] = useState(false);
 
   const navigation = useNavigation<NavigationProps<'TrainVocabulary'>>();
   const dispatch = useDispatch<AppDispatch>();
@@ -34,9 +35,11 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
   const {speak} = useTTS();
 
   const playText = () => {
-    if (currentItem?.world) speak(currentItem.world);
+    if (currentItem?.world) {
+      speak(currentItem.world);
+      setWasManuallySpoken(true);
+    }
   };
-
   const generateChoices = useCallback(
     (correctItem: WordItem) => {
       const wrongChoices: WordItem[] = [];
@@ -64,7 +67,9 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
     setIsCorrect(correct);
 
     if (correct) {
-      setHasStarted(true);
+      if (!hasFirstSpoken) {
+        setHasFirstSpoken(true); // Тепер можна озвучувати автоматично
+      }
       const updatedStats = wordStats.map(stat =>
         stat.word._id === currentItem._id
           ? {...stat, correctCount: stat.correctCount + 1}
@@ -91,7 +96,13 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
         } else {
           setSelectedId(null);
           setIsCorrect(null);
-          setRandomItem(updatedStats);
+          setWasManuallySpoken(false);
+          setCurrentItem(null);
+
+          // ⏳ даємо React "забути" попереднє слово
+          setTimeout(() => {
+            setRandomItem(updatedStats);
+          }, 100);
         }
       }, 1000); // затримка 1 секунда
     } else {
@@ -118,18 +129,17 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
     [generateChoices],
   );
 
-  // useEffect(() => {
-  //   if (currentItem?.world) {
-  //     speak(currentItem.world);
-  //   }
-  // }, [currentItem]);
-
   // Автоматичне програвання звуку тільки після першої правильної відповіді
   useEffect(() => {
-    if (currentItem?.world && hasStarted) {
+    if (
+      level === 3 &&
+      hasFirstSpoken && // Тільки після першої правильної відповіді
+      currentItem?.world &&
+      !wasManuallySpoken // Якщо слово не було озвучене вручну
+    ) {
       speak(currentItem.world);
     }
-  }, [currentItem, hasStarted]);
+  }, [currentItem, level, speak, hasFirstSpoken, wasManuallySpoken]);
 
   useEffect(() => {
     const initializeWordStats = () => {
@@ -155,8 +165,13 @@ export const LevelComponent: React.FC<LevelComponentsProps> = ({
         {backgroundColor: isDarkTheme ? '#67104c' : 'white'},
       ]}>
       <RenderProgress totalCorrectAnswers={totalCorrectAnswers} />
-      {currentItem ? renderContent(currentItem, playText) : null}
-      {renderChoices(choices, handleChoice, selectedId, isCorrect)}
+
+      {currentItem && (
+        <>
+          {renderContent(currentItem, playText)}
+          {renderChoices(choices, handleChoice, selectedId, isCorrect)}
+        </>
+      )}
     </SafeAreaView>
   );
 };

@@ -34,17 +34,12 @@ interface Question {
   tense: string;
 }
 
-export const SeventhLevel: React.FC<Props> = ({
-  selectedVerbs,
-  titleName,
-  level,
-}) => {
+const SeventhLevel: React.FC<Props> = ({selectedVerbs, titleName, level}) => {
   const [wordStats, setWordStats] = useState<any[]>([]);
   const [iteration, setIteration] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
-  // const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
   const [wrongAttempts, setWrongAttempts] = useState(0);
   const [correctAnswer, setCorrectAnswer] = useState('');
   const [manualCheck, setManualCheck] = useState(false);
@@ -382,3 +377,5 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
+
+export default SeventhLevel;

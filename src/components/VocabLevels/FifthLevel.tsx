@@ -22,11 +22,7 @@ import {initializeWordStats} from '../../helpers/wordHelpers';
 import {markCurrentWordsAsCompleted} from '../../helpers/progressHelpers';
 import {LevelProps, WordStat} from '../../types';
 
-export const FifthLevel: React.FC<LevelProps> = ({
-  progress,
-  level,
-  titleName,
-}) => {
+const FifthLevel: React.FC<LevelProps> = ({progress, level, titleName}) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigation = useNavigation<NavigationProps<'LearnVocabTheme'>>();
   const isDarkTheme = useSelector(selectTheme);
@@ -316,3 +312,5 @@ export const FifthLevel: React.FC<LevelProps> = ({
     </SafeAreaView>
   );
 };
+
+export default FifthLevel;

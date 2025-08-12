@@ -11,7 +11,6 @@ import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler';
-
 import {findNodeHandle} from 'react-native';
 
 type ContextType = {
@@ -23,8 +22,7 @@ type DraggableWordProps = {
   word: {id: string; text: string};
   draggingWordId: string | null;
   setDraggingWordId: (id: string | null) => void;
-  // Тут типізуємо з Map, а не Record
-  wordRefs: React.MutableRefObject<Map<string, any>>;
+  wordRefs: React.MutableRefObject<Map<string, number>>;
   swapWords: (id1: string, id2: string) => void;
   detectDropArea: (x: number, y: number) => string | null;
   resetPosition: boolean;
@@ -39,18 +37,17 @@ export const DraggableWord: React.FC<DraggableWordProps> = ({
   swapWords,
   detectDropArea,
   resetPosition,
-  checkCollision,
 }) => {
-  console.log('DraggableWord render:', word.id);
-
+  // Позиції по осях для анімації
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
+  // Функція визначення drop-зони після кінця перетягування
   const handleDropDetection = () => {
-    const handle = wordRefs.current.get(word.id);
-    if (!handle) return;
+    const nodeHandle = wordRefs.current.get(word.id);
+    if (!nodeHandle) return;
 
-    UIManager.measure(handle, (x, y, width, height, pageX, pageY) => {
+    UIManager.measure(nodeHandle, (x, y, width, height, pageX, pageY) => {
       const centerX = pageX + width / 2;
       const centerY = pageY + height / 2;
 
@@ -59,11 +56,13 @@ export const DraggableWord: React.FC<DraggableWordProps> = ({
         swapWords(word.id, droppedId);
       }
 
+      // Повернути слово в початкову позицію анімацією
       translateX.value = withSpring(0);
       translateY.value = withSpring(0);
     });
   };
 
+  // Скидання позиції при тригері resetPosition
   React.useEffect(() => {
     if (resetPosition) {
       translateX.value = withSpring(0);
@@ -71,6 +70,7 @@ export const DraggableWord: React.FC<DraggableWordProps> = ({
     }
   }, [resetPosition]);
 
+  // Обробник жесту drag
   const gestureHandler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
     ContextType
@@ -78,36 +78,30 @@ export const DraggableWord: React.FC<DraggableWordProps> = ({
     onStart: (_, ctx) => {
       ctx.startX = translateX.value;
       ctx.startY = translateY.value;
+      runOnJS(setDraggingWordId)(word.id); // Встановити ID слова при початку драггінгу
     },
     onActive: (event, ctx) => {
       translateX.value = ctx.startX + event.translationX;
       translateY.value = ctx.startY + event.translationY;
-
-      runOnJS(checkCollision)(event.absoluteX, event.absoluteY);
     },
-
     onEnd: () => {
-      if (typeof handleDropDetection === 'function') {
-        runOnJS(setDraggingWordId)(null);
-        runOnJS(handleDropDetection)();
-      }
+      runOnJS(setDraggingWordId)(null);
+      runOnJS(handleDropDetection)();
     },
   });
 
+  // Стиль з анімацією позиції і zIndex для видимості активного слова
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{translateX: translateX.value}, {translateY: translateY.value}],
     zIndex: draggingWordId === word.id ? 100 : 1,
   }));
 
+  // Передача ref та збереження nodeHandle в словник
   const setRef = (ref: any) => {
-    console.log('setRef called with ref:', ref);
     if (ref) {
       const nodeHandle = findNodeHandle(ref);
-      console.log('nodeHandle:', nodeHandle);
       if (nodeHandle) {
         wordRefs.current.set(word.id, nodeHandle);
-        console.log('wordRefs.current:', wordRefs.current);
-        console.log('Is Map?', wordRefs.current instanceof Map);
       }
     } else {
       wordRefs.current.delete(word.id);

@@ -1,16 +1,15 @@
-import React from 'react';
+import React, {lazy, Suspense} from 'react';
 import {useRoute} from '@react-navigation/native';
-import {Text} from 'react-native';
+import {ActivityIndicator, Text, View} from 'react-native';
 import {RouteProps} from '../../types';
-import {
-  FirstLevel,
-  SecondLevel,
-  ThirdLevel,
-  FourthLevel,
-  FifthLevel,
-  SeventhLevel,
-  SixthLevel,
-} from '../VerbsLevels';
+
+const FirstLevel = lazy(() => import('../VerbsLevels/FirstLevel'));
+const SecondLevel = lazy(() => import('../VerbsLevels/SecondLevel'));
+const ThirdLevel = lazy(() => import('../VerbsLevels/ThirdLevel'));
+const FourthLevel = lazy(() => import('../VerbsLevels/FourthLevel'));
+const FifthLevel = lazy(() => import('../VerbsLevels/FifthLevel'));
+const SixthLevel = lazy(() => import('../VerbsLevels/SixthLevel'));
+const SeventhLevel = lazy(() => import('../VerbsLevels/SeventhLevel'));
 
 export const TrainingLevelVerbs = () => {
   const route = useRoute<RouteProps<'TrainingLevelVerbs'>>();
@@ -79,5 +78,15 @@ export const TrainingLevelVerbs = () => {
     }
   };
 
-  return <>{renderLevel()}</>;
+  return (
+    <Suspense
+      fallback={
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" />
+          <Text>Завантаження рівня...</Text>
+        </View>
+      }>
+      {renderLevel()}
+    </Suspense>
+  );
 };

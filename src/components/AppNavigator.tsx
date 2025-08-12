@@ -29,7 +29,6 @@ export const AppNavigator = (): JSX.Element => {
   const {vocabOrVerbs, vocab} = useTranslationHelper();
 
   useEffect(() => {
-    // toggleTheme();
     const handleGetProfile = async (): Promise<void> => {
       try {
         const resultAction = await dispatch(getProfileThunk());
